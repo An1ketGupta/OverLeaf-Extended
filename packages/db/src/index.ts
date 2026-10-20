@@ -1,0 +1,37 @@
+import { fileURLToPath } from "node:url";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import pg from "pg";
+import * as schema from "./schema.js";
+
+export { schema };
+export function createDatabase(connectionString: string) {
+  const pool = new pg.Pool({
+    connectionString,
+    max: 3,
+    connectionTimeoutMillis: 5000,
+    idleTimeoutMillis: 10_000,
+    query_timeout: 5000,
+    statement_timeout: 5000,
+  });
+  // A sleeping/disconnected managed database must not crash the API on an idle socket.
+  pool.on("error", () => {});
+  const db = drizzle(pool, { schema });
+  return {
+    db,
+    pool,
+    async readiness() {
+      // Probe the migrated schema as well as connectivity.
+      await pool.query('SELECT 1 FROM "user" LIMIT 0');
+      await pool.query('SELECT 1 FROM "session" LIMIT 0');
+    },
+    migrate: () =>
+      migrate(db, {
+        migrationsFolder: fileURLToPath(
+          new URL("../migrations", import.meta.url),
+        ),
+      }),
+    close: () => pool.end(),
+  };
+}
+export type Database = ReturnType<typeof createDatabase>;

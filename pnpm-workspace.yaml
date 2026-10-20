@@ -1,0 +1,6 @@
+packages:
+  - apps/*
+  - packages/*
+saveExact: true
+onlyBuiltDependencies:
+  - esbuild

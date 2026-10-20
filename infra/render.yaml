@@ -1,0 +1,27 @@
+# Template for one native Node API service. No resources are provisioned by this file.
+services:
+  - type: web
+    name: overleaf-pro-api
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @overleaf-pro/api build
+    startCommand: pnpm --filter @overleaf-pro/api start
+    healthCheckPath: /api/health
+    autoDeployTrigger: "off"
+    envVars:
+      - key: NODE_VERSION
+        value: 24.22.0
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: APP_ORIGIN
+        sync: false
+      - key: TRUSTED_ORIGINS
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: AUTH_ALLOW_SIGNUP
+        value: "false"
