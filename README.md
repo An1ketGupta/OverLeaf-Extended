@@ -1,10 +1,18 @@
 # OverLeaf-Pro
 
+**Commercial product.** The free/no-card/no-subscription constraint still applies.
+Vercel Hobby is excluded; Render Free is a staging candidate, not an approved
+production backend. Commercial launch hosting is an open Part 0 decision. Read
+[commercial-use guidance](docs/commercial-use.md) before creating hosting accounts
+or following the older Vercel deployment example.
+
 A LaTeX workspace with planned AI editing and explainable resume PDF analysis.
-**Part 0 is in progress.** The working foundation includes a React status page,
-Fastify API, PostgreSQL migrations, and a Better Auth prototype. Compiler selection,
-Neon account eligibility, and hosted authentication remain open gates. See
-[Part 0 progress](docs/part-0.md) and [the roadmap](ROADMAP.md).
+**Part 2's local workspace is implemented.** It includes CodeMirror LaTeX editing,
+private PostgreSQL-backed projects, autosave/conflict recovery, resizable panels,
+and a local PDF.js preview. Compiler selection, Neon account eligibility, hosted
+authentication, and the remaining Part 1 features stay open. See
+[Part 2 progress](docs/part-2.md), [Part 0 progress](docs/part-0.md), and
+[the roadmap](ROADMAP.md).
 
 ## Start locally
 
@@ -64,6 +72,23 @@ the API, and create a synthetic test account with a password of at least 12
 characters. Sign in, refresh, and sign out through the frontend. Public production
 signup is deliberately disabled until Part 1 supplies account/email flows.
 
+After signing in, open `/projects` to create a private project and enter the
+workspace. Apply all migrations first. Text autosaves after 700 ms; saves complete
+before file switches. Offline drafts can be recovered after refresh in the same
+tab. Sign-out deletes recovery copies; download unsaved work before signing out.
+Open PDF previews a local file and never represents it as compiled output.
+Recompile remains disabled until compiler validation. See docs/part-2.md for
+shortcuts, draft privacy, limits, and remaining prerequisites.
+
+**Export project (.zip)** saves all files and captures an immutable text snapshot
+before downloading the full source tree and a version/hash manifest. Conflicts
+and unseen remote changes require review first. **Download file** keeps a copy of
+the current editor buffer, including unsaved text. Apply the new snapshot migration
+with `pnpm db:migrate` before exporting. Snapshots are capped at 20 revisions per
+project and 32 MiB of logical JSON per account; at the limit, individual downloads
+remain available. [Part 3 progress](docs/part-3.md) records the delivered prerequisite
+and the compiler gate that still blocks real compilation.
+
 ## Verification
 
 ```sh
@@ -92,14 +117,16 @@ are recorded in docs/part-0.md; a CI workflow file is not a completed hosted CI 
 
 ## Layout and deployment
 
-- `apps/web`: React/Vite status and auth prototype; only public code.
-- `apps/api`: Fastify health/readiness/auth and validated runtime configuration.
+- `apps/web`: React/Vite editor, projects, PDF preview, status/auth; only public code.
+- `apps/api`: Fastify health/readiness/auth, private project/file HTTP routes.
 - `packages/contracts`: strict HTTP/source/worker DTOs and limits.
 - `packages/db`: PostgreSQL connection, Better Auth tables, Drizzle migrations.
 - `docs`: product flows, architecture, contracts, compiler and staging gates.
 - `infra`: Free Render/native, Vercel routing, optional local PostgreSQL templates.
 
 Read [architecture](docs/architecture.md) before filling deployment templates.
-Nothing has been provisioned or published. The proposed Vercel/Render/Neon setup
-requires no paid service in code. Published Free plans do not verify account
-eligibility; check the user's account and current quotas before deployment.
+Nothing has been provisioned or published. The former Vercel Hobby/Render Free
+launch proposal is superseded by the commercial-use clarification. No complete
+commercial hosting stack is selected. Published Free plans do not verify account
+eligibility, commercial permission or production suitability; validate these
+before deployment while retaining the no-card budget.

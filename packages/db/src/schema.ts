@@ -1,4 +1,15 @@
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import type { SourceFile } from "@overleaf-pro/contracts";
+import {
+  boolean,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 const createdAt = () =>
   timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
@@ -75,3 +86,57 @@ export const appMetadata = pgTable("app_metadata", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),
 });
+
+export const project = pgTable(
+  "project",
+  {
+    id: uuid("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    mainFile: text("main_file").notNull(),
+    revision: integer("revision").notNull().default(1),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [index("project_user_idx").on(table.userId)],
+);
+
+export const projectFile = pgTable(
+  "project_file",
+  {
+    id: uuid("id").primaryKey(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => project.id, { onDelete: "cascade" }),
+    path: text("path").notNull(),
+    content: text("content").notNull(),
+    sha256: text("sha256").notNull(),
+    version: integer("version").notNull().default(1),
+  },
+  (table) => [
+    uniqueIndex("project_file_path_idx").on(table.projectId, table.path),
+  ],
+);
+
+export const projectSnapshot = pgTable(
+  "project_snapshot",
+  {
+    id: uuid("id").primaryKey(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => project.id, { onDelete: "cascade" }),
+    revision: integer("revision").notNull(),
+    mainFile: text("main_file").notNull(),
+    createdAt: createdAt(),
+    files: jsonb("files").$type<SourceFile[]>().notNull(),
+    bytes: integer("bytes").notNull(),
+  },
+  (table) => [
+    uniqueIndex("project_snapshot_revision_idx").on(
+      table.projectId,
+      table.revision,
+    ),
+  ],
+);

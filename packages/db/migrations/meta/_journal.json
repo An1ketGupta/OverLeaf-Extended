@@ -8,6 +8,20 @@
       "when": 1792502349034,
       "tag": "0000_shocking_beast",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792503588406,
+      "tag": "0001_lean_talisman",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792509058883,
+      "tag": "0002_new_the_fury",
+      "breakpoints": true
     }
   ]
 }

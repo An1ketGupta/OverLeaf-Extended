@@ -67,6 +67,21 @@ describe("untrusted project boundaries", () => {
       sourceSnapshotSchema.safeParse({ ...snapshot, mainFile: "missing.tex" })
         .success,
     ).toBe(false);
+    expect(
+      sourceSnapshotSchema.safeParse({
+        ...snapshot,
+        files: [file, { ...file, path: "other.tex" }],
+      }).success,
+    ).toBe(false);
+    expect(
+      sourceSnapshotSchema.safeParse({
+        ...snapshot,
+        files: [
+          file,
+          { ...file, id: randomUUID(), path: "main.tex/child.tex" },
+        ],
+      }).success,
+    ).toBe(false);
   });
   it("refuses test database aliases of the development database", () => {
     expect(() =>

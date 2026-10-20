@@ -1,15 +1,15 @@
 # OverLeaf-Pro: stack and Codex agent roadmap
 
-Created: 2026-10-20. Updated for the user's clarified requirement: **free hosting, no payment card, no paid subscription or expiring trial credits. Docker is allowed.** Preferred hosts remain Vercel frontend and Render backend; other genuinely free services may be used where needed.
+Created: 2026-10-20. Updated for the user's clarified requirement: **commercial use; free hosting, no payment card, no paid subscription or expiring trial credits. Docker is allowed.** Vercel Hobby is excluded. Commercial launch hosts are not selected; Render Free remains a staging candidate only. See [commercial-use decision](docs/commercial-use.md), which supersedes the earlier personal-project hosting proposal and Vercel-specific examples.
 
-Status: Part 0 implementation in progress. The local foundation, PostgreSQL/auth prototype, contracts, and verification setup are implemented. Compiler feasibility, Neon account access, and deployed authentication checks remain pending. See [Part 0 progress](docs/part-0.md).
+Status: Part 2's local editor and autosave are implemented, including the minimum private project/file persistence prerequisite. Immutable text snapshot capture and project ZIP export are implemented as a Part 3 prerequisite. Part 0 compiler/hosting gates and the rest of Part 1 remain incomplete. See [Part 0 progress](docs/part-0.md), [Part 2 progress](docs/part-2.md), and [Part 3 progress](docs/part-3.md).
 
 ## 1. Repository findings and confirmed constraints
 
 - The directory was empty when initially inspected: no source, package manifests, tests, Git repository, or applicable ancestor `AGENTS.md` files. This roadmap was the first project file.
 - Node v26.5.0, pnpm v11.17.0, and Git v2.49.0 are available. Pin a supported LTS runtime and package-manager version during implementation.
 - Docker is allowed for development and deployment. The CLI was observed, but local engine access failed during inspection; verify it before using local container checks and do not claim they passed otherwise.
-- Recommend Vercel Hobby for the personal/non-commercial frontend, Render Free for the Node API (Docker or native), and Neon Free for PostgreSQL. No AWS account or paid cloud credits are required. These are recommendations, not provisioned services or verified account eligibility.
+- Commercial frontend/API hosting must be selected and validated within the no-card budget. Evaluate Cloudflare static hosting as a frontend candidate; proxy/auth compatibility and account eligibility remain unverified. Render Free is for staging evaluation; Neon Free remains a quota-limited database candidate. No complete commercial launch stack is approved.
 - Keep recurring infrastructure dependencies small. No Redis, BullMQ, or separately hosted background worker is required for the first release.
 - The confirmed requirement is a no-card, zero-subscription MVP within free quotas. Compiler capacity/isolation, runtime AI access, account eligibility, and dependency licensing remain Part 0 gates; unlimited or always-on production capacity is not promised.
 
@@ -51,10 +51,10 @@ A frontend SPA and separate API fit the hosting split. Docker packaging is allow
 | --- | --- | --- |
 | Runtime/language | TypeScript strict mode; Node 24 LTS baseline | One language and shared contracts; verify dependency compatibility and pin versions in Part 0. |
 | Repository | pnpm workspaces | One repository with separate deployable frontend/backend and shared modules. |
-| Frontend | React + Vite + React Router | A static SPA for Vercel; application server logic stays on Render. |
+| Frontend | React + Vite + React Router | A static SPA for a commercial-compatible host; application server logic stays behind the API boundary. |
 | UI | Tailwind CSS + shadcn/ui + Lucide | Consistent components for the dashboard, editor, and analysis panels. |
 | Editor | CodeMirror 6 | Transactions, history, completion, diagnostics, and a tested LaTeX syntax mode. |
-| Backend | Fastify + Node.js on Render Free, Docker or native | Typed HTTP API, authentication, persistence, and bounded server-side AI calls. |
+| Backend | Fastify + Node.js; commercial launch host pending | Typed HTTP API, authentication, persistence, and bounded server-side AI calls. Render Free is a staging candidate, Docker or native. |
 | Contracts | Zod + shared TypeScript DTOs | Validate requests, proposals, saved analyses, and compiler messages. |
 | Database | PostgreSQL + Drizzle migrations | Project ownership, consistent revisions, analysis metadata, and sessions. Use Neon Free for the proposed hosted database; local native PostgreSQL or Docker is acceptable for development. |
 | Authentication | Better Auth + Drizzle adapter + Fastify integration | Established sessions/authentication with server-side authorization. |
@@ -64,13 +64,13 @@ A frontend SPA and separate API fit the hosting split. Docker packaging is allow
 | API state | TanStack Query | Loading, retry, save, and request status; CodeMirror owns active editor state. |
 | Artifacts | Bounded PostgreSQL binary storage for MVP; browser-local PDF output by default | Avoid a mandatory S3 account or persistent disk; durable source/assets live in the database. Abstract storage for later growth. |
 | Verification | Vitest + Playwright; native PostgreSQL integration tests | Real workflows using native services, managed development databases, or available Docker-based fixtures; disclose checks that could not run. |
-| Deployment | Vercel Hobby frontend + Render Free API + Neon Free PostgreSQL | Docker permitted; no required Redis or dedicated background-worker subscription. Stay within free plan eligibility/quotas. |
+| Deployment | Commercial-compatible frontend/API hosts pending; Neon Free database candidate | Docker permitted; no required Redis or paid worker. Commercial permission, no-card eligibility and production suitability must be demonstrated separately. |
 
 Use stable compatible dependencies, commit a lockfile, and avoid selecting beta packages from search results. Create packages only when they contain real shared behavior.
 
 ### Hosting and budget facts to account for
 
-Render supports native Node and Docker deployment. Its free web services sleep after inactivity and use ephemeral local files; persist project data in the database. Free Render Postgres currently expires after 30 days, and dedicated background workers have no free instances. Accordingly, the first release has no always-on worker dependency. See the official references below.
+Render supports native Node and Docker deployment. Its free web services sleep after inactivity and use ephemeral local files; persist project data in the database. Render explicitly advises against using free instances for production applications, so this is a staging option rather than an approved commercial launch backend. Free Render Postgres currently expires after 30 days, and dedicated background workers have no free instances. Accordingly, the first release has no always-on worker dependency. See the official references below.
 
 Recommend Neon Free rather than Render's expiring free database. Neon's checked pricing advertises no payment card, no time limit, 1 GB storage and 100 CU-hours monthly per project. This is quota-limited hosting, not unlimited storage/compute; validate signup and the actual database connection in Part 0. Do not select a paid plan or trial.
 
@@ -80,13 +80,14 @@ AI inference needs its own provider access. Groq documents a Free tier and model
 
 | Candidate | Fits the user's no-card/free requirement? | Decision |
 | --- | --- | --- |
-| Render Free web service | Render documents no-card free deployment and Docker support | Recommended backend host; verify account eligibility, deploy, and benchmark before claiming the complete compiler works. |
+| Render Free web service | Published free deployment and Docker support; provider advises against production use | Staging candidate only; validate capacity/isolation there without treating it as commercial launch approval. |
 | Neon Free PostgreSQL | Published $0, no-card plan without a trial expiry; quotas apply | Recommended database; validate signup and connection before implementation depends on it. |
-| Vercel Hobby | Free personal/non-commercial hosting | Preferred frontend for this personal MVP; reassess the plan before commercial use. |
+| Vercel Hobby | Restricted to personal, non-commercial use | Excluded following commercial-use clarification. |
+| Cloudflare static hosting / Pages Functions | Documented free static hosting and quota-limited functions | Frontend candidate for evaluation; verify applicable commercial terms, no-card account eligibility, asset limits and same-origin API proxy before selecting. |
 | Northflank Sandbox | Billing docs require a payment method for all plans | Excluded under the user's current requirement, despite free resource allowances. |
 | Hugging Face Docker Spaces | Current docs require a paid plan to create compute Spaces | Excluded as a no-subscription Docker host. CPU Basic having no hourly charge does not remove the creation requirement. |
 
-This is a feasible hosting proposal for a quota-limited MVP, not evidence that every original feature fits on free compute. No accounts, databases, or deployed compiler have been created or tested. Use one Render API service initially; additional free services share the workspace's instance-hours allowance. A database connection to Neon is external traffic from Render and must remain within its usage policies. Avoid large retained PDFs/assets and continuous background polling.
+The original personal-project hosting proposal is superseded. A complete commercial launch stack satisfying the zero-budget requirement is not yet demonstrated. No accounts, databases, or deployed compiler have been created or tested. For Render staging evaluation, additional free services share the workspace's instance-hours allowance and external traffic must remain within its usage policies. Avoid large retained PDFs/assets and continuous background polling.
 
 ### Compiler feasibility gate: Part 0A - compare server and browser execution
 
@@ -109,14 +110,14 @@ The prototype must verify:
 The diagram shows the browser execution option. If Part 0A validates server compilation, replace its compiler worker with an authorized API-to-compiler boundary and document the execution isolation. Do not infer that a Dockerized API can securely execute arbitrary user TeX in-process.
 
 ```text
-Vercel: React/Vite static frontend
+Selected commercial-compatible frontend: React/Vite static assets
   |-- CodeMirror editor and PDF.js preview
   |-- Dedicated Web Worker: WASM LaTeX compilation
   |-- Dedicated Web Worker: bounded PDF extraction/checks
   |
-  | /api/* via Vercel external rewrite (Vite proxy locally)
+  | /api/* via validated same-origin proxy (Vite proxy locally)
   v
-Render Free: Node/Fastify API (Docker or native)
+Node/Fastify API: commercial launch host pending (Render Free for staging only)
   |-- Better Auth sessions and project authorization
   |-- PostgreSQL: projects, files/assets, snapshots, reports
   |-- Bounded provider calls: AI proposals and job-match explanations
@@ -126,7 +127,7 @@ Validated results returned to browser for review
 
 ### Cross-host authentication
 
-Prefer same-origin browser requests to `/api/*`, externally rewritten by Vercel to Render. The rewrite is routing; business logic and credentials remain on Render. Validate this in Part 0B rather than assuming cross-site cookies between `vercel.app` and `onrender.com` will work in every browser.
+Prefer same-origin browser requests to `/api/*`, proxied to the API by the selected commercial-compatible frontend host. The proxy is routing; business logic and credentials remain on the API host. Validate this in Part 0B rather than assuming cross-site cookies between provider domains will work in every browser. The original Vercel rewrite template is historical and cannot be used with Hobby for this commercial product.
 
 Configure the auth public URL, trusted origins, secure host-only cookies, CSRF/origin checks, and any trusted proxy headers deliberately. Test sign-in, refresh, sign-out, password flows, multiple `Set-Cookie` headers, and direct unauthorized API access. Use an explicit preview-origin allowlist, not a wildcard for all Vercel deployments. Return `private, no-store` for protected responses and verify the rewrite/CDN does not cache user data. Avoid bearer tokens in browser local storage as a shortcut.
 
@@ -216,6 +217,8 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 **Owner:** A2; A3 adds dashboard UI. **Depends on:** Part 0 core contracts/auth validation. **Status:** [ ]
 
+**Partial prerequisites delivered:** authenticated project creation/list/read, text-file creation/update, ownership checks, server hashes, quotas, and optimistic versions from Part 2; immutable text snapshot capture/read for Part 3 export. Full CRUD, main-file selection, assets, snapshot restore, email/account lifecycle, and hosted auth checks remain pending. Part 1 is not complete.
+
 - Implement Better Auth sign-up/sign-in/sign-out and session validation. Specify verification/reset delivery before public release.
 - Add project/file CRUD, main-file selection, bounded assets, normalized paths, and optimistic file versions.
 - Authorize every project, file, snapshot, proposal, report, and artifact operation. IDs never grant access.
@@ -226,7 +229,9 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 ### Part 2 - Editor workspace and autosave
 
-**Owner:** A3. **Depends on:** Parts 0-1. **Status:** [ ]
+**Owner:** A3. **Depends on:** Parts 0-1. **Status:** [x] Local editor/autosave verified; hosted prerequisites remain open.
+
+**Implementation update:** `/projects` and `/projects/:projectId` provide a real PostgreSQL-backed writing desk, CodeMirror LaTeX editing, resizable panels, tabs/search/shortcuts, serialized debounced saves, explicit conflict resolution, private tab recovery, and a PDF.js local-file preview. The typed compiler boundary reports unavailable until Part 0A passes; no engine or mock compilation is wired in. Evidence, migration details, and remaining prerequisites: [docs/part-2.md](docs/part-2.md).
 
 - Build resizable file tree/editor/PDF panels, tabs, search, shortcuts, keyboard focus, and save indicators.
 - Integrate CodeMirror 6 with verified LaTeX syntax/completion and a typed compiler adapter.
@@ -238,6 +243,8 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 ### Part 3 - LaTeX compilation and export (validated execution route)
 
 **Owner:** A4; A3 integrates UI. **Depends on:** Part 0A, snapshots from Part 1, workspace from Part 2. **Status:** [ ]
+
+**Implementation update (2026-10-20):** immutable text snapshots and complete project source ZIP export are implemented. No compiler route passed Part 0A, so engine integration and real PDF generation remain blocked by the repository gate. The user confirmed no staging setup is available. See [docs/part-3.md](docs/part-3.md) for exact delivered behavior, checks, and remaining work. This is partial prerequisite delivery, not a completed compiler.
 
 - Integrate the engine/route selected by Part 0A: browser WASM in a worker, or the server compiler only after capacity and execution-isolation gates pass. Pin package/font assets and enforce per-job input boundaries.
 - Compile a consistent source/asset snapshot, load the entry file, perform supported passes, and return actual PDF bytes/diagnostics.
@@ -304,14 +311,14 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 **Completion:** Relevant lint/type/build/tests and actual browser/service workflows pass; unverified deployment behavior and supported-device limits are recorded honestly.
 
-### Part 8 - Free-hosted deployment and release
+### Part 8 - Commercial-compatible free-hosted deployment and release
 
 **Owner:** A1/A0; A2 validates auth/storage. **Depends on:** Part 7, validated free database access, and compiler feasibility. **Status:** [ ]
 
-- Prepare separate monorepo deployment configurations: Vercel builds only the static frontend; Render builds/starts the Node API using the selected Docker/native runtime; any compiler service must independently fit the free plan and shared hours.
-- Configure Vercel SPA fallback and `/api/*` external rewrite in the correct order. Preserve `/api` paths, auth cookies, headers, and error status; test timeouts and cache behavior.
-- Use Render Free with explicit runtime/plan, pinned dependencies, `PORT`/host binding, health checks, migrations, and environment validation. Docker builds/images are permitted; do not select paid instances or assume an accessible Docker daemon inside the deployed service.
-- Keep all runtime secrets on Render. Expose only explicitly public configuration and compiler assets on Vercel.
+- Select commercially eligible frontend/API hosts that pass the no-card budget and production suitability gates. Prepare separate monorepo builds for static frontend and Node API; any compiler service must independently satisfy capacity, isolation and hosting constraints. Render Free remains a staging candidate only.
+- Configure SPA fallback and same-origin `/api/*` proxy in the correct order on the selected frontend. Preserve paths, auth cookies, headers, and error status; test timeouts and cache behavior. Vercel Hobby is excluded.
+- Pin dependencies and validate `PORT`/host binding, health checks, migrations and runtime environment on the selected API host. Docker builds/images are permitted; do not select paid instances or assume an accessible Docker daemon inside the deployed service.
+- Keep runtime secrets on the API host. Expose only explicitly public configuration and compiler assets on the frontend.
 - Configure the chosen durable PostgreSQL connection, upload/retention limits, manual/managed backup and restore, HTTPS, auth URLs, and HTTP-based email delivery if required.
 - Test compiler asset URLs, download limits, package cache, licensing distribution, required headers, and real-browser behavior from the deployed frontend.
 - Make cold-start states and retriable API failures clear. Do not depend on uninterrupted background execution or keepalive workarounds.
@@ -374,8 +381,9 @@ Read AGENTS.md and the relevant product, architecture, and contracts.
 Inspect current code before editing.
 
 Constraints: no payment card, paid subscription, or expiring trial credits.
-Docker is allowed. Preferred deployment: Vercel Hobby frontend, Render
-Free backend, Neon Free database. Use only the compiler route proven
+Docker is allowed. Commercial launch hosting is pending selection; Vercel
+Hobby is excluded, Render Free is staging-only, and Neon Free is a database
+candidate pending eligibility/capacity checks. Use only the compiler route proven
 in Part 0A; do not assume service-level Docker is per-job isolation.
 
 Dependencies verified: [parts/branch/commit].
@@ -411,14 +419,17 @@ only for gates actually demonstrated.
 | Item | Status |
 | --- | --- |
 | Initial repository inspection | Complete; findings recorded above |
-| Hosting requirements | Confirmed: free hosting without a payment card; Docker allowed |
+| Hosting requirements | Commercial use confirmed; free/no-card constraints retained; Vercel Hobby excluded; launch hosts pending |
 | Revised architecture/roadmap | Prepared in this file |
 | Server/browser compiler comparison | Gate open; synthetic fixtures and evaluation protocol prepared; no route selected |
 | Local authentication prototype | Verified against native PostgreSQL and Chromium through the Vite proxy; actual staging hosts pending |
 | Part 0 | In progress; local foundation implemented; hosted access/auth and compiler gates pending |
-| Parts 1-9 | Not started |
+| Part 1 | Minimal persistence plus immutable text snapshot capture/read delivered; account/project/assets/restore features pending |
+| Part 2 | Local workspace/autosave verified; compiler adapter intentionally unavailable |
+| Part 3 | Text snapshots and source ZIP export delivered; engine integration blocked on Part 0A; incomplete |
+| Parts 4-9 | Not started |
 
-**Next task:** complete the open Part 0 gates: validate no-card Render/Neon eligibility and a real database connection, compare server/browser compiler feasibility, and verify the authentication prototype on actual Vercel/Render staging hosts. The local scaffold/contracts now exist; no deployment has been performed. Docker is allowed; resource limits and safe compilation remain measured gates. See [docs/part-0.md](docs/part-0.md) for exact local checks and remaining work.
+**Next task:** revise and validate hosting for commercial use within the no-card budget, establish a real database connection, compare compiler feasibility, and verify authentication on the selected staging hosts. Vercel Hobby is excluded; existing Vercel rewrite examples are historical and unapproved for this product. No commercial launch host or compiler route has been selected. See [docs/commercial-use.md](docs/commercial-use.md) and [docs/part-0.md](docs/part-0.md) for gates and local evidence.
 
 ## 10. Primary references
 

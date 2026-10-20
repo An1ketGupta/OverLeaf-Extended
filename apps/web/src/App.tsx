@@ -1,6 +1,14 @@
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, lazy, Suspense, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router";
 import { authAction, getSession, getStatus } from "./api.js";
+import { announceLogout } from "./features/workspace/drafts.js";
+import { Projects } from "./features/workspace/Projects.js";
+
+const Workspace = lazy(() =>
+  import("./features/workspace/Workspace.js").then((module) => ({
+    default: module.Workspace,
+  })),
+);
 
 type Status = Awaited<ReturnType<typeof getStatus>>;
 
@@ -117,11 +125,14 @@ function Foundation() {
         </div>
         <div className="next-content">
           <p>
-            This is the foundation prototype. Project editing, compilation, and
-            resume analysis will arrive in the next roadmap stages.
+            Open your writing desk to edit and save private LaTeX projects.
+            Compilation and resume analysis are still in progress.
           </p>
           <Link className="primary-button" to="/auth-check">
             Open authentication check <span aria-hidden="true">↗</span>
+          </Link>
+          <Link className="primary-button" to="/projects">
+            Open projects ↗
           </Link>
           <span className="small-note">
             Use synthetic test accounts while setup is in progress.
@@ -174,6 +185,7 @@ function AuthCheck() {
     setBusy(true);
     try {
       await authAction("sign-out", {});
+      announceLogout();
       setSession(await getSession());
       setMessage("Signed out.");
     } catch {
@@ -204,6 +216,9 @@ function AuthCheck() {
         <div>
           <p>
             Signed in as <strong>{session.user.email}</strong>
+          </p>
+          <p>
+            <Link to="/projects">Open your projects ↗</Link>
           </p>
           <button
             className="primary-button"
@@ -254,7 +269,7 @@ function AuthCheck() {
   );
 }
 
-export function App() {
+function FoundationApp() {
   return (
     <div className="shell">
       <header>
@@ -288,5 +303,28 @@ export function App() {
         <span>Private by design. Built step by step.</span>
       </footer>
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <Routes>
+      <Route path="/projects" element={<Projects />} />
+      <Route
+        path="/projects/:projectId"
+        element={
+          <Suspense
+            fallback={
+              <p className="workspace-gate" role="status">
+                Opening your workspace…
+              </p>
+            }
+          >
+            <Workspace />
+          </Suspense>
+        }
+      />
+      <Route path="*" element={<FoundationApp />} />
+    </Routes>
   );
 }

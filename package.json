@@ -15,7 +15,7 @@
     "format": "biome check --write .",
     "typecheck": "tsc --noEmit -p tsconfig.json && pnpm -r typecheck",
     "test": "vitest run --config vitest.config.ts",
-    "test:integration": "tsx --env-file-if-exists=.env scripts/integration.ts",
+    "test:integration": "tsx --env-file-if-exists=.env scripts/integration.ts && tsx --env-file-if-exists=.env scripts/projects-integration.ts && tsx --env-file-if-exists=.env scripts/snapshots-integration.ts",
     "test:e2e": "playwright test",
     "build": "pnpm -r build",
     "db:generate": "drizzle-kit generate --config=packages/db/drizzle.config.ts",

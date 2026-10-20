@@ -1,5 +1,11 @@
 # Part 0B: deployed authentication acceptance
 
+Commercial-use clarification supersedes the Vercel Hobby proposal. Follow
+commercial-use.md to select eligible staging hosts first; adapt host-specific
+steps and cache headers below to the selected frontend/API proxy. All cookie,
+origin, isolation and recovery acceptance criteria still apply. No host is yet
+approved for commercial launch.
+
 Local evidence covers the Better Auth/Drizzle handler, separate Set-Cookie values,
 Secure/HttpOnly/SameSite/host-only attributes, session restoration and revocation,
 missing/foreign Origin rejection, and private no-store responses. Browser tests

@@ -1,8 +1,10 @@
 # Product flows and Part 0 scope
 
-The current application is a foundation prototype. `/` shows live API/database
-readiness and the pending compiler gate. `/auth-check` exercises the real auth
-bridge with synthetic accounts. It is not a project editor.
+`/` shows live API/database readiness and the pending compiler gate. `/auth-check`
+exercises the real auth bridge with synthetic accounts. `/projects` opens private
+projects, and `/projects/:projectId` edits/autosaves actual source with explicit
+conflict review and private tab recovery. Its PDF.js preview opens local PDFs;
+compilation remains unavailable. See part-2.md for verified local behavior.
 
 The first product journey is account -> private template copy -> edit/autosave ->
 immutable snapshot -> actual compile -> preview/download. Save conflicts preserve
@@ -21,5 +23,6 @@ hash. Failed/image-only extraction yields unknown checks, not a fabricated score
 Uploaded and browser-generated PDFs are client-provided artifacts. An internal
 estimate is neither an employer ATS score nor a hiring probability.
 
-Parts 1-6 implement those flows. They are described here so contracts and ownership
-remain coherent; Part 0 does not claim those product features already exist.
+Parts 1-6 implement the complete flows. Part 2 and its minimum project/file storage
+prerequisite are implemented locally; full Part 1, hosted gates and compiler/AI/
+analysis workflows remain pending.

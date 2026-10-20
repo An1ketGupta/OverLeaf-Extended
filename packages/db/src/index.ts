@@ -4,6 +4,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import pg from "pg";
 import * as schema from "./schema.js";
 
+export { ProjectError, projectRepository } from "./projects.js";
 export { schema };
 export function createDatabase(connectionString: string) {
   const pool = new pg.Pool({
@@ -24,6 +25,9 @@ export function createDatabase(connectionString: string) {
       // Probe the migrated schema as well as connectivity.
       await pool.query('SELECT 1 FROM "user" LIMIT 0');
       await pool.query('SELECT 1 FROM "session" LIMIT 0');
+      await pool.query('SELECT 1 FROM "project" LIMIT 0');
+      await pool.query('SELECT 1 FROM "project_file" LIMIT 0');
+      await pool.query('SELECT 1 FROM "project_snapshot" LIMIT 0');
     },
     migrate: () =>
       migrate(db, {

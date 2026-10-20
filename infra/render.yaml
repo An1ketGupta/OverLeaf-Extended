@@ -1,4 +1,6 @@
 # Template for one native Node API service. No resources are provisioned by this file.
+# Commercial-use update: staging candidate only; launch hosting is unselected.
+# See docs/commercial-use.md. Render advises against Free instances for production.
 services:
   - type: web
     name: overleaf-pro-api

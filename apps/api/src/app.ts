@@ -8,6 +8,7 @@ import { fromNodeHeaders } from "better-auth/node";
 import Fastify from "fastify";
 import { createAuth } from "./auth.js";
 import type { Config } from "./config.js";
+import { registerProjectRoutes } from "./projects.js";
 
 export function buildApp(
   config: Config,
@@ -176,6 +177,7 @@ export function buildApp(
       expiresAt: result.session.expiresAt.toISOString(),
     });
   });
+  registerProjectRoutes(app, database, auth);
   app.addHook("onClose", async () => {
     if (!options.database) await database?.close();
   });

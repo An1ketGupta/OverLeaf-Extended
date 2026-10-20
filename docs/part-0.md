@@ -1,8 +1,14 @@
 # Part 0 progress — 2026-10-20
 
+**Commercial-use update:** see [commercial-use.md](commercial-use.md). Vercel
+Hobby is excluded and Render Free is a staging candidate only. Commercial launch
+hosts remain unselected; older host-specific checks below record the original
+prototype plan and do not approve that plan for launch.
+
 **In progress.** The local foundation and authentication prototype work. Compiler
-feasibility and account-dependent hosting checks remain open. Parts 1-9 are not
-started and no compiler route is approved.
+feasibility and account-dependent hosting checks remain open. Later editor and
+minimal persistence work is recorded in [Part 2 progress](part-2.md); no compiler
+route is approved. The checks below describe the original Part 0 verification.
 
 ## Implemented
 
