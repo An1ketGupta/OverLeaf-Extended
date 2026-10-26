@@ -6,13 +6,28 @@ import {
 import { createDatabase, type Database } from "@overleaf-pro/db";
 import { fromNodeHeaders } from "better-auth/node";
 import Fastify from "fastify";
+import { registerAssistanceRoutes } from "./assistance.js";
+import {
+  type AssistantProvider,
+  createAssistantProvider,
+} from "./assistant-provider.js";
 import { createAuth } from "./auth.js";
 import type { Config } from "./config.js";
 import { registerProjectRoutes } from "./projects.js";
 
+export const safeRequestPath = (url: string) =>
+  (url.split("?")[0] ?? "/").replace(
+    /(\/api\/auth\/reset-password\/)[^/]+/g,
+    "$1[redacted]",
+  );
+
 export function buildApp(
   config: Config,
-  options: { database?: Database; logger?: boolean } = {},
+  options: {
+    database?: Database;
+    logger?: boolean;
+    assistantProvider?: AssistantProvider;
+  } = {},
 ) {
   const database =
     options.database ??
@@ -29,7 +44,7 @@ export function buildApp(
           serializers: {
             req: (request) => ({
               method: request.method,
-              url: request.url.split("?")[0] ?? "/",
+              url: safeRequestPath(request.url),
             }),
           },
         }
@@ -41,6 +56,7 @@ export function buildApp(
   app.addHook("onRequest", async (request, reply) => {
     reply.header("Cache-Control", "private, no-store");
     reply.header("X-Content-Type-Options", "nosniff");
+    reply.header("Referrer-Policy", "no-referrer");
     reply.header("X-Request-Id", request.id);
     const requestOrigin = request.headers.origin;
     if (requestOrigin && !config.trustedOrigins.includes(requestOrigin)) {
@@ -125,6 +141,18 @@ export function buildApp(
             requestId: request.id,
           },
         });
+      if (
+        request.url.split("?")[0] === "/api/auth/sign-up/email" &&
+        config.MAIL_ENABLED !== "true"
+      )
+        return reply.code(503).send({
+          error: {
+            code: "UNAVAILABLE",
+            message:
+              "Start and enable the local email service before creating an account.",
+            requestId: request.id,
+          },
+        });
       // Use configured public origin rather than trusting client Host/Forwarded headers.
       const response = await auth.handler(
         new Request(new URL(request.url, config.APP_ORIGIN), {
@@ -160,7 +188,7 @@ export function buildApp(
     });
     const cookies = headers.getSetCookie();
     if (cookies.length) reply.header("set-cookie", cookies);
-    if (!result)
+    if (!result?.user.emailVerified)
       return reply.code(401).send({
         error: {
           code: "UNAUTHORIZED",
@@ -178,7 +206,21 @@ export function buildApp(
     });
   });
   registerProjectRoutes(app, database, auth);
+  registerAssistanceRoutes(
+    app,
+    database,
+    auth,
+    config,
+    options.assistantProvider ??
+      (config.AI_SHARING_ENABLED === "true" && config.GROQ_API_KEY
+        ? createAssistantProvider({
+            key: config.GROQ_API_KEY,
+            model: config.AI_MODEL,
+          })
+        : undefined),
+  );
   app.addHook("onClose", async () => {
+    await auth?.drainMail();
     if (!options.database) await database?.close();
   });
   return app;
