@@ -20,7 +20,7 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: [
     {
-      command: "pnpm exec tsx scripts/e2e-api.ts",
+      command: "pnpm exec tsx scripts/recovery-server.ts",
       url: "http://127.0.0.1:3101/api/health",
       reuseExistingServer: false,
       env: {

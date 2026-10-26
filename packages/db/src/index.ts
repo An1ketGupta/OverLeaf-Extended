@@ -18,6 +18,11 @@ export function createDatabase(connectionString: string) {
   });
   // A sleeping/disconnected managed database must not crash the API on an idle socket.
   pool.on("error", () => {});
+  // Checked-out clients no longer have the pool's idle error listener. A dropped
+  // transaction socket can emit an error between query rejection and rollback;
+  // handle that event without logging its potentially sensitive database details.
+  // Pending queries still reject and pg removes unusable clients on release.
+  pool.on("connect", (client) => client.on("error", () => {}));
   const db = drizzle(pool, { schema });
   return {
     db,
