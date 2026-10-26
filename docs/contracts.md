@@ -1,5 +1,31 @@
 # Contracts, revisions, and ownership
 
+## Part 7 backup recovery contract
+
+POST `/api/projects/import` accepts strict `{name,mainFile,files:[{path,content}],
+assets:[{path,dataBase64}]}` and returns a new private project (201). It authorizes
+the current verified account, validates the same tree/byte/path limits as live
+projects, checks asset signatures and account quotas, recomputes all hashes, and
+creates the full tree in one transaction. IDs and versions are fresh; archive
+ownership, old IDs, versions and hashes grant no authority. Failure leaves no
+partial project. Repeating an import can create another copy; never retry it
+automatically after a lost response. Maximum encoded request size is 50 MiB
+(valid 8 MiB source can expand sixfold in JSON). Other route limits are unchanged.
+
+New source backups use `overleaf-pro-source-v2`: the existing v1 metadata/entry
+layout with `captureId` replacing `snapshotId`, identifying an ephemeral consistent
+capture, not a retained history row. POST `/api/projects/:id/export-input` accepts
+strict `{baseRevision}` and returns the same ephemeral capture shape as compile-input,
+using its locked source capture without consuming history retention. Its encoded
+response cap is 50 MiB so valid escaped source can be backed up even when it exceeds
+the compiler's separate 16 MiB transport cap. v1
+archives remain importable. Import accepts only bounded ZIP32 stored entries as
+produced by this exporter, validates local/central metadata and CRCs, then checks
+manifest SHA-256, strict schemas, decoded UTF-8 and exact entry membership.
+Archives recover one revision into a new project; they contain no account,
+session, complete history, proposal or report backup. Client manifest hashes
+detect accidental corruption and are not attestation.
+
 ## Part 1 lifecycle contract (2026-10-25)
 
 Private project and assistance/report routes require a verified user as well as
@@ -210,19 +236,22 @@ The product uses sourceSnapshotSchema with full inline assets. Duplicate file ID
 file/directory path conflicts are rejected in addition to the existing bounds.
 
 Export project saves all recoverable editor buffers, checks the full saved file
-set against a fresh project read, then captures that exact revision. Conflicts,
+set against a fresh project read, then captures that exact revision without
+allocating retained history. Conflicts,
 unresolved recovery, failed saves and unseen remote changes stop export. Later
 typing can continue; the downloaded ZIP contains the captured saved revision.
 Navigation/logout suppress late downloads. Browser SHA-256 checks catch accidental
 corruption; they do not attest that a PDF was compiled from these bytes.
 
 The ZIP contains UTF-8 text at `source/<path>` and `snapshot.json` outside that
-tree, with format `overleaf-pro-source-v1`, snapshot/project IDs, revision, creation
+tree. New exports use `overleaf-pro-source-v2`, capture/project IDs, revision, creation
 time, prefixed main-file path, and file ID/path/version/hash entries. No document
 text is duplicated in the manifest. ZIP uses pinned fflate 0.8.3 with stored
 entries (no compression), bounded by the existing project input limits plus ZIP
 and manifest overhead. Assets appear at source/<path> with their metadata/hash in
-the manifest; base64 data is not duplicated there. Extract and compile from source/
+the manifest; base64 data is not duplicated there. Legacy v1 archives identify a
+retained snapshot instead of an ephemeral capture and remain supported for import.
+Extract and compile from source/
 using the selected local engine's supported package subset or an external TeX setup.
 
 `compileRequestSchema`: `{type:"compile",requestId,snapshot}` or

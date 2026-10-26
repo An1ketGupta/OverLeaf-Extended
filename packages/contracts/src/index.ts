@@ -13,6 +13,8 @@ export const limits = {
   accountSnapshotBytes: 32 * 1024 * 1024,
   accountAssetBytes: 32 * 1024 * 1024,
   compileInputBytes: 16 * 1024 * 1024,
+  backupArchiveBytes: 9 * 1024 * 1024,
+  importRequestBytes: 50 * 1024 * 1024,
 } as const;
 
 export const errorSchema = z
@@ -217,7 +219,7 @@ export const createSnapshotSchema = z
 export const restoreSnapshotSchema = z
   .object({ baseRevision: z.int().positive() })
   .strict();
-export const compileInputSchema = z
+const sourceCaptureSchema = z
   .object({
     kind: z.literal("ephemeral"),
     captureId: z.uuid(),
@@ -225,12 +227,21 @@ export const compileInputSchema = z
   })
   .strict()
   .refine(
-    (input) =>
-      input.captureId === input.snapshot.id &&
-      new TextEncoder().encode(JSON.stringify(input)).length <=
-        limits.compileInputBytes,
+    (input) => input.captureId === input.snapshot.id,
     "Capture identifier mismatch",
   );
+export const compileInputSchema = sourceCaptureSchema.refine(
+  (input) =>
+    new TextEncoder().encode(JSON.stringify(input)).length <=
+    limits.compileInputBytes,
+  "Serialized compiler input exceeds 16 MiB",
+);
+export const exportInputSchema = sourceCaptureSchema.refine(
+  (input) =>
+    new TextEncoder().encode(JSON.stringify(input)).length <=
+    limits.importRequestBytes,
+  "Serialized export input exceeds 50 MiB",
+);
 export type CompileInput = z.infer<typeof compileInputSchema>;
 const compilerShardSchema = z
   .object({
@@ -321,6 +332,105 @@ export const projectNameSchema = z
 export const createProjectSchema = z
   .object({ name: projectNameSchema, templateId: templateIdSchema.optional() })
   .strict();
+export const importProjectSchema = z
+  .object({
+    name: projectNameSchema,
+    mainFile: projectPathSchema.refine((path) => path.endsWith(".tex")),
+    files: z
+      .array(sourceFileSchema.pick({ path: true, content: true }))
+      .min(1)
+      .max(limits.projectFiles),
+    assets: z
+      .array(
+        z
+          .object({ path: projectPathSchema, dataBase64: assetBase64Schema })
+          .strict(),
+      )
+      .max(limits.projectFiles),
+  })
+  .strict()
+  .superRefine((tree, context) => {
+    const entries = [...tree.files, ...tree.assets];
+    const paths = entries.map((entry) => entry.path);
+    const bytes =
+      tree.files.reduce(
+        (sum, file) => sum + new TextEncoder().encode(file.content).length,
+        0,
+      ) +
+      tree.assets.reduce(
+        // Child schemas check validity; this refinement can still run after a
+        // continuable child error, so avoid decoding malformed input again.
+        (sum, asset) =>
+          sum +
+          Math.floor(asset.dataBase64.length / 4) * 3 -
+          (asset.dataBase64.endsWith("==")
+            ? 2
+            : asset.dataBase64.endsWith("=")
+              ? 1
+              : 0),
+        0,
+      );
+    if (
+      paths.length > limits.projectFiles ||
+      bytes > limits.projectBytes ||
+      new Set(paths).size !== paths.length ||
+      paths.some((path) =>
+        paths.some((parent) => path.startsWith(`${parent}/`)),
+      ) ||
+      !tree.files.some((file) => file.path === tree.mainFile)
+    )
+      context.addIssue({
+        code: "custom",
+        message: "Invalid or oversized project tree",
+      });
+  });
+export type ImportProject = z.infer<typeof importProjectSchema>;
+const backupPathSchema = z
+  .string()
+  .max(247)
+  .refine(
+    (path) =>
+      path.startsWith("source/") &&
+      projectPathSchema.safeParse(path.slice(7)).success,
+  );
+const backupMetadata = {
+  projectId: z.uuid(),
+  revision: z.int().positive(),
+  createdAt: z.iso.datetime(),
+  mainFile: backupPathSchema,
+  files: z
+    .array(
+      sourceFileSchema
+        .omit({ content: true })
+        .extend({ path: backupPathSchema }),
+    )
+    .min(1)
+    .max(limits.projectFiles),
+  assets: z
+    .array(
+      z
+        .object(sourceAssetSchema.shape)
+        .omit({ dataBase64: true })
+        .extend({ path: backupPathSchema }),
+    )
+    .max(limits.projectFiles),
+};
+export const backupManifestSchema = z.union([
+  z
+    .object({
+      ...backupMetadata,
+      format: z.literal("overleaf-pro-source-v1"),
+      snapshotId: z.uuid(),
+    })
+    .strict(),
+  z
+    .object({
+      ...backupMetadata,
+      format: z.literal("overleaf-pro-source-v2"),
+      captureId: z.uuid(),
+    })
+    .strict(),
+]);
 export const createTextFileSchema = z
   .object({
     baseRevision: z.int().positive(),

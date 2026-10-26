@@ -3,6 +3,8 @@ import {
   type AiOutput,
   type AiRequest,
   aiProposalSchema,
+  type ImportProject,
+  importProjectSchema,
   limits,
   type SourceAsset,
   type SourceFile,
@@ -376,22 +378,29 @@ export function projectRepository(pool: pg.Pool) {
         ]);
       });
     },
-    async compileInput(userId: string, id: string, baseRevision: number) {
+    async compileInput(
+      userId: string,
+      id: string,
+      baseRevision: number,
+      purpose: "compile" | "export" = "compile",
+    ) {
       return transaction(async (client) => {
         const project = await owned(client, userId, id);
         if (project.revision !== baseRevision)
           throw new ProjectError(
             409,
-            "Project changed before compilation. Reload and review saved files.",
+            "Project changed before capture. Reload and review saved files.",
           );
         const snapshot = await consistentInput(client, project);
         if (
           Buffer.byteLength(JSON.stringify(snapshot)) + 200 >
-          limits.compileInputBytes
+          (purpose === "export"
+            ? limits.importRequestBytes
+            : limits.compileInputBytes)
         )
           throw new ProjectError(
             400,
-            "Serialized compilation input exceeds 16 MiB",
+            "Serialized capture input exceeds the transport limit",
           );
         return { kind: "ephemeral" as const, captureId: snapshot.id, snapshot };
       });
@@ -967,6 +976,55 @@ export function projectRepository(pool: pg.Pool) {
           );
         }
         return id;
+      });
+    },
+    async importProject(userId: string, input: ImportProject) {
+      const tree = importProjectSchema.parse(input);
+      const images = tree.assets.map((asset) => ({
+        ...asset,
+        ...image(asset.path, asset.dataBase64),
+      }));
+      return transaction(async (client) => {
+        const owner = await client.query(
+          'SELECT id FROM "user" WHERE id=$1 FOR UPDATE',
+          [userId],
+        );
+        if (!owner.rowCount) throw new ProjectError(404, "Account not found");
+        const usage = await client.query<{ count: number; bytes: string }>(
+          "SELECT (SELECT count(*)::int FROM project WHERE user_id=$1) AS count, COALESCE(sum(octet_length(data)),0)::text AS bytes FROM project_asset WHERE project_id IN (SELECT id FROM project WHERE user_id=$1)",
+          [userId],
+        );
+        if ((usage.rows[0]?.count ?? 0) >= 100)
+          throw new ProjectError(400, "Project limit reached");
+        if (
+          Number(usage.rows[0]?.bytes ?? 0) +
+            images.reduce((sum, asset) => sum + asset.data.length, 0) >
+          limits.accountAssetBytes
+        )
+          throw new ProjectError(400, "Account asset storage limit reached");
+        const id = randomUUID();
+        await client.query(
+          "INSERT INTO project (id,user_id,name,main_file) VALUES ($1,$2,$3,$4)",
+          [id, userId, tree.name, tree.mainFile],
+        );
+        for (const file of tree.files)
+          await client.query(
+            "INSERT INTO project_file (id,project_id,path,content,sha256) VALUES ($1,$2,$3,$4,$5)",
+            [randomUUID(), id, file.path, file.content, hash(file.content)],
+          );
+        for (const asset of images)
+          await client.query(
+            "INSERT INTO project_asset (id,project_id,path,media_type,sha256,data) VALUES ($1,$2,$3,$4,$5,$6)",
+            [
+              randomUUID(),
+              id,
+              asset.path,
+              asset.mediaType,
+              asset.sha256,
+              asset.data,
+            ],
+          );
+        return readProject(client, userId, id);
       });
     },
     async addFile(

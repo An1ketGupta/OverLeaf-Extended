@@ -7,6 +7,9 @@ import {
   createSnapshotSchema,
   createTextFileSchema,
   deleteEntrySchema,
+  exportInputSchema,
+  importProjectSchema,
+  limits,
   mainFileSchema,
   projectListSchema,
   projectSchema,
@@ -34,6 +37,12 @@ export function registerProjectRoutes(
   database: Database | undefined,
   auth: Auth | undefined,
 ) {
+  app.route({
+    method: "POST",
+    url: "/api/projects/import",
+    bodyLimit: limits.importRequestBytes,
+    handler: handle,
+  });
   app.route({
     method: ["GET", "POST", "PUT", "DELETE"],
     url: "/api/projects",
@@ -69,6 +78,26 @@ export function registerProjectRoutes(
     const segments =
       request.url.split("?")[0]?.split("/").filter(Boolean) ?? [];
     try {
+      if (
+        segments.length === 3 &&
+        segments[2] === "import" &&
+        request.method === "POST"
+      ) {
+        const body = importProjectSchema.safeParse(request.body);
+        if (!body.success)
+          return fail(
+            400,
+            "INVALID_REQUEST",
+            "Invalid or oversized backup. No project was imported.",
+          );
+        return reply
+          .code(201)
+          .send(
+            projectSchema.parse(
+              await repository.importProject(session.user.id, body.data),
+            ),
+          );
+      }
       if (segments.length === 2) {
         if (request.method === "GET")
           return projectListSchema.parse(
@@ -164,7 +193,7 @@ export function registerProjectRoutes(
       }
       if (
         segments.length === 4 &&
-        segments[3] === "compile-input" &&
+        ["compile-input", "export-input"].includes(segments[3] ?? "") &&
         request.method === "POST"
       ) {
         const body = restoreSnapshotSchema.safeParse(request.body);
@@ -174,11 +203,16 @@ export function registerProjectRoutes(
             "INVALID_REQUEST",
             "Expected project revision required",
           );
-        return compileInputSchema.parse(
+        return (
+          segments[3] === "export-input"
+            ? exportInputSchema
+            : compileInputSchema
+        ).parse(
           await repository.compileInput(
             session.user.id,
             id.data,
             body.data.baseRevision,
+            segments[3] === "export-input" ? "export" : "compile",
           ),
         );
       }
