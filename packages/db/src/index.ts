@@ -4,6 +4,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import pg from "pg";
 import * as schema from "./schema.js";
 
+export { analysisRepository } from "./analyses.js";
 export { ProjectError, projectRepository } from "./projects.js";
 export { schema };
 export function createDatabase(connectionString: string) {
@@ -28,6 +29,11 @@ export function createDatabase(connectionString: string) {
       await pool.query('SELECT 1 FROM "project" LIMIT 0');
       await pool.query('SELECT 1 FROM "project_file" LIMIT 0');
       await pool.query('SELECT 1 FROM "project_snapshot" LIMIT 0');
+      await pool.query('SELECT assets FROM "project_snapshot" LIMIT 0');
+      await pool.query('SELECT 1 FROM "project_asset" LIMIT 0');
+      await pool.query('SELECT 1 FROM "snapshot_name" LIMIT 0');
+      await pool.query('SELECT 1 FROM "ai_proposal" LIMIT 0');
+      await pool.query('SELECT 1 FROM "resume_analysis" LIMIT 0');
     },
     migrate: () =>
       migrate(db, {

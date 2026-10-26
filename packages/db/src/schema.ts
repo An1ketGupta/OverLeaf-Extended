@@ -1,6 +1,7 @@
-import type { SourceFile } from "@overleaf-pro/contracts";
+import type { SourceAsset, SourceFile } from "@overleaf-pro/contracts";
 import {
   boolean,
+  customType,
   index,
   integer,
   jsonb,
@@ -131,6 +132,7 @@ export const projectSnapshot = pgTable(
     mainFile: text("main_file").notNull(),
     createdAt: createdAt(),
     files: jsonb("files").$type<SourceFile[]>().notNull(),
+    assets: jsonb("assets").$type<SourceAsset[]>().notNull().default([]),
     bytes: integer("bytes").notNull(),
   },
   (table) => [
@@ -139,4 +141,62 @@ export const projectSnapshot = pgTable(
       table.revision,
     ),
   ],
+);
+
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType: () => "bytea",
+});
+export const projectAsset = pgTable(
+  "project_asset",
+  {
+    id: uuid("id").primaryKey(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => project.id, { onDelete: "cascade" }),
+    path: text("path").notNull(),
+    version: integer("version").notNull().default(1),
+    sha256: text("sha256").notNull(),
+    mediaType: text("media_type").notNull(),
+    data: bytea("data").notNull(),
+  },
+  (table) => [
+    uniqueIndex("project_asset_path_idx").on(table.projectId, table.path),
+  ],
+);
+
+// Labels are separate from immutable source snapshots. A revision can be named
+// once, including when an earlier export already captured it.
+export const snapshotName = pgTable("snapshot_name", {
+  snapshotId: uuid("snapshot_id")
+    .primaryKey()
+    .references(() => projectSnapshot.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+});
+
+export const aiProposal = pgTable("ai_proposal", {
+  id: uuid("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  projectId: uuid("project_id")
+    .notNull()
+    .references(() => project.id, { onDelete: "cascade" }),
+  fingerprint: text("fingerprint").notNull(),
+  data: jsonb("data").notNull(),
+  context: jsonb("context").notNull(),
+  bytes: integer("bytes").notNull(),
+});
+
+export const resumeAnalysis = pgTable(
+  "resume_analysis",
+  {
+    id: uuid("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: createdAt(),
+    data: jsonb("data").notNull(),
+    bytes: integer("bytes").notNull(),
+  },
+  (table) => [index("resume_analysis_user_idx").on(table.userId)],
 );

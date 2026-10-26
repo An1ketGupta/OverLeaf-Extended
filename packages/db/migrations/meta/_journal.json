@@ -22,6 +22,27 @@
       "when": 1792509058883,
       "tag": "0002_new_the_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792510537854,
+      "tag": "0003_yielding_tony_stark",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792518113906,
+      "tag": "0004_strong_pepper_potts",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792852691679,
+      "tag": "0005_striped_vivisector",
+      "breakpoints": true
     }
   ]
 }
