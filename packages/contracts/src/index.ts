@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export * from "./assistance.js";
+
 export const limits = {
   textFileBytes: 256 * 1024,
   assetBytes: 2 * 1024 * 1024,
@@ -9,6 +11,8 @@ export const limits = {
   pdfBytes: 5 * 1024 * 1024,
   snapshotsPerProject: 20,
   accountSnapshotBytes: 32 * 1024 * 1024,
+  accountAssetBytes: 32 * 1024 * 1024,
+  compileInputBytes: 16 * 1024 * 1024,
 } as const;
 
 export const errorSchema = z
@@ -66,6 +70,59 @@ export const projectPathSchema = z
     "Use a relative POSIX path without traversal or empty segments",
   );
 const hashSchema = z.string().regex(/^[a-f0-9]{64}$/);
+export const assetBase64Schema = z
+  .string()
+  .min(4)
+  .max(4 * Math.ceil(limits.assetBytes / 3))
+  .regex(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/)
+  .refine((value) => {
+    try {
+      return (
+        btoa(atob(value)) === value && atob(value).length <= limits.assetBytes
+      );
+    } catch {
+      return false;
+    }
+  }, "Invalid bounded base64");
+export const sourceAssetSchema = z
+  .object({
+    id: z.uuid(),
+    path: projectPathSchema,
+    version: z.int().positive(),
+    sha256: hashSchema,
+    bytes: z.int().positive().max(limits.assetBytes),
+    mediaType: z.enum(["image/png", "image/jpeg", "application/pdf"]),
+    dataBase64: assetBase64Schema,
+  })
+  .strict()
+  .refine(
+    (asset) => atob(asset.dataBase64).length === asset.bytes,
+    "Asset byte length mismatch",
+  );
+export type SourceAsset = z.infer<typeof sourceAssetSchema>;
+export const assetWriteSchema = z
+  .object({
+    baseRevision: z.int().positive(),
+    path: projectPathSchema,
+    dataBase64: assetBase64Schema,
+  })
+  .strict();
+export const assetReplaceSchema = z
+  .object({
+    baseRevision: z.int().positive(),
+    baseVersion: z.int().positive(),
+    dataBase64: assetBase64Schema,
+  })
+  .strict();
+export const assetDeleteSchema = z
+  .object({ baseRevision: z.int().positive(), baseVersion: z.int().positive() })
+  .strict();
+export const mainFileSchema = z
+  .object({
+    baseRevision: z.int().positive(),
+    path: projectPathSchema.refine((path) => path.endsWith(".tex")),
+  })
+  .strict();
 export const sourceFileSchema = z
   .object({
     id: z.uuid(),
@@ -97,17 +154,7 @@ export const sourceSnapshotSchema = z
     mainFile: projectPathSchema,
     createdAt: z.iso.datetime(),
     files: z.array(sourceFileSchema).min(1).max(limits.projectFiles),
-    assets: z
-      .array(
-        z
-          .object({
-            path: projectPathSchema,
-            sha256: hashSchema,
-            bytes: z.int().min(0).max(limits.assetBytes),
-          })
-          .strict(),
-      )
-      .max(limits.projectFiles),
+    assets: z.array(sourceAssetSchema).max(limits.projectFiles),
   })
   .strict()
   .superRefine((snapshot, context) => {
@@ -150,8 +197,109 @@ export const updateFileSchema = z
   })
   .strict();
 export const createSnapshotSchema = z
+  .object({
+    baseRevision: z.int().positive(),
+    name: z
+      .string()
+      .trim()
+      .min(1)
+      .max(100)
+      .refine(
+        (value) =>
+          [...value].every(
+            (char) => char.charCodeAt(0) > 31 && char.charCodeAt(0) !== 127,
+          ),
+        "Snapshot names cannot contain control characters",
+      )
+      .optional(),
+  })
+  .strict();
+export const restoreSnapshotSchema = z
   .object({ baseRevision: z.int().positive() })
   .strict();
+export const compileInputSchema = z
+  .object({
+    kind: z.literal("ephemeral"),
+    captureId: z.uuid(),
+    snapshot: sourceSnapshotSchema,
+  })
+  .strict()
+  .refine(
+    (input) =>
+      input.captureId === input.snapshot.id &&
+      new TextEncoder().encode(JSON.stringify(input)).length <=
+        limits.compileInputBytes,
+    "Capture identifier mismatch",
+  );
+export type CompileInput = z.infer<typeof compileInputSchema>;
+const compilerShardSchema = z
+  .object({
+    path: z.string().regex(/^(engine|runtime)-\d+\.bin$/),
+    bytes: z
+      .int()
+      .positive()
+      .max(8 * 1024 * 1024),
+    sha256: hashSchema,
+  })
+  .strict();
+export const compilerManifestSchema = z
+  .object({
+    buildId: z.literal("busytex-tl2025-0ee2c65fb1ab"),
+    engineSha256: hashSchema,
+    engineCodeSha256: hashSchema,
+    runtimeSha256: z.literal(
+      "0ee2c65fb1ab226f6ec5c44b911ab1257d873f69e334548295913005bcfd87d5",
+    ),
+    indexSha256: hashSchema,
+    runtimeBytes: z
+      .int()
+      .positive()
+      .max(128 * 1024 * 1024),
+    shards: z
+      .object({
+        engine: z.array(compilerShardSchema).min(1).max(8),
+        runtime: z.array(compilerShardSchema).min(1).max(16),
+      })
+      .strict(),
+  })
+  .strict();
+export const snapshotSummarySchema = z
+  .object({
+    id: z.uuid(),
+    revision: z.int().positive(),
+    createdAt: z.iso.datetime(),
+    name: z.string().min(1).max(100).nullable(),
+  })
+  .strict();
+export const snapshotListSchema = z
+  .array(snapshotSummarySchema)
+  .max(limits.snapshotsPerProject);
+export const templateIdSchema = z.enum([
+  "resume-classic",
+  "resume-compact",
+  "report",
+]);
+export type TemplateId = z.infer<typeof templateIdSchema>;
+export const templateCatalog = [
+  {
+    id: "resume-classic",
+    name: "Classic resume",
+    description: "Single-column resume with clear section headings.",
+    files: ["main.tex"],
+  },
+  {
+    id: "resume-compact",
+    name: "Compact resume",
+    description: "Concise resume with projects and technical skills.",
+    files: ["main.tex"],
+  },
+  {
+    id: "report",
+    name: "Research report",
+    description: "A report with separate introduction and findings files.",
+    files: ["main.tex", "sections/introduction.tex", "sections/findings.tex"],
+  },
+] as const;
 // The current persistence layer stores text only. Asset bytes need a separate
 // validated transport after the compiler gate; metadata alone cannot be exported.
 export const textSnapshotSchema = sourceSnapshotSchema.refine(
@@ -171,11 +319,26 @@ export const projectNameSchema = z
     "Project names cannot contain control characters",
   );
 export const createProjectSchema = z
-  .object({ name: projectNameSchema })
+  .object({ name: projectNameSchema, templateId: templateIdSchema.optional() })
   .strict();
 export const createTextFileSchema = z
-  .object({ path: projectPathSchema, content: sourceFileSchema.shape.content })
+  .object({
+    baseRevision: z.int().positive(),
+    path: projectPathSchema,
+    content: sourceFileSchema.shape.content,
+  })
   .strict();
+export const renameProjectSchema = z
+  .object({ baseRevision: z.int().positive(), name: projectNameSchema })
+  .strict();
+export const renameEntrySchema = z
+  .object({
+    baseRevision: z.int().positive(),
+    baseVersion: z.int().positive(),
+    path: projectPathSchema,
+  })
+  .strict();
+export const deleteEntrySchema = assetDeleteSchema;
 export const projectSchema = z
   .object({
     id: z.uuid(),
@@ -184,10 +347,19 @@ export const projectSchema = z
     revision: z.int().positive(),
     updatedAt: z.iso.datetime(),
     files: z.array(sourceFileSchema).min(1).max(limits.projectFiles),
+    assets: z.array(sourceAssetSchema).max(limits.projectFiles).optional(),
   })
   .strict()
   .superRefine((project, context) => {
+    const allPaths = [...project.files, ...(project.assets ?? [])].map(
+      (file) => file.path,
+    );
     if (
+      new Set(allPaths).size !== allPaths.length ||
+      allPaths.length > limits.projectFiles ||
+      allPaths.some((path) =>
+        allPaths.some((parent) => path.startsWith(`${parent}/`)),
+      ) ||
       new Set(project.files.map((file) => file.path)).size !==
         project.files.length ||
       new Set(project.files.map((file) => file.id)).size !==
@@ -196,7 +368,9 @@ export const projectSchema = z
       project.files.reduce(
         (sum, file) => sum + new TextEncoder().encode(file.content).length,
         0,
-      ) > limits.projectBytes
+      ) +
+        (project.assets ?? []).reduce((sum, asset) => sum + asset.bytes, 0) >
+        limits.projectBytes
     )
       context.addIssue({ code: "custom", message: "Invalid project files" });
   });
@@ -204,6 +378,7 @@ export const projectSummarySchema = z
   .object({
     id: z.uuid(),
     name: projectNameSchema,
+    revision: z.int().positive(),
     updatedAt: z.iso.datetime(),
   })
   .strict();
@@ -260,7 +435,9 @@ export const compileEventSchema = z.discriminatedUnion("type", [
     .object({
       type: z.literal("succeeded"),
       requestId: z.uuid(),
-      snapshotId: z.uuid(),
+      snapshotId: z.uuid().nullable(),
+      captureId: z.uuid(),
+      projectId: z.uuid(),
       revision: z.int().positive(),
       compilerBuildId: z.string().min(1),
       pdf: z
@@ -274,3 +451,19 @@ export const compileEventSchema = z.discriminatedUnion("type", [
 export type SourceSnapshot = z.infer<typeof sourceSnapshotSchema>;
 export type CompileRequest = z.infer<typeof compileRequestSchema>;
 export type CompileEvent = z.infer<typeof compileEventSchema>;
+export const compilerRuntimeEventSchema = z
+  .object({
+    type: z.enum(["running", "succeeded", "failed"]),
+    pass: z.int().positive().max(3).optional(),
+    status: z.number().optional(),
+    logs: z.string().max(210000).optional(),
+    message: z.string().max(4000).optional(),
+    pdf: z
+      .instanceof(Uint8Array)
+      .refine((b) => b.length > 0 && b.length <= limits.pdfBytes)
+      .optional(),
+    memoryBytes: z.number().nonnegative().optional(),
+    durationMs: z.number().nonnegative().optional(),
+    blockedHostAPIs: z.record(z.string(), z.boolean()).optional(),
+  })
+  .strict();
