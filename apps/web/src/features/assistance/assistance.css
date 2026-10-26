@@ -1,0 +1,127 @@
+.assistant-dialog textarea,
+.analysis-report textarea {
+  display: block;
+  width: 100%;
+  min-height: 90px;
+  padding: 10px;
+  margin: 8px 0 16px;
+  border: 1px solid #ccd4c4;
+  border-radius: 6px;
+  font: inherit;
+}
+.assistant-dialog label,
+.analysis-report label {
+  display: block;
+  margin: 10px 0;
+}
+.assistant-dialog input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+.assistant-dialog form {
+  display: block;
+}
+.assistant-dialog fieldset {
+  border: 1px solid #ccd4c4;
+  margin: 16px 0;
+}
+.preserve-whitespace {
+  white-space: pre-wrap;
+}
+.resume-analysis {
+  max-width: 1600px;
+  padding: 30px;
+  margin: auto;
+}
+.resume-analysis h1 {
+  font-size: 38px;
+}
+.resume-analysis button,
+.resume-analysis select,
+.resume-analysis .upload-button {
+  color: #263b33;
+  background: #f4f7ef;
+  border: 1px solid #c5d2c9;
+  border-radius: 5px;
+  padding: 8px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+.resume-analysis button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.analysis-columns {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(300px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.analysis-preview {
+  height: calc(100vh - 40px);
+  position: sticky;
+  top: 20px;
+  border: 1px solid #dbe1d2;
+  overflow: hidden;
+}
+.analysis-preview .pdf-panel {
+  height: 100%;
+}
+.analysis-report {
+  min-width: 0;
+}
+.analysis-report h2 {
+  font-size: 24px;
+}
+.analysis-report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+.analysis-report th,
+.analysis-report td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 8px;
+  border-bottom: 1px solid #dbe1d2;
+}
+.analysis-report p,
+.analysis-report li {
+  line-height: 1.65;
+}
+.evidence-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  margin: 6px 0;
+  padding: 8px;
+}
+.resume-analysis .evidence-button {
+  background: #f7f9f4;
+  font-size: 12px;
+}
+.hash-label {
+  font-family: monospace;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.extracted-text {
+  max-height: 450px;
+  overflow: auto;
+}
+@media (max-width: 800px) {
+  .analysis-columns {
+    grid-template-columns: 1fr;
+  }
+  .analysis-preview {
+    position: relative;
+    height: 65vh;
+    top: 0;
+  }
+  .resume-analysis {
+    padding: 14px;
+  }
+}
