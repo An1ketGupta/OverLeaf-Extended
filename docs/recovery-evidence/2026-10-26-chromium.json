@@ -1,0 +1,350 @@
+{
+  "scope": "localhost / desktop Chromium; synthetic fixtures; no hosted or physical-device acceptance",
+  "development": {
+    "observedAt": "2026-10-26T11:57:35.587Z",
+    "node": "v24.22.0",
+    "browser": "156.0.8078.4",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13650HX",
+    "platform": "win32 10.0.26300",
+    "scope": "local cold asset loading and five warm compiles through the real product to rendered PDF; synthetic upstream only",
+    "sessionApiMs": [7, 6, 6, 15, 6],
+    "results": [
+      {
+        "templateId": "resume-classic",
+        "coldMs": 5704,
+        "warmMs": [5416, 5433, 5416, 5402, 5435],
+        "warmMedianMs": 5416,
+        "warmRangeMs": [5402, 5435],
+        "syntheticProviderMs": 30
+      },
+      {
+        "templateId": "resume-compact",
+        "coldMs": 7281,
+        "warmMs": [4911, 5323, 4914, 4958, 5444],
+        "warmMedianMs": 4958,
+        "warmRangeMs": [4911, 5444],
+        "syntheticProviderMs": 16
+      },
+      {
+        "templateId": "report",
+        "coldMs": 7286,
+        "warmMs": [5293, 5336, 5320, 5453, 5314],
+        "warmMedianMs": 5320,
+        "warmRangeMs": [5293, 5453],
+        "syntheticProviderMs": 21
+      }
+    ]
+  },
+  "built": {
+    "observedAt": "2026-10-26T12:07:03.913Z",
+    "node": "v24.22.0",
+    "browser": "156.0.8078.4",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13650HX",
+    "platform": "win32 10.0.26300",
+    "scope": "local cold asset loading and five warm compiles through the real product to rendered PDF; synthetic upstream only",
+    "sessionApiMs": [7, 6, 6, 7, 6],
+    "results": [
+      {
+        "templateId": "resume-classic",
+        "coldMs": 5618,
+        "warmMs": [4145, 3979, 4194, 4049, 4107],
+        "warmMedianMs": 4107,
+        "warmRangeMs": [3979, 4194],
+        "syntheticProviderMs": 40
+      },
+      {
+        "templateId": "resume-compact",
+        "coldMs": 6585,
+        "warmMs": [4091, 4193, 4100, 4059, 4083],
+        "warmMedianMs": 4091,
+        "warmRangeMs": [4059, 4193],
+        "syntheticProviderMs": 16
+      },
+      {
+        "templateId": "report",
+        "coldMs": 6405,
+        "warmMs": [4290, 4273, 4312, 4209, 4144],
+        "warmMedianMs": 4273,
+        "warmRangeMs": [4144, 4312],
+        "syntheticProviderMs": 24
+      }
+    ]
+  },
+  "api": {
+    "observedAt": "2026-10-26T12:04:48.219Z",
+    "node": "v24.22.0",
+    "scope": "separate loopback HTTP API, real PostgreSQL; five synthetic saves and captures per catalog template",
+    "results": [
+      {
+        "templateId": "resume-classic",
+        "serializedCaptureBytes": 2642,
+        "save": {
+          "samplesMs": [5.83, 4.39, 4.1, 3.49, 3.73],
+          "medianMs": 4.1,
+          "rangeMs": [3.49, 5.83]
+        },
+        "capture": {
+          "samplesMs": [5.1, 3.41, 3.48, 3.47, 3.44],
+          "medianMs": 3.47,
+          "rangeMs": [3.41, 5.1]
+        }
+      },
+      {
+        "templateId": "resume-compact",
+        "serializedCaptureBytes": 2870,
+        "save": {
+          "samplesMs": [3.78, 3.5, 3.64, 2.92, 3.03],
+          "medianMs": 3.5,
+          "rangeMs": [2.92, 3.78]
+        },
+        "capture": {
+          "samplesMs": [3.42, 3.27, 2.89, 2.67, 2.77],
+          "medianMs": 2.89,
+          "rangeMs": [2.67, 3.42]
+        }
+      },
+      {
+        "templateId": "report",
+        "serializedCaptureBytes": 3429,
+        "save": {
+          "samplesMs": [2.93, 2.97, 2.9, 2.67, 3.07],
+          "medianMs": 2.93,
+          "rangeMs": [2.67, 3.07]
+        },
+        "capture": {
+          "samplesMs": [2.94, 2.59, 2.44, 2.79, 2.63],
+          "medianMs": 2.63,
+          "rangeMs": [2.44, 2.94]
+        }
+      }
+    ]
+  },
+  "storage": {
+    "observedAt": "2026-10-26T11:59:53.102Z",
+    "reportByteLimitCount": 13,
+    "asset_bytes": "33554432",
+    "report_bytes": "7855679",
+    "stored_asset_column_bytes": "384336",
+    "note": "Synthetic repeated binary compresses strongly; column sizes are not whole database disk use."
+  },
+  "evaluator": {
+    "observedAt": "2026-10-26T12:13:09.020Z",
+    "candidate": "siglum-busytex-tl2025-v0.1.0",
+    "browser": "156.0.8078.4",
+    "node": "v24.22.0",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13650HX",
+    "initialization": {
+      "durationMs": 382.4000000357628,
+      "decodedRuntimeBytes": 80995466
+    },
+    "resultCount": 70,
+    "failures": 0,
+    "corruptedDeliveryRejected": true,
+    "loadCancellationPassed": true,
+    "largestDeliveryShardBytes": 8388608,
+    "fixtures": [
+      {
+        "name": "chart",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [505, 433, 423, 1099, 1395, 1388],
+        "warmMedianMs": 1099,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "resume-classic",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1866, 1879, 1867, 1850, 1861, 1859],
+        "warmMedianMs": 1861,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "resume-unicode",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [2453, 2466, 2460, 2439, 2421, 2456],
+        "warmMedianMs": 2456,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "report",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [5014, 5010, 4922, 5045, 5027, 4970],
+        "warmMedianMs": 5010,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "template-resume-classic",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1235, 1250, 1246, 1281, 1309, 1265],
+        "warmMedianMs": 1265,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "template-resume-compact",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1293, 1302, 1337, 1339, 1323, 1309],
+        "warmMedianMs": 1323,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "template-report",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [3651, 3647, 3614, 3682, 3620, 3571],
+        "warmMedianMs": 3620,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "invalid",
+        "states": ["failed"],
+        "wallMs": [1278],
+        "warmMedianMs": null,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "missing-package",
+        "states": ["failed"],
+        "wallMs": [1315],
+        "warmMedianMs": null,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "timeout",
+        "states": ["timed-out"],
+        "wallMs": [1002],
+        "warmMedianMs": null,
+        "maximumObservedWasmBytes": 0,
+        "passed": true
+      },
+      {
+        "name": "cancel",
+        "states": ["cancelled"],
+        "wallMs": [521],
+        "warmMedianMs": null,
+        "maximumObservedWasmBytes": 0,
+        "passed": true
+      },
+      {
+        "name": "project-a",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1240, 1275, 1327, 1298, 1290, 1302],
+        "warmMedianMs": 1298,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "project-b",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1312, 1346, 1312, 1352, 1356, 1333],
+        "warmMedianMs": 1346,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "shell-disabled",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1334, 1327, 1357, 1309, 1329, 1346],
+        "warmMedianMs": 1329,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      },
+      {
+        "name": "recovery",
+        "states": [
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded",
+          "succeeded"
+        ],
+        "wallMs": [1290, 1269, 1262, 1295, 1254, 1295],
+        "warmMedianMs": 1269,
+        "maximumObservedWasmBytes": 330498048,
+        "passed": true
+      }
+    ]
+  },
+  "limitations": [
+    "Small local samples, not hosted service objectives or percentile tails.",
+    "Worker memory excludes filesystem/JS/PDF.js copies and browser overhead.",
+    "Source ZIP recovery is not whole-database or off-device disaster recovery."
+  ]
+}
