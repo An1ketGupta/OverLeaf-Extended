@@ -2,10 +2,28 @@ import { limits } from "@overleaf-pro/contracts";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { useEffect, useRef, useState } from "react";
 
-export function PdfPreview() {
-  const [file, setFile] = useState<File>();
+export function PdfPreview({
+  externalFile,
+  onFileChange,
+  requestedPage,
+  generated,
+  importedLabel,
+}: {
+  externalFile?: File | undefined;
+  onFileChange?: (file: File | undefined) => void;
+  requestedPage?: number;
+  generated?: { revision: number; stale: boolean } | undefined;
+  importedLabel?: string;
+} = {}) {
+  const [internalFile, setInternalFile] = useState<File>();
+  const file = onFileChange ? externalFile : internalFile;
+  const setFile = onFileChange ?? setInternalFile;
   const [pdf, setPdf] = useState<PDFDocumentProxy>();
   const [page, setPage] = useState(1);
+  useEffect(() => {
+    if (requestedPage && pdf && requestedPage <= pdf.numPages)
+      setPage(requestedPage);
+  }, [requestedPage, pdf]);
   const [zoom, setZoom] = useState(1);
   const [width, setWidth] = useState(400);
   const [message, setMessage] = useState("");
@@ -217,9 +235,18 @@ export function PdfPreview() {
         ) : (
           <>
             <div className="pdf-file-label">
-              Opened locally · {file.name}
+              {generated
+                ? `Compiled revision ${generated.revision}${generated.stale ? " · Older output" : ""}`
+                : `Opened locally · ${file.name}`}
               <br />
-              <span>This PDF is not compiled from this project.</span>
+              <span>
+                {generated
+                  ? "Generated locally from saved source."
+                  : (importedLabel ??
+                    (onFileChange
+                      ? "Uploaded PDF; source relationship is unverified."
+                      : "This PDF is not compiled from this project."))}
+              </span>
             </div>
             <p className="pdf-message" role="status">
               {message ||

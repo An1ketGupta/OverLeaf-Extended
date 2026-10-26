@@ -12,7 +12,7 @@ import {
   syntaxHighlighting,
 } from "@codemirror/language";
 import { search, searchKeymap } from "@codemirror/search";
-import { EditorState } from "@codemirror/state";
+import { Compartment, EditorState } from "@codemirror/state";
 import {
   drawSelection,
   EditorView,
@@ -31,6 +31,7 @@ export function CodeEditor({
   onChange,
   onSave,
   onView,
+  readOnly = false,
 }: {
   fileId: string;
   path: string;
@@ -38,9 +39,11 @@ export function CodeEditor({
   onChange: (content: string) => void;
   onSave: () => void;
   onView: (view: EditorView | null) => void;
+  readOnly?: boolean;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const callbacks = useRef({ onChange, onSave, onView });
+  const editability = useRef(new Compartment());
   callbacks.current = { onChange, onSave, onView };
   // Each open file is kept mounted to preserve selection, scroll position and undo history.
   // biome-ignore lint/correctness/useExhaustiveDependencies: Initial document belongs to this file; subsequent content is synchronized below.
@@ -51,6 +54,10 @@ export function CodeEditor({
       state: EditorState.create({
         doc: content,
         extensions: [
+          editability.current.of([
+            EditorState.readOnly.of(readOnly),
+            EditorView.editable.of(!readOnly),
+          ]),
           lineNumbers(),
           highlightActiveLineGutter(),
           highlightActiveLine(),
@@ -133,5 +140,15 @@ export function CodeEditor({
       });
     }
   }, [content]);
+  useEffect(() => {
+    const node = host.current?.querySelector(".cm-editor");
+    const view = node ? EditorView.findFromDOM(node as HTMLElement) : null;
+    view?.dispatch({
+      effects: editability.current.reconfigure([
+        EditorState.readOnly.of(readOnly),
+        EditorView.editable.of(!readOnly),
+      ]),
+    });
+  }, [readOnly]);
   return <div className="code-editor" ref={host} />;
 }
