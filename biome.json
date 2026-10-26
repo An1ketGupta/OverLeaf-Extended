@@ -10,6 +10,7 @@
       "!playwright-report",
       "!coverage",
       "!.cache",
+      "!apps/web/public/compiler",
       "!pnpm-lock.yaml",
       "!packages/db/migrations/meta"
     ]

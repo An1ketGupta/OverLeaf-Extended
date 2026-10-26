@@ -1,0 +1,422 @@
+[
+  {
+    "module": "env",
+    "name": "exit",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "system",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__assert_fail",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "abort",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "strftime",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__cxa_throw",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_iii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_iiiii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_vii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_ii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_iiii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_id",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_i",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_viii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_vi",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "getnameinfo",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "getaddrinfo",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "gethostbyaddr",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "gethostbyname",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_iiiiiii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_viiii",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_vidd",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_v",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_di",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_vid",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "invoke_iiid",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "getpass",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "environ_sizes_get",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "environ_get",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_fcntl64",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_ioctl",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "fd_close",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "fd_read",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "fd_write",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "proc_exit",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_faccessat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_chdir",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_chmod",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_openat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_fstat64",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_dup",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "emscripten_memcpy_big",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "emscripten_date_now",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_emscripten_get_now_is_monotonic",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "emscripten_get_now",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_dup3",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_stat64",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_newfstatat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_lstat64",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "fd_sync",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_getcwd",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "emscripten_console_error",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_mkdirat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_pipe",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__call_sighandler",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_getdents64",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_readlinkat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_unlinkat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_rmdir",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_renameat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall__newselect",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_fstatfs64",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_symlink",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "emscripten_get_heap_max",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_tzset_js",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_utimensat",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "emscripten_resize_heap",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_emscripten_throw_longjmp",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_accept4",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_bind",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_connect",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_getpeername",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_getsockname",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_getsockopt",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_listen",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_recvfrom",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_sendto",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "__syscall_socket",
+    "kind": "function"
+  },
+  {
+    "module": "wasi_snapshot_preview1",
+    "name": "fd_seek",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_mktime_js",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_localtime_js",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_gmtime_js",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_munmap_js",
+    "kind": "function"
+  },
+  {
+    "module": "env",
+    "name": "_mmap_js",
+    "kind": "function"
+  }
+]

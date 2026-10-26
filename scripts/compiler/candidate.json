@@ -1,0 +1,56 @@
+{
+  "id": "siglum-busytex-tl2025-v0.1.0",
+  "status": "accepted-local-development",
+  "source": "https://github.com/SiglumProject/siglum/tree/2a44e46f216d04bf52235cae271cd5e31c881a92",
+  "engineSource": "https://github.com/SiglumProject/busytex/tree/fbaaee98ef8f2d3717a1b01ca4cea222fc33a82f",
+  "licenseStatus": "Incomplete engine/dependency/package/font notice and corresponding-source audit; not approved for distribution",
+  "assets": [
+    {
+      "file": "busytex.js",
+      "url": "https://github.com/SiglumProject/siglum/releases/download/v0.1.0/busytex.js",
+      "bytes": 298998,
+      "sha256": "53374fbb04e9b485c5854ae107cb68c3d3b79735e684c6049a7597013a23ff2b"
+    },
+    {
+      "file": "busytex.wasm",
+      "url": "https://github.com/SiglumProject/siglum/releases/download/v0.1.0/busytex.wasm",
+      "bytes": 30767701,
+      "sha256": "3efcd116f16e058048f0870d5fbe75eafe6441063d9e7f83e617bf57102645bd"
+    },
+    {
+      "file": "bundles.tar.gz",
+      "url": "https://github.com/SiglumProject/siglum/releases/download/v0.1.0/siglum-bundles-v0.1.0.tar.gz",
+      "bytes": 199133079,
+      "sha256": "90dcc717a4361c466e035492b10f9c7573b5b4062f6fad88892e41a63e443484"
+    },
+    {
+      "file": "enumitem.sty",
+      "url": "https://raw.githubusercontent.com/jbezos/enumitem/ec9787500280b3c2bd280906093183589338a809/enumitem.sty",
+      "bytes": 52272,
+      "sha256": "628ef5b6916c682f586a066e735ceb6191e73fe3216dfb2fb4aa8e2f4c819dba"
+    }
+  ],
+  "bundles": [
+    "core",
+    "fmt-xelatex",
+    "l3",
+    "fonts-lm-otf",
+    "fonts-lm-tfm",
+    "fonts-cm",
+    "fonts-misc",
+    "dvips",
+    "extra-maps",
+    "extra-xetex-lang",
+    "hyperref",
+    "tex-latex-misc",
+    "tables",
+    "graphics",
+    "typography",
+    "tex-generic",
+    "utils",
+    "tex-xelatex",
+    "tex-xetex",
+    "xcolor",
+    "fonts-lm-type1"
+  ]
+}

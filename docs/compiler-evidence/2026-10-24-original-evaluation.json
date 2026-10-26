@@ -1,0 +1,2448 @@
+{
+  "candidate": "siglum-busytex-tl2025-v0.1.0",
+  "selected": false,
+  "productIntegrationAllowed": false,
+  "gates": {
+    "licensing": "open",
+    "hostedDelivery": "unverified",
+    "serverCapacity": "unverified",
+    "localCompatibility": "passed"
+  },
+  "observedAt": "2026-10-24T14:21:40.540Z",
+  "browser": "156.0.8078.4",
+  "node": "v24.22.0",
+  "platform": "win32 10.0.26300",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-13650HX",
+  "initialization": {
+    "durationMs": 387.4000000357628,
+    "decodedRuntimeBytes": 80995466
+  },
+  "prepared": {
+    "candidate": "siglum-busytex-tl2025-v0.1.0",
+    "runtimeSha256": "0ee2c65fb1ab226f6ec5c44b911ab1257d873f69e334548295913005bcfd87d5",
+    "gzipSha256": "898f148d6330527bda2ad46099d97d705e83e49c9a57d56582c7d29f9813a083",
+    "indexSha256": "ef6c01149d31f2c3ddcaaa3637d35237a8b5ac912c9182c9d63791d857686523",
+    "bytes": 80995466,
+    "transferBytes": 36321748,
+    "files": 3692,
+    "bundles": [
+      "core",
+      "fmt-xelatex",
+      "l3",
+      "fonts-lm-otf",
+      "fonts-lm-tfm",
+      "fonts-cm",
+      "fonts-misc",
+      "dvips",
+      "extra-maps",
+      "extra-xetex-lang",
+      "hyperref",
+      "tex-latex-misc",
+      "tables",
+      "graphics",
+      "typography",
+      "tex-generic",
+      "utils",
+      "tex-xelatex",
+      "tex-xetex",
+      "xcolor",
+      "fonts-lm-type1"
+    ]
+  },
+  "deniedNetworkRequests": [],
+  "corruptedDeliveryRejected": true,
+  "loadCancellationPassed": true,
+  "largestDeliveryShardBytes": 8388608,
+  "requestedPaths": [
+    "/",
+    "/harness.js",
+    "/shards.json",
+    "/engine-0.bin",
+    "/engine-8388608.bin",
+    "/engine-16777216.bin",
+    "/engine-25165824.bin",
+    "/runtime-0.bin",
+    "/runtime-8388608.bin",
+    "/runtime.json",
+    "/runtime-16777216.bin",
+    "/runtime-25165824.bin",
+    "/runtime-33554432.bin",
+    "/worker.js",
+    "/engine.js",
+    "/pdf.mjs",
+    "/pdf.worker.mjs"
+  ],
+  "failures": 0,
+  "results": [
+    {
+      "name": "chart",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 482.39999997615814,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 522.3000000119209,
+      "uiTicks": 26,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 305,
+          "sha256": "d620d6e96b991e9f9e023f8c8bd140f1437a450e8474c5d9fb4e023d47bd3bae"
+        }
+      ],
+      "pdfBytes": 769,
+      "pdfSha256": "b863b5827b9b7760c5e052121be238f66530bc56301790af778954c4bba3dafb",
+      "pageCount": 1,
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "chart",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 394.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 431.80000001192093,
+      "uiTicks": 21,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 305,
+          "sha256": "d620d6e96b991e9f9e023f8c8bd140f1437a450e8474c5d9fb4e023d47bd3bae"
+        }
+      ],
+      "pdfBytes": 769,
+      "pdfSha256": "44a93dc73e5fa67a43a67bdf207e1e084cf71fa40dfc3a21757cdf4ba43d1f8a",
+      "pageCount": 1,
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "chart",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 396.5999999642372,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 433.60000002384186,
+      "uiTicks": 21,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 305,
+          "sha256": "d620d6e96b991e9f9e023f8c8bd140f1437a450e8474c5d9fb4e023d47bd3bae"
+        }
+      ],
+      "pdfBytes": 769,
+      "pdfSha256": "44a93dc73e5fa67a43a67bdf207e1e084cf71fa40dfc3a21757cdf4ba43d1f8a",
+      "pageCount": 1,
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "chart",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 488.89999997615814,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 528.5,
+      "uiTicks": 26,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 305,
+          "sha256": "d620d6e96b991e9f9e023f8c8bd140f1437a450e8474c5d9fb4e023d47bd3bae"
+        }
+      ],
+      "pdfBytes": 769,
+      "pdfSha256": "71b7e47edd2227da0713d016f0a5a1f2be5b0f05ae4f5b126022c9b8bab0d802",
+      "pageCount": 1,
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "chart",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 506.10000002384186,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 549.5,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 305,
+          "sha256": "d620d6e96b991e9f9e023f8c8bd140f1437a450e8474c5d9fb4e023d47bd3bae"
+        }
+      ],
+      "pdfBytes": 769,
+      "pdfSha256": "71b7e47edd2227da0713d016f0a5a1f2be5b0f05ae4f5b126022c9b8bab0d802",
+      "pageCount": 1,
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "chart",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 547.3000000119209,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 592.3999999761581,
+      "uiTicks": 29,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 305,
+          "sha256": "d620d6e96b991e9f9e023f8c8bd140f1437a450e8474c5d9fb4e023d47bd3bae"
+        }
+      ],
+      "pdfBytes": 769,
+      "pdfSha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51",
+      "pageCount": 1,
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-classic",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 714.3999999761581,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 754.8999999761581,
+      "uiTicks": 36,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 901,
+          "sha256": "5fac0bdf4ca2b5055eb6cff33f64c9e170231a1c7ec155ee5d7023e8e4a83efc"
+        }
+      ],
+      "pdfBytes": 15530,
+      "pdfSha256": "a9dbc22a9ec985fb7e6bbf57338bf871cc4290761870199a15fe079db89e416f",
+      "pageCount": 1,
+      "expectedText": ["Alex Example", "Experience", "Education"],
+      "extractedText": "Alex Example alex@example.test | Example City Experience Software Engineer, Synthetic Labs 2023–2025 • Built a documented TypeScript API and reviewed changes with the team. • Maintained PostgreSQL migrations and automated integration checks. Education B.Sc. Computer Science, Example University 2023 Skills TypeScript, PostgreSQL, testing, technical writing. Languages: English, Français.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-classic",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 752.8000000119209,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 811.5,
+      "uiTicks": 39,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 901,
+          "sha256": "5fac0bdf4ca2b5055eb6cff33f64c9e170231a1c7ec155ee5d7023e8e4a83efc"
+        }
+      ],
+      "pdfBytes": 15532,
+      "pdfSha256": "4649c8e6bd13727b9984645ed1f14fd2b3cebaa45b4199e3d216fc765c9d348c",
+      "pageCount": 1,
+      "expectedText": ["Alex Example", "Experience", "Education"],
+      "extractedText": "Alex Example alex@example.test | Example City Experience Software Engineer, Synthetic Labs 2023–2025 • Built a documented TypeScript API and reviewed changes with the team. • Maintained PostgreSQL migrations and automated integration checks. Education B.Sc. Computer Science, Example University 2023 Skills TypeScript, PostgreSQL, testing, technical writing. Languages: English, Français.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-classic",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 821,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 877.8000000119209,
+      "uiTicks": 43,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 901,
+          "sha256": "5fac0bdf4ca2b5055eb6cff33f64c9e170231a1c7ec155ee5d7023e8e4a83efc"
+        }
+      ],
+      "pdfBytes": 15532,
+      "pdfSha256": "6780260688d6e28011cb2f8acc05b4eab8ec418f3110048be209dad5d2d4d7e4",
+      "pageCount": 1,
+      "expectedText": ["Alex Example", "Experience", "Education"],
+      "extractedText": "Alex Example alex@example.test | Example City Experience Software Engineer, Synthetic Labs 2023–2025 • Built a documented TypeScript API and reviewed changes with the team. • Maintained PostgreSQL migrations and automated integration checks. Education B.Sc. Computer Science, Example University 2023 Skills TypeScript, PostgreSQL, testing, technical writing. Languages: English, Français.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-classic",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 694.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 739.7999999523163,
+      "uiTicks": 36,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 901,
+          "sha256": "5fac0bdf4ca2b5055eb6cff33f64c9e170231a1c7ec155ee5d7023e8e4a83efc"
+        }
+      ],
+      "pdfBytes": 15531,
+      "pdfSha256": "609d026137be1d954e6631363a5cbb9b990b68db88cb951f80fa5ee2283551f8",
+      "pageCount": 1,
+      "expectedText": ["Alex Example", "Experience", "Education"],
+      "extractedText": "Alex Example alex@example.test | Example City Experience Software Engineer, Synthetic Labs 2023–2025 • Built a documented TypeScript API and reviewed changes with the team. • Maintained PostgreSQL migrations and automated integration checks. Education B.Sc. Computer Science, Example University 2023 Skills TypeScript, PostgreSQL, testing, technical writing. Languages: English, Français.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-classic",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 700.1999999880791,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 746.6999999880791,
+      "uiTicks": 37,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 901,
+          "sha256": "5fac0bdf4ca2b5055eb6cff33f64c9e170231a1c7ec155ee5d7023e8e4a83efc"
+        }
+      ],
+      "pdfBytes": 15531,
+      "pdfSha256": "730abe341f5091c7e5ec7c4266afd7ca7c865338648bec100d9553afac9a1dfc",
+      "pageCount": 1,
+      "expectedText": ["Alex Example", "Experience", "Education"],
+      "extractedText": "Alex Example alex@example.test | Example City Experience Software Engineer, Synthetic Labs 2023–2025 • Built a documented TypeScript API and reviewed changes with the team. • Maintained PostgreSQL migrations and automated integration checks. Education B.Sc. Computer Science, Example University 2023 Skills TypeScript, PostgreSQL, testing, technical writing. Languages: English, Français.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-classic",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 755.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 800.8000000119209,
+      "uiTicks": 39,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 901,
+          "sha256": "5fac0bdf4ca2b5055eb6cff33f64c9e170231a1c7ec155ee5d7023e8e4a83efc"
+        }
+      ],
+      "pdfBytes": 15532,
+      "pdfSha256": "e896155486b5b71e085fe305620419a911a5be3973175a9057a1831cabdba4e5",
+      "pageCount": 1,
+      "expectedText": ["Alex Example", "Experience", "Education"],
+      "extractedText": "Alex Example alex@example.test | Example City Experience Software Engineer, Synthetic Labs 2023–2025 • Built a documented TypeScript API and reviewed changes with the team. • Maintained PostgreSQL migrations and automated integration checks. Education B.Sc. Computer Science, Example University 2023 Skills TypeScript, PostgreSQL, testing, technical writing. Languages: English, Français.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-unicode",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 971.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1017.5,
+      "uiTicks": 50,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 846,
+          "sha256": "352988e9b47af53309b4b357f6053da0e92c403f1755298ea9c557d239da5fb3"
+        }
+      ],
+      "pdfBytes": 14923,
+      "pdfSha256": "11bb91c26deb82c13b1754dce538d985258272df95e0f753cf62eecbd6a8474d",
+      "pageCount": 1,
+      "expectedText": ["Zoë García", "Montréal", "café"],
+      "extractedText": "Zoë García zoe@example.test | Montréal Profile Synthetic résumé for Unicode and font compatibility testing. Experience Research Assistant, Example Institute 2024–2025 • Documented a café dataset using reproducible research methods. • Presented findings with explicit uncertainty and traceable references. Education M.Sc. Data Science, Example University, 2024.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-unicode",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1007.6000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1054.699999988079,
+      "uiTicks": 52,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 846,
+          "sha256": "352988e9b47af53309b4b357f6053da0e92c403f1755298ea9c557d239da5fb3"
+        }
+      ],
+      "pdfBytes": 14919,
+      "pdfSha256": "4f4a78b0db5c9494449d734f19bc9beee054b43276469d489577337bec56b16c",
+      "pageCount": 1,
+      "expectedText": ["Zoë García", "Montréal", "café"],
+      "extractedText": "Zoë García zoe@example.test | Montréal Profile Synthetic résumé for Unicode and font compatibility testing. Experience Research Assistant, Example Institute 2024–2025 • Documented a café dataset using reproducible research methods. • Presented findings with explicit uncertainty and traceable references. Education M.Sc. Data Science, Example University, 2024.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-unicode",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 928.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 971.6000000238419,
+      "uiTicks": 47,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 846,
+          "sha256": "352988e9b47af53309b4b357f6053da0e92c403f1755298ea9c557d239da5fb3"
+        }
+      ],
+      "pdfBytes": 14922,
+      "pdfSha256": "d6b1fcea037514b23e68be5f2e7fa75ab0e2f8bc48caadff2231fa8b6fb95f56",
+      "pageCount": 1,
+      "expectedText": ["Zoë García", "Montréal", "café"],
+      "extractedText": "Zoë García zoe@example.test | Montréal Profile Synthetic résumé for Unicode and font compatibility testing. Experience Research Assistant, Example Institute 2024–2025 • Documented a café dataset using reproducible research methods. • Presented findings with explicit uncertainty and traceable references. Education M.Sc. Data Science, Example University, 2024.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-unicode",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 926.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 975.6000000238419,
+      "uiTicks": 47,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 846,
+          "sha256": "352988e9b47af53309b4b357f6053da0e92c403f1755298ea9c557d239da5fb3"
+        }
+      ],
+      "pdfBytes": 14920,
+      "pdfSha256": "3b9b344ce66aba0d3fcdaea79ccc7c9f8e2f731fad45837f5f97056c68172ade",
+      "pageCount": 1,
+      "expectedText": ["Zoë García", "Montréal", "café"],
+      "extractedText": "Zoë García zoe@example.test | Montréal Profile Synthetic résumé for Unicode and font compatibility testing. Experience Research Assistant, Example Institute 2024–2025 • Documented a café dataset using reproducible research methods. • Presented findings with explicit uncertainty and traceable references. Education M.Sc. Data Science, Example University, 2024.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-unicode",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1013.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1056.2000000476837,
+      "uiTicks": 52,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 846,
+          "sha256": "352988e9b47af53309b4b357f6053da0e92c403f1755298ea9c557d239da5fb3"
+        }
+      ],
+      "pdfBytes": 14917,
+      "pdfSha256": "07afbf200c64f35e772509c0110fd18bde3d8ffe7c41e6ec6a93e4eea22c5061",
+      "pageCount": 1,
+      "expectedText": ["Zoë García", "Montréal", "café"],
+      "extractedText": "Zoë García zoe@example.test | Montréal Profile Synthetic résumé for Unicode and font compatibility testing. Experience Research Assistant, Example Institute 2024–2025 • Documented a café dataset using reproducible research methods. • Presented findings with explicit uncertainty and traceable references. Education M.Sc. Data Science, Example University, 2024.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "resume-unicode",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 985,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1034.1000000238419,
+      "uiTicks": 51,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 846,
+          "sha256": "352988e9b47af53309b4b357f6053da0e92c403f1755298ea9c557d239da5fb3"
+        }
+      ],
+      "pdfBytes": 14924,
+      "pdfSha256": "9fe3e2c93678c4cfe0a1ca22966263cc0a467fd9c24d3184ea883c89a8c56521",
+      "pageCount": 1,
+      "expectedText": ["Zoë García", "Montréal", "café"],
+      "extractedText": "Zoë García zoe@example.test | Montréal Profile Synthetic résumé for Unicode and font compatibility testing. Experience Research Assistant, Example Institute 2024–2025 • Documented a café dataset using reproducible research methods. • Presented findings with explicit uncertainty and traceable references. Education M.Sc. Data Science, Example University, 2024.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "report",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 2069.400000035763,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 2114.400000035763,
+      "uiTicks": 105,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 797,
+          "sha256": "638f90c65ed24f59dc397ab1bf44ab5ee4523e246c35ff9d4a9030ebaca72a2e"
+        },
+        {
+          "path": "sections/method.tex",
+          "bytes": 194,
+          "sha256": "ebaf48646075a253dd9e7ef3cf93ff127a98c790a03145c902884f7b7301af3e"
+        },
+        {
+          "path": "chart.pdf",
+          "bytes": 769,
+          "sha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51"
+        }
+      ],
+      "pdfBytes": 20467,
+      "pdfSha256": "094fff687783553d21bbb5a628d310ab2a7e7de1ef55ca998c4036bac0bf5651",
+      "pageCount": 4,
+      "expectedText": [
+        "Synthetic Compiler Compatibility Report",
+        "Chapter 1",
+        "Figure 1.1"
+      ],
+      "extractedText": "Synthetic Compiler Compatibility Report Example Researcher October 24, 2026 Contents 1 Measurement 2 1 Chapter 1 Measurement We compare cold and warm compilation of a bounded source snapshot. The test includes text such as café, references, macros, and a vector image. No bench- mark result is implied by this fixture. As described in Chapter 1, Figure 1.1 Figure 1.1: Original vector asset; generated by chart.tex. must resolve on a subsequent pass. A reference follows [1]. 2 Bibliography [1] Example Author. Synthetic Methods . 2026. 3",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "report",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 2211.599999964237,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 2263.2000000476837,
+      "uiTicks": 112,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 797,
+          "sha256": "638f90c65ed24f59dc397ab1bf44ab5ee4523e246c35ff9d4a9030ebaca72a2e"
+        },
+        {
+          "path": "sections/method.tex",
+          "bytes": 194,
+          "sha256": "ebaf48646075a253dd9e7ef3cf93ff127a98c790a03145c902884f7b7301af3e"
+        },
+        {
+          "path": "chart.pdf",
+          "bytes": 769,
+          "sha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51"
+        }
+      ],
+      "pdfBytes": 20464,
+      "pdfSha256": "1b668abc2112d21fdd43e9a04eb109f2211a9af34b1f1a09d117ac854900438d",
+      "pageCount": 4,
+      "expectedText": [
+        "Synthetic Compiler Compatibility Report",
+        "Chapter 1",
+        "Figure 1.1"
+      ],
+      "extractedText": "Synthetic Compiler Compatibility Report Example Researcher October 24, 2026 Contents 1 Measurement 2 1 Chapter 1 Measurement We compare cold and warm compilation of a bounded source snapshot. The test includes text such as café, references, macros, and a vector image. No bench- mark result is implied by this fixture. As described in Chapter 1, Figure 1.1 Figure 1.1: Original vector asset; generated by chart.tex. must resolve on a subsequent pass. A reference follows [1]. 2 Bibliography [1] Example Author. Synthetic Methods . 2026. 3",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "report",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 2160.899999976158,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 2212.899999976158,
+      "uiTicks": 110,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 797,
+          "sha256": "638f90c65ed24f59dc397ab1bf44ab5ee4523e246c35ff9d4a9030ebaca72a2e"
+        },
+        {
+          "path": "sections/method.tex",
+          "bytes": 194,
+          "sha256": "ebaf48646075a253dd9e7ef3cf93ff127a98c790a03145c902884f7b7301af3e"
+        },
+        {
+          "path": "chart.pdf",
+          "bytes": 769,
+          "sha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51"
+        }
+      ],
+      "pdfBytes": 20467,
+      "pdfSha256": "3fa1c0129a0ae2d6f64b308b9c35862a619d3d0753f01e26078eb71cdc2c1bed",
+      "pageCount": 4,
+      "expectedText": [
+        "Synthetic Compiler Compatibility Report",
+        "Chapter 1",
+        "Figure 1.1"
+      ],
+      "extractedText": "Synthetic Compiler Compatibility Report Example Researcher October 24, 2026 Contents 1 Measurement 2 1 Chapter 1 Measurement We compare cold and warm compilation of a bounded source snapshot. The test includes text such as café, references, macros, and a vector image. No bench- mark result is implied by this fixture. As described in Chapter 1, Figure 1.1 Figure 1.1: Original vector asset; generated by chart.tex. must resolve on a subsequent pass. A reference follows [1]. 2 Bibliography [1] Example Author. Synthetic Methods . 2026. 3",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "report",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 2073.599999964237,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 2121.399999976158,
+      "uiTicks": 105,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 797,
+          "sha256": "638f90c65ed24f59dc397ab1bf44ab5ee4523e246c35ff9d4a9030ebaca72a2e"
+        },
+        {
+          "path": "sections/method.tex",
+          "bytes": 194,
+          "sha256": "ebaf48646075a253dd9e7ef3cf93ff127a98c790a03145c902884f7b7301af3e"
+        },
+        {
+          "path": "chart.pdf",
+          "bytes": 769,
+          "sha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51"
+        }
+      ],
+      "pdfBytes": 20467,
+      "pdfSha256": "378434755adf2049a326a687419f1c0f6f4d69c5d38ded4c71aa48e18a18feca",
+      "pageCount": 4,
+      "expectedText": [
+        "Synthetic Compiler Compatibility Report",
+        "Chapter 1",
+        "Figure 1.1"
+      ],
+      "extractedText": "Synthetic Compiler Compatibility Report Example Researcher October 24, 2026 Contents 1 Measurement 2 1 Chapter 1 Measurement We compare cold and warm compilation of a bounded source snapshot. The test includes text such as café, references, macros, and a vector image. No bench- mark result is implied by this fixture. As described in Chapter 1, Figure 1.1 Figure 1.1: Original vector asset; generated by chart.tex. must resolve on a subsequent pass. A reference follows [1]. 2 Bibliography [1] Example Author. Synthetic Methods . 2026. 3",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "report",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 2142.199999988079,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 2191.600000023842,
+      "uiTicks": 109,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 797,
+          "sha256": "638f90c65ed24f59dc397ab1bf44ab5ee4523e246c35ff9d4a9030ebaca72a2e"
+        },
+        {
+          "path": "sections/method.tex",
+          "bytes": 194,
+          "sha256": "ebaf48646075a253dd9e7ef3cf93ff127a98c790a03145c902884f7b7301af3e"
+        },
+        {
+          "path": "chart.pdf",
+          "bytes": 769,
+          "sha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51"
+        }
+      ],
+      "pdfBytes": 20468,
+      "pdfSha256": "86d7c2940730c79b9781981b6922c902c0d12fd0b7415abbc11abf712fcd4193",
+      "pageCount": 4,
+      "expectedText": [
+        "Synthetic Compiler Compatibility Report",
+        "Chapter 1",
+        "Figure 1.1"
+      ],
+      "extractedText": "Synthetic Compiler Compatibility Report Example Researcher October 24, 2026 Contents 1 Measurement 2 1 Chapter 1 Measurement We compare cold and warm compilation of a bounded source snapshot. The test includes text such as café, references, macros, and a vector image. No bench- mark result is implied by this fixture. As described in Chapter 1, Figure 1.1 Figure 1.1: Original vector asset; generated by chart.tex. must resolve on a subsequent pass. A reference follows [1]. 2 Bibliography [1] Example Author. Synthetic Methods . 2026. 3",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "report",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 2176.800000011921,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 2230.699999988079,
+      "uiTicks": 111,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 797,
+          "sha256": "638f90c65ed24f59dc397ab1bf44ab5ee4523e246c35ff9d4a9030ebaca72a2e"
+        },
+        {
+          "path": "sections/method.tex",
+          "bytes": 194,
+          "sha256": "ebaf48646075a253dd9e7ef3cf93ff127a98c790a03145c902884f7b7301af3e"
+        },
+        {
+          "path": "chart.pdf",
+          "bytes": 769,
+          "sha256": "703a6e1e53250c89044d29824e5e29acada486ce6673ff9d50b81c2fe1cafe51"
+        }
+      ],
+      "pdfBytes": 20467,
+      "pdfSha256": "db40fdc52b6bedaeea889d0efda5cbd511262e373d60d51c0c3da6300dfe2fd7",
+      "pageCount": 4,
+      "expectedText": [
+        "Synthetic Compiler Compatibility Report",
+        "Chapter 1",
+        "Figure 1.1"
+      ],
+      "extractedText": "Synthetic Compiler Compatibility Report Example Researcher October 24, 2026 Contents 1 Measurement 2 1 Chapter 1 Measurement We compare cold and warm compilation of a bounded source snapshot. The test includes text such as café, references, macros, and a vector image. No bench- mark result is implied by this fixture. As described in Chapter 1, Figure 1.1 Figure 1.1: Original vector asset; generated by chart.tex. must resolve on a subsequent pass. A reference follows [1]. 2 Bibliography [1] Example Author. Synthetic Methods . 2026. 3",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-classic",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 482.5999999642372,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 528.6000000238419,
+      "uiTicks": 25,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 853,
+          "sha256": "84c043aecf52d187167b9d2d2a1dc3b99e48516676ce17f049d99830d7177e2f"
+        }
+      ],
+      "pdfBytes": 16231,
+      "pdfSha256": "692f37b5e3178a7adec1d8fa4216906092dbe428b01b3eaf7004866b2511d153",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Alex Example alex@example.test Example City +1 202 555 0142 Summary Software developer interested in accessible tools and reliable systems. Experience Example Studio — Software Developer 2024–2026 • Built a document organizer with keyboard navigation. • Wrote regression checks and documented release procedures. Education Example University Bachelor of Science in Computer Science, 2024 Skills TypeScript, SQL, automated testing, technical writing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-classic",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 536.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 585.1000000238419,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 853,
+          "sha256": "84c043aecf52d187167b9d2d2a1dc3b99e48516676ce17f049d99830d7177e2f"
+        }
+      ],
+      "pdfBytes": 16230,
+      "pdfSha256": "15b662eebaf975f418ffd5cdad4ed1242d7c1a63088320d4b6707e098c439df2",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Alex Example alex@example.test Example City +1 202 555 0142 Summary Software developer interested in accessible tools and reliable systems. Experience Example Studio — Software Developer 2024–2026 • Built a document organizer with keyboard navigation. • Wrote regression checks and documented release procedures. Education Example University Bachelor of Science in Computer Science, 2024 Skills TypeScript, SQL, automated testing, technical writing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-classic",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 541.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 587.4000000357628,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 853,
+          "sha256": "84c043aecf52d187167b9d2d2a1dc3b99e48516676ce17f049d99830d7177e2f"
+        }
+      ],
+      "pdfBytes": 16233,
+      "pdfSha256": "25e5124137b080a1fdd6322196018241b466283329ebacdd747f58eac08cb72c",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Alex Example alex@example.test Example City +1 202 555 0142 Summary Software developer interested in accessible tools and reliable systems. Experience Example Studio — Software Developer 2024–2026 • Built a document organizer with keyboard navigation. • Wrote regression checks and documented release procedures. Education Example University Bachelor of Science in Computer Science, 2024 Skills TypeScript, SQL, automated testing, technical writing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-classic",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 498.19999998807907,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 542,
+      "uiTicks": 26,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 853,
+          "sha256": "84c043aecf52d187167b9d2d2a1dc3b99e48516676ce17f049d99830d7177e2f"
+        }
+      ],
+      "pdfBytes": 16234,
+      "pdfSha256": "a7a26f2e6b73e3a77612dd886cffbc8e024ccd055fc10580e5b4592a189e85d3",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Alex Example alex@example.test Example City +1 202 555 0142 Summary Software developer interested in accessible tools and reliable systems. Experience Example Studio — Software Developer 2024–2026 • Built a document organizer with keyboard navigation. • Wrote regression checks and documented release procedures. Education Example University Bachelor of Science in Computer Science, 2024 Skills TypeScript, SQL, automated testing, technical writing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-classic",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 526,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 579.0999999642372,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 853,
+          "sha256": "84c043aecf52d187167b9d2d2a1dc3b99e48516676ce17f049d99830d7177e2f"
+        }
+      ],
+      "pdfBytes": 16230,
+      "pdfSha256": "a2d2ff0450b870f9b13a5e5fe932ddace948c762a0316b167a50e823c23dcb51",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Alex Example alex@example.test Example City +1 202 555 0142 Summary Software developer interested in accessible tools and reliable systems. Experience Example Studio — Software Developer 2024–2026 • Built a document organizer with keyboard navigation. • Wrote regression checks and documented release procedures. Education Example University Bachelor of Science in Computer Science, 2024 Skills TypeScript, SQL, automated testing, technical writing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-classic",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 513.3000000119209,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 562.6000000238419,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 853,
+          "sha256": "84c043aecf52d187167b9d2d2a1dc3b99e48516676ce17f049d99830d7177e2f"
+        }
+      ],
+      "pdfBytes": 16230,
+      "pdfSha256": "a2d2ff0450b870f9b13a5e5fe932ddace948c762a0316b167a50e823c23dcb51",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Alex Example alex@example.test Example City +1 202 555 0142 Summary Software developer interested in accessible tools and reliable systems. Experience Example Studio — Software Developer 2024–2026 • Built a document organizer with keyboard navigation. • Wrote regression checks and documented release procedures. Education Example University Bachelor of Science in Computer Science, 2024 Skills TypeScript, SQL, automated testing, technical writing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-compact",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 521.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 568.5,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 1069,
+          "sha256": "de78a2b59b9d24f414b31ee9b904b65236f52e0c0e3a24bf4a462830ef7be20c"
+        }
+      ],
+      "pdfBytes": 17625,
+      "pdfSha256": "28342e6015f4f3aa9999300c680171f11aa6046721153ba10ca4504e4cb71c29",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Morgan Sample morgan@example.test Sample City +1 202 555 0183 Profile Early-career engineer interested in data quality and clear communication. Projects Sample Catalog 2026 • Created a searchable catalog for a synthetic library dataset. • Added validation and documented data import limitations. Study Planner 2025 • Designed an accessible schedule editor for a coursework project. Experience Sample Workshop — Engineering Intern 2025 Reviewed test cases and prepared onboarding examples. Education Example Institute, Bachelor of Engineering, 2026 Technical skills Python, SQL, Git, documentation, unit testing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-compact",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 469.69999998807907,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 516.7999999523163,
+      "uiTicks": 25,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 1069,
+          "sha256": "de78a2b59b9d24f414b31ee9b904b65236f52e0c0e3a24bf4a462830ef7be20c"
+        }
+      ],
+      "pdfBytes": 17631,
+      "pdfSha256": "ed94facde2005d5315789c43cc08d7968cf2e357ecf4231442d2a919a53885c1",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Morgan Sample morgan@example.test Sample City +1 202 555 0183 Profile Early-career engineer interested in data quality and clear communication. Projects Sample Catalog 2026 • Created a searchable catalog for a synthetic library dataset. • Added validation and documented data import limitations. Study Planner 2025 • Designed an accessible schedule editor for a coursework project. Experience Sample Workshop — Engineering Intern 2025 Reviewed test cases and prepared onboarding examples. Education Example Institute, Bachelor of Engineering, 2026 Technical skills Python, SQL, Git, documentation, unit testing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-compact",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 510.60000002384186,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 558,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 1069,
+          "sha256": "de78a2b59b9d24f414b31ee9b904b65236f52e0c0e3a24bf4a462830ef7be20c"
+        }
+      ],
+      "pdfBytes": 17623,
+      "pdfSha256": "82f9dafe5e9669d0c6db8c133d5a234014ee9497624fc80cc7698bbacd5371cb",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Morgan Sample morgan@example.test Sample City +1 202 555 0183 Profile Early-career engineer interested in data quality and clear communication. Projects Sample Catalog 2026 • Created a searchable catalog for a synthetic library dataset. • Added validation and documented data import limitations. Study Planner 2025 • Designed an accessible schedule editor for a coursework project. Experience Sample Workshop — Engineering Intern 2025 Reviewed test cases and prepared onboarding examples. Education Example Institute, Bachelor of Engineering, 2026 Technical skills Python, SQL, Git, documentation, unit testing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-compact",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 546.4000000357628,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 594.0999999642372,
+      "uiTicks": 29,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 1069,
+          "sha256": "de78a2b59b9d24f414b31ee9b904b65236f52e0c0e3a24bf4a462830ef7be20c"
+        }
+      ],
+      "pdfBytes": 17628,
+      "pdfSha256": "6bfd6101a6914102afbb61d572191eb591e2481d76c0cecc865698749e752a1d",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Morgan Sample morgan@example.test Sample City +1 202 555 0183 Profile Early-career engineer interested in data quality and clear communication. Projects Sample Catalog 2026 • Created a searchable catalog for a synthetic library dataset. • Added validation and documented data import limitations. Study Planner 2025 • Designed an accessible schedule editor for a coursework project. Experience Sample Workshop — Engineering Intern 2025 Reviewed test cases and prepared onboarding examples. Education Example Institute, Bachelor of Engineering, 2026 Technical skills Python, SQL, Git, documentation, unit testing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-compact",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 529.9000000357628,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 587.1999999880791,
+      "uiTicks": 29,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 1069,
+          "sha256": "de78a2b59b9d24f414b31ee9b904b65236f52e0c0e3a24bf4a462830ef7be20c"
+        }
+      ],
+      "pdfBytes": 17628,
+      "pdfSha256": "6bfd6101a6914102afbb61d572191eb591e2481d76c0cecc865698749e752a1d",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Morgan Sample morgan@example.test Sample City +1 202 555 0183 Profile Early-career engineer interested in data quality and clear communication. Projects Sample Catalog 2026 • Created a searchable catalog for a synthetic library dataset. • Added validation and documented data import limitations. Study Planner 2025 • Designed an accessible schedule editor for a coursework project. Experience Sample Workshop — Engineering Intern 2025 Reviewed test cases and prepared onboarding examples. Education Example Institute, Bachelor of Engineering, 2026 Technical skills Python, SQL, Git, documentation, unit testing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-resume-compact",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 471.9000000357628,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 518,
+      "uiTicks": 25,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 1069,
+          "sha256": "de78a2b59b9d24f414b31ee9b904b65236f52e0c0e3a24bf4a462830ef7be20c"
+        }
+      ],
+      "pdfBytes": 17627,
+      "pdfSha256": "9bd7aee47cfb62106bc2c2a05e46aa1c7be678e31435fff6713072f23124b30a",
+      "pageCount": 1,
+      "expectedText": ["Experience"],
+      "extractedText": "Morgan Sample morgan@example.test Sample City +1 202 555 0183 Profile Early-career engineer interested in data quality and clear communication. Projects Sample Catalog 2026 • Created a searchable catalog for a synthetic library dataset. • Added validation and documented data import limitations. Study Planner 2025 • Designed an accessible schedule editor for a coursework project. Experience Sample Workshop — Engineering Intern 2025 Reviewed test cases and prepared onboarding examples. Education Example Institute, Bachelor of Engineering, 2026 Technical skills Python, SQL, Git, documentation, unit testing.",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-report",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1556.5999999642372,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1603.5,
+      "uiTicks": 79,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 503,
+          "sha256": "2228cf4064a568459ee24a3e61bd88afae59d3c6f057e11d97351ef0b6ada397"
+        },
+        {
+          "path": "sections/introduction.tex",
+          "bytes": 323,
+          "sha256": "7d10703a9612aeeb70f48101b5452f1bbf6c622e1c54277b354cc124f7e6e895"
+        },
+        {
+          "path": "sections/findings.tex",
+          "bytes": 437,
+          "sha256": "b00e4ef124ae6ea7867df73ca29e99781b013c532d08bd586e6982ca3248fc39"
+        }
+      ],
+      "pdfBytes": 23232,
+      "pdfSha256": "bb80227abc8ed9c51780c42677d89d9074e87e74c47e018f9fbbef7bf6ffe4b5",
+      "pageCount": 5,
+      "expectedText": ["A Synthetic Document Workflow Study"],
+      "extractedText": "A Synthetic Document Workflow Study Example Research Team October 2026 Contents 1 Introduction 2 1.1 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 Findings 3 2.1 Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 1 Chapter 1 Introduction This synthetic report illustrates a document with multiple source files. The example protocol is described in [1]. 1.1 Method We compare two fictional drafting workflows using the same example text. No empirical measurements or real participants are represented. 2 Chapter 2 Findings The method in Section 1.1 provides a place to describe verified results. Workflow Observation Single file Simple navigation Multiple files Separate sections Table 2.1: Illustrative observations, not measured outcomes. 2.1 Limitations Replace these examples with actual evidence before publication. 3 Bibliography [1] Example Research Team. Synthetic workflow protocol, 2026. 4",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-report",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1579.800000011921,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1625.6000000238419,
+      "uiTicks": 80,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 503,
+          "sha256": "2228cf4064a568459ee24a3e61bd88afae59d3c6f057e11d97351ef0b6ada397"
+        },
+        {
+          "path": "sections/introduction.tex",
+          "bytes": 323,
+          "sha256": "7d10703a9612aeeb70f48101b5452f1bbf6c622e1c54277b354cc124f7e6e895"
+        },
+        {
+          "path": "sections/findings.tex",
+          "bytes": 437,
+          "sha256": "b00e4ef124ae6ea7867df73ca29e99781b013c532d08bd586e6982ca3248fc39"
+        }
+      ],
+      "pdfBytes": 23232,
+      "pdfSha256": "9b5028d6b3deeed92096fd07114f89e31d94ed9263cad53724f89c67cee0cfbc",
+      "pageCount": 5,
+      "expectedText": ["A Synthetic Document Workflow Study"],
+      "extractedText": "A Synthetic Document Workflow Study Example Research Team October 2026 Contents 1 Introduction 2 1.1 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 Findings 3 2.1 Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 1 Chapter 1 Introduction This synthetic report illustrates a document with multiple source files. The example protocol is described in [1]. 1.1 Method We compare two fictional drafting workflows using the same example text. No empirical measurements or real participants are represented. 2 Chapter 2 Findings The method in Section 1.1 provides a place to describe verified results. Workflow Observation Single file Simple navigation Multiple files Separate sections Table 2.1: Illustrative observations, not measured outcomes. 2.1 Limitations Replace these examples with actual evidence before publication. 3 Bibliography [1] Example Research Team. Synthetic workflow protocol, 2026. 4",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-report",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1488.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1537.5999999642372,
+      "uiTicks": 76,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 503,
+          "sha256": "2228cf4064a568459ee24a3e61bd88afae59d3c6f057e11d97351ef0b6ada397"
+        },
+        {
+          "path": "sections/introduction.tex",
+          "bytes": 323,
+          "sha256": "7d10703a9612aeeb70f48101b5452f1bbf6c622e1c54277b354cc124f7e6e895"
+        },
+        {
+          "path": "sections/findings.tex",
+          "bytes": 437,
+          "sha256": "b00e4ef124ae6ea7867df73ca29e99781b013c532d08bd586e6982ca3248fc39"
+        }
+      ],
+      "pdfBytes": 23235,
+      "pdfSha256": "b5965e6020dded838f832961882be882414b68b67436bf1820aacc2a7715c80c",
+      "pageCount": 5,
+      "expectedText": ["A Synthetic Document Workflow Study"],
+      "extractedText": "A Synthetic Document Workflow Study Example Research Team October 2026 Contents 1 Introduction 2 1.1 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 Findings 3 2.1 Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 1 Chapter 1 Introduction This synthetic report illustrates a document with multiple source files. The example protocol is described in [1]. 1.1 Method We compare two fictional drafting workflows using the same example text. No empirical measurements or real participants are represented. 2 Chapter 2 Findings The method in Section 1.1 provides a place to describe verified results. Workflow Observation Single file Simple navigation Multiple files Separate sections Table 2.1: Illustrative observations, not measured outcomes. 2.1 Limitations Replace these examples with actual evidence before publication. 3 Bibliography [1] Example Research Team. Synthetic workflow protocol, 2026. 4",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-report",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1561.800000011921,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1604.2999999523163,
+      "uiTicks": 79,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 503,
+          "sha256": "2228cf4064a568459ee24a3e61bd88afae59d3c6f057e11d97351ef0b6ada397"
+        },
+        {
+          "path": "sections/introduction.tex",
+          "bytes": 323,
+          "sha256": "7d10703a9612aeeb70f48101b5452f1bbf6c622e1c54277b354cc124f7e6e895"
+        },
+        {
+          "path": "sections/findings.tex",
+          "bytes": 437,
+          "sha256": "b00e4ef124ae6ea7867df73ca29e99781b013c532d08bd586e6982ca3248fc39"
+        }
+      ],
+      "pdfBytes": 23228,
+      "pdfSha256": "c64632102b02ffa92f7441848a76df84ed676d6d0944ba15ef62c6839076b57a",
+      "pageCount": 5,
+      "expectedText": ["A Synthetic Document Workflow Study"],
+      "extractedText": "A Synthetic Document Workflow Study Example Research Team October 2026 Contents 1 Introduction 2 1.1 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 Findings 3 2.1 Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 1 Chapter 1 Introduction This synthetic report illustrates a document with multiple source files. The example protocol is described in [1]. 1.1 Method We compare two fictional drafting workflows using the same example text. No empirical measurements or real participants are represented. 2 Chapter 2 Findings The method in Section 1.1 provides a place to describe verified results. Workflow Observation Single file Simple navigation Multiple files Separate sections Table 2.1: Illustrative observations, not measured outcomes. 2.1 Limitations Replace these examples with actual evidence before publication. 3 Bibliography [1] Example Research Team. Synthetic workflow protocol, 2026. 4",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-report",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1538.199999988079,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1599.699999988079,
+      "uiTicks": 79,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 503,
+          "sha256": "2228cf4064a568459ee24a3e61bd88afae59d3c6f057e11d97351ef0b6ada397"
+        },
+        {
+          "path": "sections/introduction.tex",
+          "bytes": 323,
+          "sha256": "7d10703a9612aeeb70f48101b5452f1bbf6c622e1c54277b354cc124f7e6e895"
+        },
+        {
+          "path": "sections/findings.tex",
+          "bytes": 437,
+          "sha256": "b00e4ef124ae6ea7867df73ca29e99781b013c532d08bd586e6982ca3248fc39"
+        }
+      ],
+      "pdfBytes": 23225,
+      "pdfSha256": "71bd449130a62e438510a136ed9e6efbc4f405c264dfdd138bed9bd39eedfd7c",
+      "pageCount": 5,
+      "expectedText": ["A Synthetic Document Workflow Study"],
+      "extractedText": "A Synthetic Document Workflow Study Example Research Team October 2026 Contents 1 Introduction 2 1.1 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 Findings 3 2.1 Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 1 Chapter 1 Introduction This synthetic report illustrates a document with multiple source files. The example protocol is described in [1]. 1.1 Method We compare two fictional drafting workflows using the same example text. No empirical measurements or real participants are represented. 2 Chapter 2 Findings The method in Section 1.1 provides a place to describe verified results. Workflow Observation Single file Simple navigation Multiple files Separate sections Table 2.1: Illustrative observations, not measured outcomes. 2.1 Limitations Replace these examples with actual evidence before publication. 3 Bibliography [1] Example Research Team. Synthetic workflow protocol, 2026. 4",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "template-report",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 1598.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 1650,
+      "uiTicks": 82,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 503,
+          "sha256": "2228cf4064a568459ee24a3e61bd88afae59d3c6f057e11d97351ef0b6ada397"
+        },
+        {
+          "path": "sections/introduction.tex",
+          "bytes": 323,
+          "sha256": "7d10703a9612aeeb70f48101b5452f1bbf6c622e1c54277b354cc124f7e6e895"
+        },
+        {
+          "path": "sections/findings.tex",
+          "bytes": 437,
+          "sha256": "b00e4ef124ae6ea7867df73ca29e99781b013c532d08bd586e6982ca3248fc39"
+        }
+      ],
+      "pdfBytes": 23235,
+      "pdfSha256": "8b3c2f1ded77c0fc9ab14961cf93415467b268650e5adc9e90f97fd5f9f2040f",
+      "pageCount": 5,
+      "expectedText": ["A Synthetic Document Workflow Study"],
+      "extractedText": "A Synthetic Document Workflow Study Example Research Team October 2026 Contents 1 Introduction 2 1.1 Method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2 Findings 3 2.1 Limitations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3 1 Chapter 1 Introduction This synthetic report illustrates a document with multiple source files. The example protocol is described in [1]. 1.1 Method We compare two fictional drafting workflows using the same example text. No empirical measurements or real participants are represented. 2 Chapter 2 Findings The method in Section 1.1 provides a place to describe verified results. Workflow Observation Single file Simple navigation Multiple files Separate sections Table 2.1: Illustrative observations, not measured outcomes. 2.1 Limitations Replace these examples with actual evidence before publication. 3 Bibliography [1] Example Research Team. Synthetic workflow protocol, 2026. 4",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "invalid",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "failed",
+      "status": 1,
+      "memoryBytes": 330498048,
+      "wallMs": 549.6999999880791,
+      "uiTicks": 26,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 68,
+          "sha256": "d1a7099dc605c14d7012dcb66666653e3f632813935ae5bc3abe82fa994eddbd"
+        }
+      ],
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "missing-package",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "failed",
+      "status": 1,
+      "memoryBytes": 330498048,
+      "wallMs": 560.5,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 92,
+          "sha256": "b125885c42c781aa28dba800d2eb1a0d544aa4e5287641d9419edeb7eb52f3da"
+        }
+      ],
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "timeout",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "timed-out",
+      "wallMs": 1010.5,
+      "uiTicks": 50,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 83,
+          "sha256": "9ec583de67f26955329dc2cba57888200694b8a247e500d517066adda9057589"
+        }
+      ],
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "cancel",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "cancelled",
+      "wallMs": 260.69999998807907,
+      "uiTicks": 13,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 83,
+          "sha256": "9ec583de67f26955329dc2cba57888200694b8a247e500d517066adda9057589"
+        }
+      ],
+      "expectedText": [],
+      "extractedText": "",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-a",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 512.8999999761581,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 561.8000000119209,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 75,
+          "sha256": "07679d5581c80cdbbc0984e596a893c0396a78f7f45a0bf57912fe8bb8b84560"
+        },
+        {
+          "path": "private.txt",
+          "bytes": 23,
+          "sha256": "3e2080ac660e037a70c7c2c6fe1ad062cb1595e3d78aeebd6d3465bff9a6fb90"
+        }
+      ],
+      "pdfBytes": 3633,
+      "pdfSha256": "2c1c6f9218f2e84eee41cf180060dce2046ffe274ce446f6140cbfcc8fa5534d",
+      "pageCount": 1,
+      "expectedText": ["First isolated project"],
+      "extractedText": "First isolated project 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-a",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 531.3000000119209,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 581.7999999523163,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 75,
+          "sha256": "07679d5581c80cdbbc0984e596a893c0396a78f7f45a0bf57912fe8bb8b84560"
+        },
+        {
+          "path": "private.txt",
+          "bytes": 23,
+          "sha256": "3e2080ac660e037a70c7c2c6fe1ad062cb1595e3d78aeebd6d3465bff9a6fb90"
+        }
+      ],
+      "pdfBytes": 3633,
+      "pdfSha256": "c6dfeaad15a93b3068a75d06a4a0ad5346313c54297bd889220a327eb9c09572",
+      "pageCount": 1,
+      "expectedText": ["First isolated project"],
+      "extractedText": "First isolated project 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-a",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 537,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 590.6000000238419,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 75,
+          "sha256": "07679d5581c80cdbbc0984e596a893c0396a78f7f45a0bf57912fe8bb8b84560"
+        },
+        {
+          "path": "private.txt",
+          "bytes": 23,
+          "sha256": "3e2080ac660e037a70c7c2c6fe1ad062cb1595e3d78aeebd6d3465bff9a6fb90"
+        }
+      ],
+      "pdfBytes": 3632,
+      "pdfSha256": "480976ae639cede7df9127207d555504fc01c971ee987093713911f84636a09e",
+      "pageCount": 1,
+      "expectedText": ["First isolated project"],
+      "extractedText": "First isolated project 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-a",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 488.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 532.6999999880791,
+      "uiTicks": 26,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 75,
+          "sha256": "07679d5581c80cdbbc0984e596a893c0396a78f7f45a0bf57912fe8bb8b84560"
+        },
+        {
+          "path": "private.txt",
+          "bytes": 23,
+          "sha256": "3e2080ac660e037a70c7c2c6fe1ad062cb1595e3d78aeebd6d3465bff9a6fb90"
+        }
+      ],
+      "pdfBytes": 3632,
+      "pdfSha256": "480976ae639cede7df9127207d555504fc01c971ee987093713911f84636a09e",
+      "pageCount": 1,
+      "expectedText": ["First isolated project"],
+      "extractedText": "First isolated project 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-a",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 533.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 576,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 75,
+          "sha256": "07679d5581c80cdbbc0984e596a893c0396a78f7f45a0bf57912fe8bb8b84560"
+        },
+        {
+          "path": "private.txt",
+          "bytes": 23,
+          "sha256": "3e2080ac660e037a70c7c2c6fe1ad062cb1595e3d78aeebd6d3465bff9a6fb90"
+        }
+      ],
+      "pdfBytes": 3633,
+      "pdfSha256": "1f7b1435cddb12140750e770fe98693e34ff5e442810dee0926e57b3e899c6b6",
+      "pageCount": 1,
+      "expectedText": ["First isolated project"],
+      "extractedText": "First isolated project 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-a",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 522.8000000119209,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 571.1999999880791,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 75,
+          "sha256": "07679d5581c80cdbbc0984e596a893c0396a78f7f45a0bf57912fe8bb8b84560"
+        },
+        {
+          "path": "private.txt",
+          "bytes": 23,
+          "sha256": "3e2080ac660e037a70c7c2c6fe1ad062cb1595e3d78aeebd6d3465bff9a6fb90"
+        }
+      ],
+      "pdfBytes": 3632,
+      "pdfSha256": "9016699b19a6b4c9bda7cee1c6ce1e5a64c0fb2efd0a67f1ffba46069f54a950",
+      "pageCount": 1,
+      "expectedText": ["First isolated project"],
+      "extractedText": "First isolated project 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-b",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 538.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 587.5,
+      "uiTicks": 29,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 95,
+          "sha256": "004ea7d1933bad91dd7c931e1771e2d8d2faa79f540332e22857d7a13bc32ddd"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "bea934853a1f57568f980939b5ede4f8247fbfa3bc24015eae09805891435d30",
+      "pageCount": 1,
+      "expectedText": ["ISOLATED"],
+      "extractedText": "ISOLATED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-b",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 571.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 617,
+      "uiTicks": 30,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 95,
+          "sha256": "004ea7d1933bad91dd7c931e1771e2d8d2faa79f540332e22857d7a13bc32ddd"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "bea934853a1f57568f980939b5ede4f8247fbfa3bc24015eae09805891435d30",
+      "pageCount": 1,
+      "expectedText": ["ISOLATED"],
+      "extractedText": "ISOLATED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-b",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 510.7999999523163,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 554.6000000238419,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 95,
+          "sha256": "004ea7d1933bad91dd7c931e1771e2d8d2faa79f540332e22857d7a13bc32ddd"
+        }
+      ],
+      "pdfBytes": 3047,
+      "pdfSha256": "b4f19272a928a70587c379c7fafb7c9e32cb02791638f6d14e3a2ab90826efe8",
+      "pageCount": 1,
+      "expectedText": ["ISOLATED"],
+      "extractedText": "ISOLATED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-b",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 518.5,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 564.6999999880791,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 95,
+          "sha256": "004ea7d1933bad91dd7c931e1771e2d8d2faa79f540332e22857d7a13bc32ddd"
+        }
+      ],
+      "pdfBytes": 3048,
+      "pdfSha256": "f860ebee7893d627825bd3b2d9b87af6a54b0993210a9c0a336e8cbc9a7d9ad3",
+      "pageCount": 1,
+      "expectedText": ["ISOLATED"],
+      "extractedText": "ISOLATED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-b",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 548.1999999880791,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 601.6000000238419,
+      "uiTicks": 29,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 95,
+          "sha256": "004ea7d1933bad91dd7c931e1771e2d8d2faa79f540332e22857d7a13bc32ddd"
+        }
+      ],
+      "pdfBytes": 3048,
+      "pdfSha256": "f860ebee7893d627825bd3b2d9b87af6a54b0993210a9c0a336e8cbc9a7d9ad3",
+      "pageCount": 1,
+      "expectedText": ["ISOLATED"],
+      "extractedText": "ISOLATED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "project-b",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 541.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 585.3000000119209,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 95,
+          "sha256": "004ea7d1933bad91dd7c931e1771e2d8d2faa79f540332e22857d7a13bc32ddd"
+        }
+      ],
+      "pdfBytes": 3050,
+      "pdfSha256": "55744e4827b4f8ad00d6664493468292fb5fceffc3bf9c69928e795bdaaab1cf",
+      "pageCount": 1,
+      "expectedText": ["ISOLATED"],
+      "extractedText": "ISOLATED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "shell-disabled",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 486.60000002384186,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 528.7999999523163,
+      "uiTicks": 25,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 149,
+          "sha256": "bddbafda228359dda07caf0bd5dc2d71a64e606283b327d9fd3166adfa79343e"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "42f308e6f6b16f8b4b9326d43514caf9c381d570e5af3c39009c1ea5b5c5c4ed",
+      "pageCount": 1,
+      "expectedText": ["SHELL DISABLED"],
+      "extractedText": "SHELL DISABLED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "shell-disabled",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 518.8999999761581,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 568.6999999880791,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 149,
+          "sha256": "bddbafda228359dda07caf0bd5dc2d71a64e606283b327d9fd3166adfa79343e"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "1903434830b14542bca8a9c815d7c773066c0cf4f0e8bbafba51935d52705cf3",
+      "pageCount": 1,
+      "expectedText": ["SHELL DISABLED"],
+      "extractedText": "SHELL DISABLED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "shell-disabled",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 501.2000000476837,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 545.3000000119209,
+      "uiTicks": 26,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 149,
+          "sha256": "bddbafda228359dda07caf0bd5dc2d71a64e606283b327d9fd3166adfa79343e"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "1903434830b14542bca8a9c815d7c773066c0cf4f0e8bbafba51935d52705cf3",
+      "pageCount": 1,
+      "expectedText": ["SHELL DISABLED"],
+      "extractedText": "SHELL DISABLED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "shell-disabled",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 500.89999997615814,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 548.1999999880791,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 149,
+          "sha256": "bddbafda228359dda07caf0bd5dc2d71a64e606283b327d9fd3166adfa79343e"
+        }
+      ],
+      "pdfBytes": 3049,
+      "pdfSha256": "5c748e4abbb8390867fc25d46bd13b822928c2c0b97df449c112749e1881efd6",
+      "pageCount": 1,
+      "expectedText": ["SHELL DISABLED"],
+      "extractedText": "SHELL DISABLED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "shell-disabled",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 535.1999999880791,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 588.1999999880791,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 149,
+          "sha256": "bddbafda228359dda07caf0bd5dc2d71a64e606283b327d9fd3166adfa79343e"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "5e2ce8cc5637530fcfc278301ce958b53c83cf9e0087557e0a640f2fe05f7e49",
+      "pageCount": 1,
+      "expectedText": ["SHELL DISABLED"],
+      "extractedText": "SHELL DISABLED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "shell-disabled",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 570.7000000476837,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 621,
+      "uiTicks": 30,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 149,
+          "sha256": "bddbafda228359dda07caf0bd5dc2d71a64e606283b327d9fd3166adfa79343e"
+        }
+      ],
+      "pdfBytes": 3051,
+      "pdfSha256": "5e2ce8cc5637530fcfc278301ce958b53c83cf9e0087557e0a640f2fe05f7e49",
+      "pageCount": 1,
+      "expectedText": ["SHELL DISABLED"],
+      "extractedText": "SHELL DISABLED 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "recovery",
+      "iteration": 0,
+      "phase": "fresh-worker-first",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 481.7000000476837,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 526.8999999761581,
+      "uiTicks": 25,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 71,
+          "sha256": "0e6ffff891f29bf612b52aec3c477ef2e2405ec9ab5bca801d6f0550530ecbd4"
+        }
+      ],
+      "pdfBytes": 3416,
+      "pdfSha256": "dfda0b227251dbc01fc6aead24d4a6e672b83358041c4bf65493480581364710",
+      "pageCount": 1,
+      "expectedText": ["Recovery succeeded"],
+      "extractedText": "Recovery succeeded 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "recovery",
+      "iteration": 1,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 524.1000000238419,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 567.2999999523163,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 71,
+          "sha256": "0e6ffff891f29bf612b52aec3c477ef2e2405ec9ab5bca801d6f0550530ecbd4"
+        }
+      ],
+      "pdfBytes": 3416,
+      "pdfSha256": "821166baf624f44bbd4b904c2c8cee96a13410f3a815073479b8ecfe82a4adb8",
+      "pageCount": 1,
+      "expectedText": ["Recovery succeeded"],
+      "extractedText": "Recovery succeeded 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "recovery",
+      "iteration": 2,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 531.1999999880791,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 575.3000000119209,
+      "uiTicks": 28,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 71,
+          "sha256": "0e6ffff891f29bf612b52aec3c477ef2e2405ec9ab5bca801d6f0550530ecbd4"
+        }
+      ],
+      "pdfBytes": 3416,
+      "pdfSha256": "821166baf624f44bbd4b904c2c8cee96a13410f3a815073479b8ecfe82a4adb8",
+      "pageCount": 1,
+      "expectedText": ["Recovery succeeded"],
+      "extractedText": "Recovery succeeded 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "recovery",
+      "iteration": 3,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 471,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 524.8999999761581,
+      "uiTicks": 25,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 71,
+          "sha256": "0e6ffff891f29bf612b52aec3c477ef2e2405ec9ab5bca801d6f0550530ecbd4"
+        }
+      ],
+      "pdfBytes": 3418,
+      "pdfSha256": "9569e469e68561e0f1a1eb708e63842c59a57ba526b0fe0547314c3413ea8eea",
+      "pageCount": 1,
+      "expectedText": ["Recovery succeeded"],
+      "extractedText": "Recovery succeeded 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "recovery",
+      "iteration": 4,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 500.0999999642372,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 554,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 71,
+          "sha256": "0e6ffff891f29bf612b52aec3c477ef2e2405ec9ab5bca801d6f0550530ecbd4"
+        }
+      ],
+      "pdfBytes": 3417,
+      "pdfSha256": "11414931ed6f338fed3e5aaa05047de0bfdc0c74ff72d4014268ed373c9d4357",
+      "pageCount": 1,
+      "expectedText": ["Recovery succeeded"],
+      "extractedText": "Recovery succeeded 1",
+      "unresolvedReferences": false
+    },
+    {
+      "name": "recovery",
+      "iteration": 5,
+      "phase": "fresh-worker-warm-assets",
+      "passed": true,
+      "type": "succeeded",
+      "memoryBytes": 330498048,
+      "durationMs": 519.0999999642372,
+      "blockedHostAPIs": {
+        "fetch": true,
+        "xhr": true,
+        "websocket": true,
+        "storage": true,
+        "document": true
+      },
+      "wallMs": 563.1000000238419,
+      "uiTicks": 27,
+      "enteredRun": true,
+      "inputFiles": [
+        {
+          "path": "main.tex",
+          "bytes": 71,
+          "sha256": "0e6ffff891f29bf612b52aec3c477ef2e2405ec9ab5bca801d6f0550530ecbd4"
+        }
+      ],
+      "pdfBytes": 3417,
+      "pdfSha256": "11414931ed6f338fed3e5aaa05047de0bfdc0c74ff72d4014268ed373c9d4357",
+      "pageCount": 1,
+      "expectedText": ["Recovery succeeded"],
+      "extractedText": "Recovery succeeded 1",
+      "unresolvedReferences": false
+    }
+  ]
+}

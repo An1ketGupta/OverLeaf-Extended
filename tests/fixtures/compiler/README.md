@@ -2,7 +2,10 @@
 
 These are original synthetic documents, dedicated to the public domain under
 CC0-1.0. They are benchmark inputs, not verified product templates. They have
-not yet been compiled in this repository. All identity and employment data are fictional.
+been compiled in the isolated BusyTeX/TeX Live 2025 browser evaluation harness on
+2026-10-24. This establishes local fixture compatibility, not a selected product
+engine or hosted/device support. See docs/compiler-feasibility.md and its raw
+measurement record. All identity and employment data are fictional.
 
 | Fixture | Engine target | Required behavior |
 | --- | --- | --- |
