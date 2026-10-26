@@ -1,0 +1,6 @@
+simulation: assistant-recovery
+routing: path
+mocks:
+  - name: synthetic-assistant
+    routeKey: assistant
+    path: postman/mocks/assistant/default.js
