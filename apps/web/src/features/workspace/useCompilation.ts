@@ -121,10 +121,12 @@ export function useCompilation(model: WorkspaceModel, enabled: boolean) {
       ["saving", "loading", "queued", "running"].includes(s) ? "cancelled" : s,
     );
     if (!enabled) {
-      setOutput(undefined);
+      // A paused atomic source mutation cancels work but retains the last good
+      // PDF; its fingerprint labels it stale once the accepted source changes.
+      if (!model.paused || !model.isActive) setOutput(undefined);
       setMessages([]);
     }
-  }, [fingerprint, enabled]);
+  }, [fingerprint, enabled, model.paused, model.isActive]);
   useEffect(() => {
     void fingerprint;
     if (!auto || !enabled) return;

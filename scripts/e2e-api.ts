@@ -7,6 +7,26 @@ import { readConfig } from "../apps/api/src/config.js";
 // Test harness only: the production server has no fixture-provider switch.
 if (process.env.NODE_ENV !== "test")
   throw new Error("E2E harness requires NODE_ENV=test");
+let holdProvider = false;
+const heldResponses = new Set<() => void>();
+const arrivalWaiters = new Set<() => void>();
+process.on("message", (message: { id: number; action: string }) => {
+  const done = () => process.send?.({ id: message.id });
+  if (message.action === "provider/hold") {
+    holdProvider = true;
+    done();
+  }
+  if (message.action === "provider/release") {
+    holdProvider = false;
+    for (const release of heldResponses) release();
+    heldResponses.clear();
+    done();
+  }
+  if (message.action === "provider/wait") {
+    if (heldResponses.size) done();
+    else arrivalWaiters.add(done);
+  }
+});
 const upstream = createServer(async (req, res) => {
   if (req.method !== "POST" || req.url !== "/openai/v1/chat/completions") {
     res.statusCode = 501;
@@ -19,8 +39,15 @@ const upstream = createServer(async (req, res) => {
   const input = JSON.parse(wire.messages[1].content) as {
     mode: string;
     instruction: string;
+    diagnostics: string;
     files: { id: string; content: string }[];
   };
+  if (holdProvider)
+    await new Promise<void>((resolve) => {
+      heldResponses.add(resolve);
+      for (const ready of arrivalWaiters) ready();
+      arrivalWaiters.clear();
+    });
   if (input.instruction.includes("simulate unavailable")) {
     res.statusCode = 429;
     res.end("{}");
@@ -29,7 +56,18 @@ const upstream = createServer(async (req, res) => {
   const edits = ["rewrite", "generate"].includes(input.mode)
     ? input.files.map((f) => ({
         fileId: f.id,
-        content: `${f.content}\n% Reviewed synthetic change\n`,
+        content:
+          input.instruction === "synthetic visible edit"
+            ? f.content.replace(
+                "\\end{document}",
+                "\\par\\noindent Reviewed visible change.\\par\n\\end{document}",
+              )
+            : input.instruction === "synthetic broken edit"
+              ? f.content.replace(
+                  "\\end{document}",
+                  "\\UnknownAssistantCommand\n\\end{document}",
+                )
+              : `${f.content}\n% Reviewed synthetic change\n`,
       }))
     : [];
   res.setHeader("Content-Type", "application/json");
@@ -41,7 +79,10 @@ const upstream = createServer(async (req, res) => {
           message: {
             content: JSON.stringify({
               answer:
-                "Synthetic provider: review every change before applying.",
+                input.mode === "diagnostic" &&
+                input.diagnostics.includes("Undefined control sequence")
+                  ? "Synthetic diagnostic: undefined command. Review the source or restore its backup."
+                  : "Synthetic provider: review every change before applying.",
               refused: false,
               edits,
             }),

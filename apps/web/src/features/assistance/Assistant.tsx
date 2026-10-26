@@ -6,9 +6,11 @@ import {
 } from "@overleaf-pro/contracts";
 import { useEffect, useRef, useState } from "react";
 import { projectApi } from "../workspace/api.js";
+import { containDialogFocus } from "../workspace/dialog.js";
 import { changedFiles } from "../workspace/diff.js";
 import { savedProjectForHistory } from "../workspace/export.js";
 import type { WorkspaceModel } from "../workspace/model.js";
+import { mutateSavedProject } from "../workspace/mutations.js";
 import { assistanceRequest } from "./api.js";
 import "./assistance.css";
 
@@ -40,12 +42,14 @@ export function Assistant({
   // biome-ignore lint/correctness/useExhaustiveDependencies: A mounted dialog belongs to one fixed workspace model.
   useEffect(() => {
     alive.current = true;
+    const before = document.activeElement;
     const element = dialog.current;
     element?.showModal();
     void refresh().catch(() => {});
     return () => {
       alive.current = false;
       element?.close();
+      if (before instanceof HTMLElement && before.isConnected) before.focus();
     };
   }, []);
   async function refresh() {
@@ -87,6 +91,7 @@ export function Assistant({
       : [];
   return (
     <dialog
+      onKeyDown={containDialogFocus}
       ref={dialog}
       className="history-dialog assistant-dialog"
       aria-labelledby="assistant-title"
@@ -103,7 +108,7 @@ export function Assistant({
       </div>
       <p>
         Review every change before applying. Accepted edits preserve a snapshot.
-        Compilation is unavailable until an engine passes evaluation.
+        Recompile accepted edits in the workspace to verify their PDF output.
       </p>
       <form
         onSubmit={(event) => {
@@ -181,6 +186,7 @@ export function Assistant({
         <label>
           Instruction
           <textarea
+            aria-label="Instruction"
             required
             maxLength={2000}
             value={instruction}
@@ -192,6 +198,7 @@ export function Assistant({
           <label>
             Diagnostic text (optional, up to 4000 characters)
             <textarea
+              aria-label="Diagnostic text (optional, up to 4000 characters)"
               value={diagnostics}
               maxLength={4000}
               disabled={busy}
@@ -264,22 +271,21 @@ export function Assistant({
                 }
                 onClick={() =>
                   void run(async () => {
-                    const current = await savedProjectForHistory(model);
-                    if (current.revision !== proposal.baseRevision)
-                      throw new Error(
-                        "This proposal is stale. Request new assistance.",
+                    await mutateSavedProject(model, async (current) => {
+                      if (current.revision !== proposal.baseRevision)
+                        throw new Error(
+                          "This proposal is stale. Request new assistance.",
+                        );
+                      aiProposalSchema.parse(
+                        await assistanceRequest(
+                          `ai-proposals/${proposal.id}/apply`,
+                          "POST",
+                          {},
+                        ),
                       );
-                    const result = aiProposalSchema.parse(
-                      await assistanceRequest(
-                        `ai-proposals/${proposal.id}/apply`,
-                        "POST",
-                        {},
-                      ),
-                    );
-                    if (alive.current && model.isActive) {
-                      setProposal(result);
-                      window.location.reload();
-                    }
+                      return projectApi.get(model.project.id);
+                    });
+                    if (alive.current && model.isActive) onClose();
                   })
                 }
               >
@@ -310,29 +316,29 @@ export function Assistant({
             <>
               <p>
                 Changes applied at revision {proposal.appliedRevision}.
-                Recompilation is unavailable. Restore is allowed only while that
-                revision is still current.
+                Recompile from the workspace to verify the changes. Restore is
+                allowed only while that revision is still current.
               </p>
               <button
                 type="button"
                 disabled={busy}
                 onClick={() =>
                   void run(async () => {
-                    const current = await savedProjectForHistory(model);
-                    if (
-                      current.revision !== proposal.appliedRevision ||
-                      !proposal.backupSnapshotId
-                    )
-                      throw new Error(
-                        "Later work exists. Use History to compare and restore deliberately.",
+                    await mutateSavedProject(model, async (current) => {
+                      if (
+                        current.revision !== proposal.appliedRevision ||
+                        !proposal.backupSnapshotId
+                      )
+                        throw new Error(
+                          "Later work exists. Use History to compare and restore deliberately.",
+                        );
+                      return projectApi.restore(
+                        model.project.id,
+                        proposal.backupSnapshotId,
+                        current.revision,
                       );
-                    await projectApi.restore(
-                      model.project.id,
-                      proposal.backupSnapshotId,
-                      current.revision,
-                    );
-                    if (alive.current && model.isActive)
-                      window.location.reload();
+                    });
+                    if (alive.current && model.isActive) onClose();
                   })
                 }
               >
