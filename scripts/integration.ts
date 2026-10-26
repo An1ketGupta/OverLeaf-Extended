@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { createDatabase } from "@overleaf-pro/db";
 import { buildApp } from "../apps/api/src/app.js";
 import { readConfig } from "../apps/api/src/config.js";
+import { verifiedSignup } from "./test-account.js";
 import { requireTestDatabase } from "./test-database.js";
 
 const database = createDatabase(requireTestDatabase());
@@ -14,6 +15,7 @@ const config = readConfig({
   TRUSTED_ORIGINS: origin,
   AUTH_SECRET: randomUUID(),
   AUTH_ALLOW_SIGNUP: "true",
+  MAIL_ENABLED: "true",
 });
 const app = buildApp(config, { database });
 function cookieHeader(value: string | string[] | undefined) {
@@ -26,15 +28,10 @@ try {
   await database.migrate(); // A second run must preserve existing data/schema.
   assert.equal((await app.inject("/api/ready")).statusCode, 200);
   assert.equal((await app.inject("/api/session")).statusCode, 401);
-  const signup = await app.inject({
-    method: "POST",
-    url: "/api/auth/sign-up/email",
-    headers: { origin },
-    payload: {
-      name: "Synthetic Test",
-      email,
-      password: "synthetic-test-password-42",
-    },
+  const signup = await verifiedSignup(app, origin, {
+    name: "Synthetic Test",
+    email,
+    password: "synthetic-test-password-42",
   });
   assert.equal(signup.statusCode, 200, `Signup returned ${signup.statusCode}`);
   const cookies = signup.headers["set-cookie"];

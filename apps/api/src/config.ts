@@ -25,11 +25,20 @@ const envSchema = z.object({
   DATABASE_URL: databaseUrl.optional(),
   TRUSTED_ORIGINS: z.string().default("http://localhost:5173"),
   AUTH_ALLOW_SIGNUP: z.enum(["true", "false"]).default("false"),
+  // Local capture only. A future hosted delivery adapter requires separate validation.
+  MAIL_ENABLED: z.enum(["true", "false"]).default("false"),
+  MAIL_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
+  GROQ_API_KEY: z.string().min(1).optional(),
+  AI_MODEL: z
+    .literal("llama-3.3-70b-versatile")
+    .default("llama-3.3-70b-versatile"),
+  AI_SHARING_ENABLED: z.enum(["true", "false"]).default("false"),
 });
 export function readConfig(env: NodeJS.ProcessEnv = process.env) {
   const config = envSchema.parse({
     ...env,
     DATABASE_URL: env.DATABASE_URL || undefined,
+    GROQ_API_KEY: env.GROQ_API_KEY || undefined,
   });
   const trustedOrigins = z
     .array(origin)
@@ -47,7 +56,11 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env) {
       throw new Error("Production origins must use HTTPS");
     if (config.AUTH_ALLOW_SIGNUP === "true")
       throw new Error(
-        "Public signup requires Part 1 email verification; keep it disabled in production",
+        "Public signup requires validated hosted email delivery; keep it disabled in production",
+      );
+    if (config.MAIL_ENABLED === "true")
+      throw new Error(
+        "Local mail capture is not a production delivery service",
       );
   }
   return { ...config, trustedOrigins };

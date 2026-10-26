@@ -1,6 +1,14 @@
 # Optional local PostgreSQL; a native installation or Neon also works.
 # These credentials are for localhost development only.
 services:
+  mailpit:
+    image: axllent/mailpit:v1.32.0
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+    environment:
+      MP_DISABLE_VERSION_CHECK: "true"
+      MP_QUIET: "true"
   postgres:
     image: postgres:17.10-alpine
     environment:
