@@ -152,7 +152,7 @@ test("AI request, diff, atomic apply, refresh, safe restore, provider failure an
     .getByRole("button", { name: "Request assistance", exact: true })
     .click();
   await expect(
-    dialog.getByRole("heading", { name: "ready · llama-3.3-70b-versatile" }),
+    dialog.getByRole("heading", { name: "ready · openai/gpt-oss-20b" }),
   ).toBeVisible();
   await expect(dialog.locator(".source-diff")).toContainText(
     "+ % Reviewed synthetic change",
@@ -190,7 +190,7 @@ test("AI request, diff, atomic apply, refresh, safe restore, provider failure an
     .getByRole("button", { name: "Request assistance", exact: true })
     .click();
   await expect(
-    dialog.getByRole("heading", { name: "failed · llama-3.3-70b-versatile" }),
+    dialog.getByRole("heading", { name: "failed · openai/gpt-oss-20b" }),
   ).toBeVisible();
   await expect(
     dialog.getByText(

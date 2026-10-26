@@ -70,6 +70,9 @@ export function createAssistantProvider(config: {
               },
             ],
             max_completion_tokens: 4096,
+            ...(config.model === "openai/gpt-oss-20b"
+              ? { reasoning_effort: "low" }
+              : {}),
             temperature: 0,
             response_format: { type: "json_object" },
             stream: false,
@@ -81,7 +84,7 @@ export function createAssistantProvider(config: {
         throw new Error(
           response.status === 429
             ? "Provider quota exhausted. No edits applied."
-            : "Provider unavailable. No edits applied.",
+            : `Provider unavailable (HTTP ${response.status}). No edits applied.`,
         );
       }
       const reader = response.body?.getReader();

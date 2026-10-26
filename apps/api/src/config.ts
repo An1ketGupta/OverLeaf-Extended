@@ -29,9 +29,7 @@ const envSchema = z.object({
   MAIL_ENABLED: z.enum(["true", "false"]).default("false"),
   MAIL_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
   GROQ_API_KEY: z.string().min(1).optional(),
-  AI_MODEL: z
-    .literal("llama-3.3-70b-versatile")
-    .default("llama-3.3-70b-versatile"),
+  AI_MODEL: z.literal("openai/gpt-oss-20b").default("openai/gpt-oss-20b"),
   AI_SHARING_ENABLED: z.enum(["true", "false"]).default("false"),
 });
 export function readConfig(env: NodeJS.ProcessEnv = process.env) {

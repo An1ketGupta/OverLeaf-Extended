@@ -68,6 +68,8 @@ describe("assistant safety and real HTTP provider adapter", () => {
       expect(req.headers.authorization).toBe("Bearer synthetic-key");
       expect(body.messages[0].content).toContain("untrusted data");
       expect(body.stream).toBe(false);
+      expect(body.model).toBe("openai/gpt-oss-20b");
+      expect(body.reasoning_effort).toBe("low");
       if (scenario === "hang") return;
       if (scenario === "429" || scenario === "html") {
         res.statusCode = scenario === "429" ? 429 : 502;
@@ -108,7 +110,7 @@ describe("assistant safety and real HTTP provider adapter", () => {
     const endpoint = `http://127.0.0.1:${(server.address() as AddressInfo).port}/openai/v1/chat/completions`;
     const provider = createAssistantProvider({
       key: "synthetic-key",
-      model: "synthetic-model",
+      model: "openai/gpt-oss-20b",
       endpoint,
       timeoutMs: 500,
     });
