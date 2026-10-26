@@ -1,6 +1,6 @@
 import { openSearchPanel } from "@codemirror/search";
 import type { EditorView } from "@codemirror/view";
-import type { SourceFile } from "@overleaf-pro/contracts";
+import type { LocalDraft, SourceFile } from "@overleaf-pro/contracts";
 import {
   type CSSProperties,
   useEffect,
@@ -10,21 +10,31 @@ import {
 } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { authAction, getSession } from "../../api.js";
+import { Assistant } from "../assistance/Assistant.js";
+import { analyzeCompiledPdf } from "../assistance/compiled-pdf.js";
+import { AssetControls } from "./AssetControls.js";
 import { ApiError, projectApi } from "./api.js";
 import { CodeEditor } from "./CodeEditor.js";
-import { pendingCompiler } from "./compiler.js";
+import { onProjectChange } from "./changes.js";
 import {
   announceLogout,
   onLogout,
+  onSessionChange,
   readDrafts,
   removeDraft,
   writeDraft,
 } from "./drafts.js";
 import { captureSavedSource, sourceArchive } from "./export.js";
 import { FileTree } from "./FileTree.js";
+import { History } from "./History.js";
+import { ManagementDialog, type ManagementTarget } from "./ManagementDialog.js";
 import { WorkspaceModel } from "./model.js";
+import { mutateSavedProject } from "./mutations.js";
+import { NavigationGuard } from "./NavigationGuard.js";
+import { OrphanDrafts } from "./OrphanDrafts.js";
 import { PdfPreview } from "./PdfPreview.js";
 import { ResizeHandle } from "./ResizeHandle.js";
+import { useCompilation } from "./useCompilation.js";
 import "./workspace.css";
 
 function downloadText(content: string, path: string) {
@@ -43,6 +53,8 @@ export function Workspace() {
   const [model, setModel] = useState<WorkspaceModel>();
   const [message, setMessage] = useState("Opening your workspace…");
   const [attempt, setAttempt] = useState(0);
+  const [orphans, setOrphans] = useState<LocalDraft[]>([]);
+  useEffect(() => onLogout(() => setOrphans([])), []);
   // biome-ignore lint/correctness/useExhaustiveDependencies: Explicit retry restarts session/project loading.
   useEffect(() => {
     let active = true;
@@ -53,8 +65,16 @@ export function Workspace() {
       .then(async (session) => {
         if (!session) throw new Error("Sign in to open this private project.");
         if (!projectId) throw new Error("Project not found.");
+        const drafts = readDrafts(session.user.id, projectId);
+        if (active) setOrphans(drafts);
         const project = await projectApi.get(projectId);
         if (active) {
+          setOrphans(
+            drafts.filter(
+              (draft) =>
+                !project.files.some((file) => file.id === draft.fileId),
+            ),
+          );
           loaded = new WorkspaceModel(
             project,
             session.user.id,
@@ -76,7 +96,15 @@ export function Workspace() {
     };
   }, [projectId, attempt]);
   return model ? (
-    <WorkspaceDesk key={`${projectId}-${attempt}`} model={model} />
+    <>
+      <OrphanDrafts
+        drafts={orphans}
+        onDiscard={(id) =>
+          setOrphans((items) => items.filter((draft) => draft.fileId !== id))
+        }
+      />
+      <WorkspaceDesk key={`${projectId}-${attempt}`} model={model} />
+    </>
   ) : (
     <div className="workspace-gate">
       <Link className="brand" to="/projects">
@@ -84,6 +112,12 @@ export function Workspace() {
       </Link>
       <h1>Your writing desk.</h1>
       <p role="status">{message}</p>
+      <OrphanDrafts
+        drafts={orphans}
+        onDiscard={(id) =>
+          setOrphans((items) => items.filter((draft) => draft.fileId !== id))
+        }
+      />
       <div className="inline-actions">
         <Link to="/auth-check">Open account</Link>
         <Link to="/projects">Projects</Link>
@@ -104,11 +138,23 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     "";
   const [active, setActive] = useState(mainId);
   const [tabs, setTabs] = useState([mainId]);
+  useEffect(() => {
+    if (!model.buffers.has(mainId)) return;
+    setTabs((items) => (items.includes(mainId) ? items : [...items, mainId]));
+    setActive(mainId);
+  }, [mainId, model]);
   const [filter, setFilter] = useState("");
   const [newPath, setNewPath] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [assistant, setAssistant] = useState<{
+    fileId: string;
+    selection: { from: number; to: number } | undefined;
+  }>();
   const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [management, setManagement] = useState<ManagementTarget>();
+  const [managementError, setManagementError] = useState("");
   const [signedOut, setSignedOut] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
   const [remote, setRemote] = useState<SourceFile>();
@@ -121,6 +167,17 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
   const navigate = useNavigate();
   const current = model.buffers.get(active);
   const locked = signedOut || sessionExpired || model.authLost;
+  const compilation = useCompilation(
+    model,
+    !locked && !model.paused && !model.missing,
+  );
+  const [manualPdf, setManualPdf] = useState<File>();
+  const compileAction = useRef(compilation.compile);
+  compileAction.current = compilation.compile;
+  useEffect(() => {
+    void compilation.output?.file;
+    setManualPdf(undefined);
+  }, [compilation.output?.file]);
   const exportAllowed = useRef(true);
   exportAllowed.current = !locked;
   useEffect(() => {
@@ -133,7 +190,7 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: Model revision reschedules the autosave debounce on buffer changes.
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!locked)
+      if (!locked && !model.paused && !model.missing)
         for (const [id, file] of model.buffers)
           if (file.status === "dirty" && !file.recovery) void model.save(id);
     }, 700);
@@ -164,13 +221,58 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
       if (document.visibilityState !== "visible") return;
       void getSession()
         .then((session) => {
-          if (!session || session.user.id !== model.userId)
+          if (!session || session.user.id !== model.userId) {
+            model.suspend();
             setSessionExpired(true);
+          }
         })
         .catch(() => {
           /* Save errors disclose outages. Never clear source on a network failure. */
         });
     };
+    const validateProject = () => {
+      if (model.paused || !model.isActive) return;
+      void getSession()
+        .then(async (session) => {
+          if (!session || session.user.id !== model.userId) {
+            model.suspend();
+            setSessionExpired(true);
+            return;
+          }
+          const project = await projectApi.get(model.project.id);
+          if (!model.isActive || model.paused) return;
+          if (
+            project.name !== model.project.name ||
+            project.mainFile !== model.project.mainFile ||
+            project.files.length !== model.buffers.size ||
+            project.files.some((file) => {
+              const local = model.buffers.get(file.id)?.base;
+              return (
+                !local ||
+                local.version !== file.version ||
+                local.path !== file.path
+              );
+            }) ||
+            JSON.stringify(project.assets ?? []) !==
+              JSON.stringify(model.project.assets ?? [])
+          )
+            model.markRemote();
+        })
+        .catch((error: unknown) => {
+          if (error instanceof ApiError && error.status === 404)
+            model.markRemote(true);
+        });
+    };
+    const stopSession = onSessionChange(validateSession);
+    const stopChanges = onProjectChange((id) => {
+      if (id === model.project.id) validateProject();
+    });
+    const visibleProject = () => {
+      if (document.visibilityState === "visible") validateProject();
+    };
+    window.addEventListener("focus", validateProject);
+    window.addEventListener("online", validateProject);
+    document.addEventListener("visibilitychange", visibleProject);
     window.addEventListener("beforeunload", unload);
     window.addEventListener("online", connected);
     window.addEventListener("offline", connected);
@@ -180,6 +282,11 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
       window.removeEventListener("online", connected);
       window.removeEventListener("offline", connected);
       document.removeEventListener("visibilitychange", validateSession);
+      window.removeEventListener("focus", validateProject);
+      window.removeEventListener("online", validateProject);
+      document.removeEventListener("visibilitychange", visibleProject);
+      stopSession();
+      stopChanges();
     };
   }, [model]);
   useEffect(() => {
@@ -191,7 +298,18 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
   }, [active, locked]);
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
-      if (locked || !(event.ctrlKey || event.metaKey)) return;
+      if (
+        locked ||
+        management ||
+        model.paused ||
+        model.missing ||
+        !(event.ctrlKey || event.metaKey)
+      )
+        return;
+      if (event.key === "Enter") {
+        event.preventDefault();
+        void compileAction.current();
+      }
       if (event.key.toLowerCase() === "s") {
         event.preventDefault();
         void model.save(active);
@@ -212,7 +330,103 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     };
     window.addEventListener("keydown", shortcut);
     return () => window.removeEventListener("keydown", shortcut);
-  }, [model, active, locked]);
+  }, [model, active, locked, management]);
+
+  async function manage(name: string, discard: boolean) {
+    if (!management) return;
+    setBusy(true);
+    setManagementError("");
+    const target = management;
+    try {
+      const discards = new Set<string>();
+      if (discard && target.action === "delete") {
+        if (target.kind === "project")
+          for (const id of model.buffers.keys()) discards.add(id);
+        else discards.add(target.id);
+      }
+      compilation.cancel();
+      const updated = await mutateSavedProject(
+        model,
+        async (project) => {
+          if (target.kind === "project") {
+            if (target.action === "rename")
+              return projectApi.rename(project.id, project.revision, name);
+            await projectApi.delete(project.id, project.revision);
+            return null;
+          }
+          const entry = (
+            target.kind === "files" ? project.files : (project.assets ?? [])
+          ).find((item) => item.id === target.id);
+          if (!entry)
+            throw new Error(
+              "This file is no longer available. Download your draft.",
+            );
+          if (target.action === "rename")
+            return projectApi.renameEntry(
+              project.id,
+              target.kind,
+              entry.id,
+              project.revision,
+              entry.version,
+              name,
+            );
+          if (target.kind === "files")
+            return projectApi.deleteFile(
+              project.id,
+              entry.id,
+              project.revision,
+              entry.version,
+            );
+          await projectApi.deleteAsset(
+            project.id,
+            entry.id,
+            project.revision,
+            entry.version,
+          );
+          return projectApi.get(project.id);
+        },
+        discards,
+      );
+      compilation.clear();
+      setManagement(undefined);
+      if (!updated) {
+        if (target.kind === "project") navigate("/projects");
+        return;
+      }
+      const available = new Set(updated.files.map((file) => file.id));
+      setTabs((items) => {
+        const next = items.filter((id) => available.has(id));
+        return next.length
+          ? next
+          : [
+              updated.files.find((file) => file.path === updated.mainFile)
+                ?.id ??
+                updated.files[0]?.id ??
+                "",
+            ];
+      });
+      if (!available.has(active))
+        setActive(
+          updated.files.find((file) => file.path === updated.mainFile)?.id ??
+            updated.files[0]?.id ??
+            "",
+        );
+      setRemote(undefined);
+      setNotice(
+        target.action === "delete"
+          ? "File deleted. Its saved bytes can be recovered through History."
+          : "Renamed. Update LaTeX references if needed.",
+      );
+    } catch (error) {
+      setManagementError(
+        error instanceof Error
+          ? error.message
+          : "Project update failed. Drafts were kept.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function switchFile(id: string) {
     if (id !== active && current && !(await model.save(active))) {
@@ -305,8 +519,10 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
       );
     } catch (error) {
       if (exportAllowed.current) {
-        if (error instanceof ApiError && error.status === 401)
+        if (error instanceof ApiError && error.status === 401) {
+          model.suspend();
           setSessionExpired(true);
+        }
         setNotice(
           error instanceof Error
             ? error.message
@@ -351,6 +567,64 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
         } as CSSProperties
       }
     >
+      <NavigationGuard model={model} />
+      {management && (
+        <ManagementDialog
+          key={`${management.action}-${management.id}`}
+          target={management}
+          unsaved={model.hasUnsaved}
+          busy={busy}
+          error={managementError}
+          onClose={() => {
+            setManagement(undefined);
+            setManagementError("");
+          }}
+          onSubmit={(name, discard) => void manage(name, discard)}
+          onDownload={() => {
+            for (const file of model.buffers.values())
+              downloadText(
+                file.recovery?.content ?? file.content,
+                file.base.path,
+              );
+          }}
+        />
+      )}
+      {model.remoteChanged && (
+        <div className="workspace-notice" role="alert">
+          {model.missing
+            ? "This project was deleted in another tab. Your draft is still available here for download. It cannot be saved to the deleted project."
+            : "This project changed in another tab. Download any unsaved drafts, then reload and review the saved version."}
+          <div className="inline-actions">
+            <button
+              type="button"
+              onClick={() => {
+                for (const file of model.buffers.values())
+                  downloadText(
+                    file.recovery?.content ?? file.content,
+                    file.base.path,
+                  );
+              }}
+            >
+              Download drafts
+            </button>
+            <button
+              type="button"
+              disabled={model.paused}
+              onClick={() => {
+                if (
+                  !model.hasUnsaved ||
+                  window.confirm(
+                    "Reload and keep your unsaved recovery drafts in this tab?",
+                  )
+                )
+                  window.location.reload();
+              }}
+            >
+              Reload and review
+            </button>
+          </div>
+        </div>
+      )}
       <nav className="workspace-header" aria-label="Workspace navigation">
         <div className="workspace-brand">
           <Link className="brand" to="/" aria-label="OverLeaf-Pro home">
@@ -369,6 +643,34 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
           </button>
           <span className="subtle">/</span>
           <strong title={model.project.name}>{model.project.name}</strong>
+          <button
+            type="button"
+            disabled={busy || model.missing}
+            onClick={() =>
+              setManagement({
+                action: "rename",
+                kind: "project",
+                id: model.project.id,
+                name: model.project.name,
+              })
+            }
+          >
+            Rename project
+          </button>
+          <button
+            type="button"
+            disabled={busy || model.missing}
+            onClick={() =>
+              setManagement({
+                action: "delete",
+                kind: "project",
+                id: model.project.id,
+                name: model.project.name,
+              })
+            }
+          >
+            Delete project
+          </button>
         </div>
         <div className="workspace-account">
           <span className={`connection-pill ${online ? "" : "offline"}`}>
@@ -413,6 +715,13 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
           </button>
           <button
             type="button"
+            disabled={busy}
+            onClick={() => setHistoryOpen(true)}
+          >
+            History
+          </button>
+          <button
+            type="button"
             className="save-button"
             onClick={() => void model.save(active)}
           >
@@ -420,14 +729,111 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
           </button>
           <button
             type="button"
+            disabled={busy}
+            onClick={() => {
+              const range = views.current.get(active)?.state.selection.main;
+              setAssistant({
+                fileId: active,
+                selection:
+                  range && !range.empty
+                    ? { from: range.from, to: range.to }
+                    : undefined,
+              });
+            }}
+          >
+            AI assistant
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setBusy(true);
+              void Promise.all(
+                [...model.buffers.keys()].map((id) => model.save(id)),
+              )
+                .then((saved) => {
+                  if (
+                    saved.every(Boolean) &&
+                    !model.hasUnsaved &&
+                    model.isActive
+                  ) {
+                    if (compilation.output && !manualPdf)
+                      analyzeCompiledPdf({
+                        file: compilation.output.file,
+                        revision: compilation.output.event.revision,
+                        projectId: model.project.id,
+                        pdfSha256: compilation.output.event.pdfSha256,
+                      });
+                    navigate("/resume");
+                  } else
+                    setNotice(
+                      "Save or resolve every draft before opening PDF analysis.",
+                    );
+                })
+                .finally(() => setBusy(false));
+            }}
+          >
+            Analyze resume PDF
+          </button>
+          <button
+            type="button"
             className="compile-button"
-            disabled={pendingCompiler.availability === "unavailable"}
-            title={pendingCompiler.reason}
+            disabled={busy || compilation.compiling}
+            title="Compile saved source (Ctrl/Cmd Enter)"
+            onClick={() => void compilation.compile()}
           >
             ▷ Recompile
           </button>
+          {compilation.compiling && (
+            <button type="button" onClick={compilation.cancel}>
+              Cancel compile
+            </button>
+          )}
+          <label className="auto-compile">
+            <input
+              type="checkbox"
+              checked={compilation.auto}
+              onChange={(event) => compilation.setAuto(event.target.checked)}
+            />
+            Auto compile
+          </label>
+          {compilation.output && (
+            <button
+              type="button"
+              onClick={() => {
+                const output = compilation.output;
+                if (!output) return;
+                const url = URL.createObjectURL(output.file);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = output.file.name;
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              }}
+            >
+              Download PDF
+            </button>
+          )}
         </div>
       </div>
+      {historyOpen && (
+        <History model={model} onClose={() => setHistoryOpen(false)} />
+      )}
+      {assistant && (
+        <Assistant
+          model={model}
+          fileId={assistant.fileId}
+          selection={assistant.selection}
+          initialDiagnostics={compilation.messages
+            .map(
+              (d) =>
+                `${d.path ?? ""}${d.line ? `:${d.line}` : ""} ${d.message}`,
+            )
+            .join("\n")
+            .slice(0, 4000)}
+          onClose={() => setAssistant(undefined)}
+        />
+      )}
       <div className="workspace-meta">
         <span>
           <span className={`save-dot ${current.status}`} />{" "}
@@ -436,6 +842,23 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
           </span>
         </span>
         <span>LaTeX · main file: {model.project.mainFile}</span>
+        <span role="status" aria-label="Compilation status">
+          {
+            (
+              {
+                idle: "Ready to compile",
+                saving: "Saving source…",
+                loading: "Loading compiler…",
+                queued: "Compilation queued…",
+                running: "Compiling…",
+                succeeded: "Compilation succeeded",
+                failed: "Compilation failed",
+                cancelled: "Compilation cancelled",
+                "timed-out": "Compilation timed out",
+              } as Record<string, string>
+            )[compilation.state]
+          }
+        </span>
       </div>
       <nav className="mobile-panels" aria-label="Workspace panels">
         {["files", "editor", "preview"].map((panel) => (
@@ -464,6 +887,54 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
             ×
           </button>
         </div>
+      )}
+      {!!compilation.messages.length && (
+        <details
+          className="compile-diagnostics"
+          open={compilation.state === "failed"}
+        >
+          <summary>
+            Compiler diagnostics ({compilation.messages.length})
+          </summary>
+          <ul>
+            {compilation.messages.map((d) => (
+              <li key={d.key}>
+                <strong>{d.severity}: </strong>
+                {d.path && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      void (async () => {
+                        const file = [...model.buffers.values()]
+                          .map((buffer) => buffer.base)
+                          .find((f) => f.path === d.path);
+                        if (!file || !(await model.save(active))) return;
+                        await switchFile(file.id);
+                        requestAnimationFrame(() => {
+                          const view = views.current.get(file.id);
+                          if (view) {
+                            const line = view.state.doc.line(
+                              Math.min(d.line ?? 1, view.state.doc.lines),
+                            );
+                            view.dispatch({
+                              selection: { anchor: line.from },
+                              scrollIntoView: true,
+                            });
+                            view.focus();
+                          }
+                        });
+                      })()
+                    }
+                  >
+                    {d.path}
+                    {d.line ? `:${d.line}` : ""}
+                  </button>
+                )}
+                <span>{d.message}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
       {model.storageFailed && (
         <div className="workspace-notice warning" role="alert">
@@ -500,23 +971,10 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
                 event.preventDefault();
                 setBusy(true);
                 void (async () => {
-                  if (!(await model.save(active)))
-                    throw new Error(
-                      "Save the current draft before adding a file.",
-                    );
-                  const project = await projectApi.addFile(
-                    model.project.id,
-                    newPath,
+                  const project = await mutateSavedProject(model, (saved) =>
+                    projectApi.addFile(saved.id, newPath, saved.revision),
                   );
-                  for (const file of project.files)
-                    if (!model.buffers.has(file.id))
-                      model.buffers.set(file.id, {
-                        base: file,
-                        content: file.content,
-                        status: "saved",
-                        message: "",
-                        recovery: undefined,
-                      });
+                  if (!project) return;
                   const created = project.files.find(
                     (file) => file.path === newPath,
                   );
@@ -558,12 +1016,24 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
               active={active}
               dirty={(id) => model.buffers.get(id)?.status !== "saved"}
               onOpen={(id) => void switchFile(id)}
+              onManage={(target) => {
+                setManagementError("");
+                setManagement(target);
+              }}
+              disabled={busy || model.paused || model.missing}
             />
             {files.every(
               (file) => !file.path.toLowerCase().includes(filter.toLowerCase()),
             ) && <p className="empty-search">No matching files.</p>}
           </nav>
           <div className="file-panel-bottom">
+            <AssetControls
+              model={model}
+              onManage={(target) => {
+                setManagementError("");
+                setManagement(target);
+              }}
+            />
             <span className="eyebrow">A LITTLE FOCUS GOES A LONG WAY</span>
             <p>One line, then the next.</p>
             <span>{files.length} files in this project</span>
@@ -738,6 +1208,7 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
                       fileId={id}
                       path={file.base.path}
                       content={file.content}
+                      readOnly={model.paused || model.missing || historyOpen}
                       onChange={(content) => model.edit(id, content)}
                       onSave={() => void model.save(id)}
                       onView={(view) => {
@@ -766,7 +1237,22 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
           direction={-1}
           onChange={setPdfWidth}
         />
-        <PdfPreview />
+        <PdfPreview
+          importedLabel="This PDF is not compiled from this project."
+          externalFile={manualPdf ?? compilation.output?.file}
+          onFileChange={(file) => {
+            setManualPdf(file);
+            if (!file) compilation.clear();
+          }}
+          generated={
+            !manualPdf && compilation.output
+              ? {
+                  revision: compilation.output.event.revision,
+                  stale: compilation.stale,
+                }
+              : undefined
+          }
+        />
       </div>
       <div className="workspace-footer">
         <details>
@@ -785,7 +1271,12 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
             keys: resize a focused divider or switch focused tabs.
           </p>
         </details>
-        <span>{pendingCompiler.reason}</span>
+        <span>
+          Compilation stays in this browser.{" "}
+          {compilation.output
+            ? `PDF from revision ${compilation.output.event.revision}${compilation.stale ? " · Older output; recompile to update" : ""}`
+            : "Ctrl/Cmd Enter to compile."}
+        </span>
       </div>
     </div>
   );

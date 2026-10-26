@@ -3,8 +3,9 @@ import { readFile } from "node:fs/promises";
 import { createDatabase } from "@overleaf-pro/db";
 import { type BrowserContext, expect, type Page, test } from "@playwright/test";
 import { requireTestDatabase } from "../../scripts/test-database.js";
+import { verifyBrowserAccount } from "./account-helper.js";
 
-const origin = "http://127.0.0.1:5173";
+const origin = "http://127.0.0.1:5273";
 const accounts: string[] = [];
 let authCookies: Awaited<ReturnType<BrowserContext["cookies"]>> = [];
 test.beforeAll(async ({ browser }) => {
@@ -24,6 +25,12 @@ test.beforeAll(async ({ browser }) => {
     },
   });
   expect(signup.status()).toBe(200);
+  await verifyBrowserAccount(
+    authContext.request,
+    email,
+    "synthetic-editor-password-42",
+    origin,
+  );
   authCookies = await authContext.cookies();
   await authContext.close();
 });
@@ -75,7 +82,10 @@ test("real autosave, file switching, search, completion, shortcuts, resizing and
   const editor = await openProject(page);
   await editor.fill("\\section{Saved from the browser}\nFirst draft.");
   await page
-    .getByRole("button", { name: "sections/notes.tex", exact: false })
+    .getByRole("button", {
+      name: "Open sections/notes.tex",
+      exact: true,
+    })
     .click();
   await expect(
     page.getByRole("textbox", {
@@ -128,9 +138,7 @@ test("real autosave, file switching, search, completion, shortcuts, resizing and
     await page.mouse.up();
   }
   await expect(pdfDivider).toHaveAttribute("aria-valuenow", "503");
-  await expect(
-    page.getByRole("button", { name: "▷ Recompile" }),
-  ).toBeDisabled();
+  await expect(page.getByRole("button", { name: "▷ Recompile" })).toBeEnabled();
   await page.getByRole("tab", { name: "main.tex", exact: true }).click();
   await editor.fill(
     "\\documentclass[11pt]{article}\n\\usepackage[margin=1in]{geometry}\n\n\\title{A thoughtful draft}\n\\author{}\n\\date{}\n\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nEvery great document starts with a first draft.\n\n\\input{sections/method.tex}\n\n\\end{document}",
@@ -160,10 +168,10 @@ test("real autosave, file switching, search, completion, shortcuts, resizing and
   await page.getByRole("button", { name: "Files", exact: true }).click();
   await page.getByLabel("Find a file", { exact: true }).fill("method");
   await expect(
-    page.getByRole("button", { name: "sections/method.tex", exact: false }),
+    page.getByRole("button", { name: "Open sections/method.tex", exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "sections/method.tex", exact: false })
+    .getByRole("button", { name: "Open sections/method.tex", exact: true })
     .click();
   await expect(
     page.getByRole("textbox", {
@@ -379,4 +387,109 @@ test("PDF.js previews actual local bytes and rejects malformed input", async ({
   await expect(page.getByRole("img", { name: "PDF page 1 of 1" })).toHaveCount(
     0,
   );
+});
+
+test("template copies, named history, source diff and recoverable full-tree restore", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/projects");
+  await page
+    .getByLabel("New project", { exact: true })
+    .fill("A report from a template");
+  await page.getByLabel("Starting template").selectOption("report");
+  await page.getByRole("button", { name: "+ Create project" }).click();
+  const editor = page.getByRole("textbox", {
+    name: "Source editor: main.tex",
+    exact: true,
+  });
+  await expect(editor).toContainText("A Synthetic Document Workflow Study");
+  await page.getByRole("button", { name: "History", exact: true }).click();
+  const history = page.getByRole("dialog", { name: "Recoverable history" });
+  await history.getByLabel("Snapshot name").fill("Starting report");
+  await history.getByRole("button", { name: "Save named snapshot" }).click();
+  await expect(history.getByText("Named snapshot saved.")).toBeVisible();
+  await history.getByRole("button", { name: "Close history" }).click();
+  await editor.fill("Changed report from the browser");
+  await page.getByRole("button", { name: "New file", exact: true }).click();
+  await page.getByLabel("New file path").fill("later.tex");
+  await page.getByRole("button", { name: "Add file", exact: true }).click();
+  await expect(
+    page.getByRole("textbox", {
+      name: "Source editor: later.tex",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "History", exact: true }).click();
+  await history
+    .getByRole("button", { name: "Compare r1", exact: true })
+    .click();
+  await history.getByLabel("Compare file").selectOption("main.tex");
+  await expect(
+    history.getByRole("region", { name: "Source diff", exact: true }),
+  ).toContainText("+ Changed report from the browser");
+  await page.screenshot({ path: testInfo.outputPath("history-desktop.png") });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: testInfo.outputPath("history-mobile.png") });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await history
+    .getByRole("button", { name: "Restore snapshot r1", exact: true })
+    .click();
+  await expect(editor).toContainText("A Synthetic Document Workflow Study");
+  await page.getByRole("button", { name: "History", exact: true }).click();
+  await expect(
+    history.getByText("Starting report", { exact: true }),
+  ).toBeVisible();
+  await history
+    .getByRole("button", { name: "Compare r3", exact: true })
+    .click();
+  await history.getByLabel("Compare file").selectOption("later.tex");
+  await expect(history.getByLabel("Compare file")).toContainText(
+    "later.tex (removed since snapshot)",
+  );
+  await history
+    .getByRole("button", { name: "Restore snapshot r3", exact: true })
+    .click();
+  await expect(editor).toContainText("Changed report from the browser");
+});
+
+test("history rejects a restore after an unseen remote edit", async ({
+  page,
+}) => {
+  const editor = await openProject(page);
+  await page.getByRole("button", { name: "History", exact: true }).click();
+  const history = page.getByRole("dialog");
+  await history.getByLabel("Snapshot name").fill("Before remote changes");
+  await history.getByRole("button", { name: "Save named snapshot" }).click();
+  await expect(history.getByText("Named snapshot saved.")).toBeVisible();
+  await history
+    .getByRole("button", { name: "Compare r1", exact: true })
+    .click();
+  const url = `/api${new URL(page.url()).pathname}`;
+  const project = await (await page.request.get(url)).json();
+  const file = project.files.find(
+    (item: { path: string }) => item.path === "main.tex",
+  );
+  expect(
+    (
+      await page.request.put(`${url}/files/${file.id}`, {
+        headers: { origin },
+        data: {
+          baseVersion: file.version,
+          content: "Remote change must survive",
+        },
+      })
+    ).status(),
+  ).toBe(200);
+  await history
+    .getByRole("button", { name: "Restore snapshot r1", exact: true })
+    .click();
+  await expect(history.getByRole("status")).toContainText(
+    "Project changed since comparison",
+  );
+  await page.reload();
+  await expect(editor).toContainText("Remote change must survive");
 });

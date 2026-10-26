@@ -1,12 +1,17 @@
-import { type FormEvent, lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router";
-import { authAction, getSession, getStatus } from "./api.js";
-import { announceLogout } from "./features/workspace/drafts.js";
+import { getStatus } from "./api.js";
+import { Account } from "./features/account/Account.js";
 import { Projects } from "./features/workspace/Projects.js";
 
 const Workspace = lazy(() =>
   import("./features/workspace/Workspace.js").then((module) => ({
     default: module.Workspace,
+  })),
+);
+const ResumeAnalysis = lazy(() =>
+  import("./features/assistance/ResumeAnalysis.js").then((module) => ({
+    default: module.ResumeAnalysis,
   })),
 );
 
@@ -126,7 +131,8 @@ function Foundation() {
         <div className="next-content">
           <p>
             Open your writing desk to edit and save private LaTeX projects.
-            Compilation and resume analysis are still in progress.
+            Analyze an uploaded resume PDF locally, or review AI edits in a
+            project. Compilation remains in evaluation.
           </p>
           <Link className="primary-button" to="/auth-check">
             Open authentication check <span aria-hidden="true">↗</span>
@@ -134,138 +140,15 @@ function Foundation() {
           <Link className="primary-button" to="/projects">
             Open projects ↗
           </Link>
+          <Link className="primary-button" to="/resume">
+            Analyze a resume PDF ↗
+          </Link>
           <span className="small-note">
             Use synthetic test accounts while setup is in progress.
           </span>
         </div>
       </section>
     </>
-  );
-}
-
-function AuthCheck() {
-  const [session, setSession] =
-    useState<Awaited<ReturnType<typeof getSession>>>();
-  const [message, setMessage] = useState("Checking session…");
-  const [busy, setBusy] = useState(false);
-  const [signup, setSignup] = useState(false);
-  useEffect(() => {
-    void getSession()
-      .then((value) => {
-        setSession(value);
-        setMessage(value ? "Session restored." : "No active session.");
-      })
-      .catch((error: Error) => setMessage(error.message));
-  }, []);
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const fields = new FormData(form);
-    setBusy(true);
-    try {
-      await authAction(signup ? "sign-up/email" : "sign-in/email", {
-        name: String(fields.get("name") ?? ""),
-        email: String(fields.get("email")),
-        password: String(fields.get("password")),
-      });
-      setSession(await getSession());
-      setMessage(
-        "Signed in. Refresh this page to verify the session persists.",
-      );
-      form.reset();
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Authentication failed.",
-      );
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function signOut() {
-    setBusy(true);
-    try {
-      await authAction("sign-out", {});
-      announceLogout();
-      setSession(await getSession());
-      setMessage("Signed out.");
-    } catch {
-      setMessage("Sign-out failed. Try again.");
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <section className="auth-panel">
-      <Link className="back-link" to="/">
-        ← Workspace readiness
-      </Link>
-      <div className="eyebrow">PART 00 / AUTHENTICATION</div>
-      <h1>
-        Check your
-        <br />
-        <em>connection.</em>
-      </h1>
-      <p>
-        Verify sign-in, refresh, and sign-out through the frontend proxy. Signup
-        requires <code>AUTH_ALLOW_SIGNUP=true</code> in development.
-      </p>
-      <p role="status" className="notice">
-        {message}
-      </p>
-      {session ? (
-        <div>
-          <p>
-            Signed in as <strong>{session.user.email}</strong>
-          </p>
-          <p>
-            <Link to="/projects">Open your projects ↗</Link>
-          </p>
-          <button
-            className="primary-button"
-            type="button"
-            disabled={busy}
-            onClick={() => void signOut()}
-          >
-            Sign out
-          </button>
-        </div>
-      ) : (
-        <form onSubmit={(event) => void submit(event)}>
-          {signup && (
-            <label>
-              Name
-              <input name="name" autoComplete="name" required maxLength={100} />
-            </label>
-          )}
-          <label>
-            Email
-            <input name="email" type="email" autoComplete="email" required />
-          </label>
-          <label>
-            Password
-            <input
-              name="password"
-              type="password"
-              autoComplete={signup ? "new-password" : "current-password"}
-              required
-              minLength={12}
-              maxLength={128}
-            />
-          </label>
-          <button className="primary-button" disabled={busy} type="submit">
-            {busy ? "Working…" : signup ? "Create test account" : "Sign in"}
-          </button>
-          <button
-            className="text-button"
-            disabled={busy}
-            type="button"
-            onClick={() => setSignup(!signup)}
-          >
-            {signup ? "Use an existing account" : "Create a test account"}
-          </button>
-        </form>
-      )}
-    </section>
   );
 }
 
@@ -286,7 +169,13 @@ function FoundationApp() {
       <main>
         <Routes>
           <Route path="/" element={<Foundation />} />
-          <Route path="/auth-check" element={<AuthCheck />} />
+          <Route
+            path="/auth-check"
+            element={<Account key="legacy-account" />}
+          />
+          <Route path="/account" element={<Account key="account" />} />
+          <Route path="/forgot-password" element={<Account key="forgot" />} />
+          <Route path="/reset-password" element={<Account key="reset" />} />
           <Route
             path="*"
             element={
@@ -310,6 +199,14 @@ export function App() {
   return (
     <Routes>
       <Route path="/projects" element={<Projects />} />
+      <Route
+        path="/resume"
+        element={
+          <Suspense fallback={<p role="status">Opening PDF analysis…</p>}>
+            <ResumeAnalysis />
+          </Suspense>
+        }
+      />
       <Route
         path="/projects/:projectId"
         element={

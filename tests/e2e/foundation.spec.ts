@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createDatabase } from "@overleaf-pro/db";
 import { expect, test } from "@playwright/test";
+import { inboxLink } from "../../scripts/test-account.js";
 import { requireTestDatabase } from "../../scripts/test-database.js";
 
 test("frontend reads the API through its proxy and auth has no phantom session", async ({
@@ -60,7 +61,7 @@ test("real account cookies survive refresh and are invalidated on signout throug
     await page.goto("/auth-check");
     await expect(page.getByRole("status")).toHaveText("No active session.");
     await page
-      .getByRole("button", { name: "Create a test account", exact: true })
+      .getByRole("button", { name: "Create an account", exact: true })
       .click();
     await page
       .getByLabel("Name", { exact: true })
@@ -70,8 +71,16 @@ test("real account cookies survive refresh and are invalidated on signout throug
       .getByLabel("Password", { exact: true })
       .fill("synthetic-browser-password-42");
     await page
-      .getByRole("button", { name: "Create test account", exact: true })
+      .getByRole("button", { name: "Create account", exact: true })
       .click();
+    await expect(page.getByRole("status")).toContainText("verification link");
+    await page.goto(await inboxLink(email, "Verify your email"));
+    await page.goto("/account");
+    await page.getByLabel("Email", { exact: true }).fill(email);
+    await page
+      .getByLabel("Password", { exact: true })
+      .fill("synthetic-browser-password-42");
+    await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await expect(page.getByText(email, { exact: true })).toBeVisible();
     await page.reload();
     await expect(page.getByRole("status")).toHaveText("Session restored.");

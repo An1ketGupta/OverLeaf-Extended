@@ -40,23 +40,44 @@ export async function getSession() {
   return sessionSchema.parse(await response.json());
 }
 export async function authAction(
-  action: "sign-in/email" | "sign-up/email" | "sign-out",
+  action:
+    | "sign-in/email"
+    | "sign-up/email"
+    | "sign-out"
+    | "request-password-reset"
+    | "reset-password"
+    | "send-verification-email",
   body: Record<string, string>,
 ) {
   const response = await fetch(`/api/auth/${action}`, {
     method: "POST",
     credentials: "same-origin",
+    signal: AbortSignal.timeout(12_000),
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   if (!response.ok) {
-    const parsed = errorSchema.safeParse(
-      await response.json().catch(() => null),
-    );
+    const json: unknown = await response.json().catch(() => null);
+    const parsed = errorSchema.safeParse(json);
+    const code =
+      json && typeof json === "object" && "code" in json
+        ? String(json.code)
+        : "";
+    const messages: Record<string, string> = {
+      EMAIL_NOT_VERIFIED:
+        "Verify your email first. Use Send verification email below.",
+      INVALID_EMAIL_OR_PASSWORD: "Email or password is incorrect.",
+      INVALID_TOKEN:
+        "This link is invalid, expired or already used. Request a new link.",
+      PASSWORD_TOO_SHORT: "Use a password of at least 12 characters.",
+    };
     throw new Error(
       parsed.success
         ? parsed.data.error.message
-        : "Authentication failed. Check credentials and whether prototype signup is enabled.",
+        : response.status === 429
+          ? "Too many attempts. Wait a minute and try again."
+          : (messages[code] ??
+            "Account request failed. Check local email setup and try again."),
     );
   }
 }
