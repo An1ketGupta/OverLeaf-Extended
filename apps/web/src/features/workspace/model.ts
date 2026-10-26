@@ -33,6 +33,9 @@ export class WorkspaceModel {
   revision = 0;
   storageFailed = false;
   authLost = false;
+  paused = false;
+  missing = false;
+  remoteChanged = false;
   constructor(
     readonly project: Project,
     readonly userId: string,
@@ -78,7 +81,14 @@ export class WorkspaceModel {
   }
   edit(id: string, content: string) {
     const file = this.buffers.get(id);
-    if (!file || this.stopped || file.recovery || file.content === content)
+    if (
+      !file ||
+      this.stopped ||
+      this.paused ||
+      this.missing ||
+      file.recovery ||
+      file.content === content
+    )
       return;
     file.content = content;
     if (file.status !== "conflict")
@@ -139,7 +149,13 @@ export class WorkspaceModel {
   }
   private async flush(id: string) {
     const file = this.buffers.get(id);
-    if (!file || this.stopped || file.recovery || file.status === "conflict")
+    if (
+      !file ||
+      this.stopped ||
+      this.missing ||
+      file.recovery ||
+      file.status === "conflict"
+    )
       return false;
     if (file.status === "saved") return true;
     while (!this.stopped) {
@@ -164,7 +180,7 @@ export class WorkspaceModel {
           file.base.version,
           content,
         );
-        if (this.stopped) return false;
+        if (!this.isActive) return false;
         file.base = saved;
         if (file.content === content) {
           file.status = "saved";
@@ -179,7 +195,7 @@ export class WorkspaceModel {
         }
         this.draft(file); // Keep the newer text and advance its base version after an acknowledgement.
       } catch (error) {
-        if (this.stopped) return false;
+        if (!this.isActive) return false;
         file.status =
           error instanceof ApiError && error.status === 409
             ? "conflict"
@@ -202,7 +218,71 @@ export class WorkspaceModel {
     );
   }
   get isActive() {
-    return !this.stopped && !this.authLost;
+    return !this.stopped && !this.authLost && !this.missing;
+  }
+  pause() {
+    if (this.paused)
+      throw new Error("Another project operation is in progress.");
+    this.paused = true;
+    this.changed();
+  }
+  resume() {
+    this.paused = false;
+    this.changed();
+  }
+  async settle() {
+    await Promise.all([...this.saves.values()]);
+  }
+  markRemote(missing = false) {
+    this.remoteChanged = true;
+    this.missing = missing;
+    this.changed();
+  }
+  suspend() {
+    this.authLost = true;
+    this.changed();
+  }
+  acceptProject(project: Project) {
+    if (!this.isActive) return;
+    for (const [id] of this.buffers)
+      if (!project.files.some((file) => file.id === id)) {
+        this.persistence.removeDraft({
+          userId: this.userId,
+          projectId: project.id,
+          fileId: id,
+        });
+        this.buffers.delete(id);
+      }
+    for (const file of project.files) {
+      const buffer = this.buffers.get(file.id);
+      if (buffer) {
+        buffer.base = file;
+        if (buffer.status === "saved") buffer.content = file.content;
+      } else
+        this.buffers.set(file.id, {
+          base: file,
+          content: file.content,
+          status: "saved",
+          message: "",
+          recovery: undefined,
+        });
+    }
+    Object.assign(this.project, project);
+    this.remoteChanged = false;
+    this.changed();
+  }
+  discardAll() {
+    for (const [id, file] of this.buffers) {
+      this.persistence.removeDraft({
+        userId: this.userId,
+        projectId: this.project.id,
+        fileId: id,
+      });
+      file.content = file.base.content;
+      file.status = "saved";
+      file.recovery = undefined;
+    }
+    this.changed();
   }
   stop() {
     this.stopped = true;

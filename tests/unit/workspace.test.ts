@@ -132,4 +132,39 @@ describe("workspace save ordering and recovery", () => {
     expect(drafts.size).toBe(0);
     expect(model.buffers.size).toBe(0);
   });
+  it("keeps a draft when a late save completes after remote project deletion", async () => {
+    let acknowledge: ((file: SourceFile) => void) | undefined;
+    const { file, model, drafts } = fixture(
+      () =>
+        new Promise((resolve) => {
+          acknowledge = resolve;
+        }),
+    );
+    model.edit(file.id, "last private draft");
+    const pending = model.save(file.id);
+    model.markRemote(true);
+    acknowledge?.({ ...file, version: 2, content: "last private draft" });
+    expect(await pending).toBe(false);
+    expect(drafts.get(file.id)?.content).toBe("last private draft");
+    expect(model.buffers.get(file.id)?.base.version).toBe(1);
+    expect(await model.save(file.id)).toBe(false);
+  });
+  it("pauses editor changes during mutations and ignores late saves after session loss", async () => {
+    let acknowledge: ((file: SourceFile) => void) | undefined;
+    const { file, model, drafts } = fixture(
+      () =>
+        new Promise((resolve) => {
+          acknowledge = resolve;
+        }),
+    );
+    model.edit(file.id, "private draft");
+    const pending = model.save(file.id);
+    model.pause();
+    model.edit(file.id, "unaccepted typing");
+    expect(model.buffers.get(file.id)?.content).toBe("private draft");
+    model.suspend();
+    acknowledge?.({ ...file, version: 2, content: "private draft" });
+    expect(await pending).toBe(false);
+    expect(drafts.get(file.id)?.content).toBe("private draft");
+  });
 });

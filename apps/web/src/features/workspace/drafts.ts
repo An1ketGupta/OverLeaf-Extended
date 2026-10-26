@@ -71,6 +71,70 @@ export function clearPrivateDrafts() {
     /* No writable storage. */
   }
 }
+export function clearMismatchedDrafts(userId: string) {
+  readDrafts(userId, "");
+}
+export function removeProjectDrafts(userId: string, projectId: string) {
+  for (const draft of readDrafts(userId, projectId)) removeDraft(draft);
+}
+export function allDrafts(userId: string) {
+  // Reuse expiry, logout and identity checks for the account's orphan recovery list.
+  const result: LocalDraft[] = [];
+  try {
+    const projects = new Set<string>();
+    for (const item of Object.keys(sessionStorage).filter((item) =>
+      item.startsWith(prefix),
+    )) {
+      try {
+        const parsed = localDraftSchema.safeParse(
+          JSON.parse(sessionStorage.getItem(item) ?? "null"),
+        );
+        if (parsed.success) projects.add(parsed.data.projectId);
+      } catch {
+        /* Invalid records are removed by readDrafts. */
+      }
+    }
+    for (const project of projects) result.push(...readDrafts(userId, project));
+  } catch {
+    /* Recovery is best effort. */
+  }
+  return result;
+}
+const sessionChannel = "overleaf-pro:session-change";
+export function announceSessionChange() {
+  window.dispatchEvent(new Event(sessionChannel));
+  const channel =
+    typeof BroadcastChannel === "undefined"
+      ? null
+      : new BroadcastChannel(sessionChannel);
+  channel?.postMessage("changed");
+  channel?.close();
+  try {
+    localStorage.setItem(
+      sessionChannel,
+      `${Date.now()}:${crypto.randomUUID()}`,
+    );
+  } catch {
+    /* Broadcast fallback. */
+  }
+}
+export function onSessionChange(callback: () => void) {
+  const storage = (event: StorageEvent) => {
+    if (event.key === sessionChannel) callback();
+  };
+  window.addEventListener(sessionChannel, callback);
+  window.addEventListener("storage", storage);
+  const channel =
+    typeof BroadcastChannel === "undefined"
+      ? null
+      : new BroadcastChannel(sessionChannel);
+  if (channel) channel.onmessage = callback;
+  return () => {
+    window.removeEventListener(sessionChannel, callback);
+    window.removeEventListener("storage", storage);
+    channel?.close();
+  };
+}
 export function announceLogout() {
   clearPrivateDrafts();
   window.dispatchEvent(new Event("workspace-logout"));
