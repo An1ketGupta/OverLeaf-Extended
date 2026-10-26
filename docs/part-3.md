@@ -8,6 +8,11 @@ redistribution remain publication checks; no paid service or deployment is used.
 
 ## Current delivered workflow
 
+Part 7 update: source ZIP export now uses a separate ephemeral capture and remains
+available at full retained history, including valid escaped source above the
+compiler's encoded input cap. ZIP recovery creates a new private project with
+fresh IDs and exact source/asset bytes. See backup-recovery.md and part-7.md.
+
 - Recompile and Ctrl/Cmd Enter save all buffers, reject unresolved recovery,
   conflicts or unseen remote changes, then capture one project revision and its
   exact source/asset bytes. Ephemeral capture IDs are not retained snapshot IDs;

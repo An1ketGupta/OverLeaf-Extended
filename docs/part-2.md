@@ -5,6 +5,11 @@ are complete for localhost. Use `/account` with the local verification inbox; se
 [Part 1](part-1.md) and [Part 3](part-3.md). The older implementation evidence below
 describes the original Part 2 scope.
 
+## Historical editor-only delivery record
+
+The compiler and Part 1 blockers below describe the original editor-only milestone.
+They are superseded by the current update above and Parts 1/3/7 local evidence.
+
 Local implementation complete. The workspace uses real authenticated PostgreSQL
 storage. Part 0 hosted authentication, Neon eligibility, and compiler feasibility
 remain open. Part 1 is only partially implemented to supply the required project

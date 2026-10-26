@@ -26,7 +26,16 @@ safety snapshot. `/resume` analyzes actual uploaded PDF bytes locally, shows
 text evidence and required/preferred job-term coverage, and optionally saves
 private reports. Generated PDFs now feed this exact-byte analysis flow, and
 compiler diagnostics can be shared with the assistant through its consent flow.
-Live provider validation remains open. See [Part 5](docs/part-5.md) and [Part 6](docs/part-6.md).
+Parts 4–6 are complete for the agreed localhost / desktop Chromium scope,
+including all-template compiler verification and a bounded six-case live provider
+validation with synthetic documents. AI remains optional and disabled by default.
+See [Part 4](docs/part-4.md), [Part 5](docs/part-5.md),
+[Part 6](docs/part-6.md), and [current verification](docs/validation-parts-4-6.md).
+
+**Part 7 adds integrated recovery verification:** real API restarts/database
+disconnects, late-response and quota checks, modal keyboard fixes, and source ZIP
+recovery into new private projects. See [Part 7](docs/part-7.md),
+[recovery instructions](docs/backup-recovery.md) and [validation](docs/validation-part-7.md).
 
 ## Start locally
 
@@ -112,14 +121,18 @@ and History include those bytes. Regular compiles do not consume retained histor
 See docs/part-2.md for
 shortcuts, draft privacy, limits, and remaining prerequisites.
 
-**Export project (.zip)** saves all files and captures an immutable source/asset snapshot
+**Export project (.zip)** saves all files and captures one consistent source/asset revision
 before downloading the full source tree and a version/hash manifest. Conflicts
 and unseen remote changes require review first. **Download file** keeps a copy of
-the current editor buffer, including unsaved text. Apply the new snapshot migration
-with `pnpm db:migrate` before exporting. Snapshots are capped at 20 revisions per
-project and 32 MiB of logical JSON per account; at the limit, individual downloads
-remain available. Regular compilation uses a non-retained capture and continues
-at that history limit. [Part 3 progress](docs/part-3.md) records the local workflow.
+the current editor buffer, including unsaved text. Exports use an ephemeral capture
+and consume no retained history slots. Snapshots are capped at 20 revisions per
+project and 32 MiB of logical JSON per account; full ZIP export, individual downloads
+and regular compilation remain available at that limit. The compiler retains its
+separate encoded input cap. **Import project backup** on Projects restores an
+unchanged exported ZIP into a new private project with fresh IDs. It restores
+one source/asset revision, not accounts, all history or reports. Both v1 and v2
+stored ZIP exports are supported; arbitrary archives are rejected. See
+[backup recovery](docs/backup-recovery.md).
 
 Create a project from either resume starter or the multi-file report using the
 **Starting template** selector. All examples are synthetic and include an MIT
@@ -132,6 +145,15 @@ At the retention limit restore stops if it cannot preserve the current revision.
 Apply all migrations, including 0005, with `pnpm db:migrate` first. See [template provenance](templates/README.md).
 
 ## Verification
+
+Run `pnpm test:recovery:integration` alongside `pnpm test:integration` against the
+separate real test database and local inbox. Full `pnpm test:e2e` and
+`pnpm test:e2e:built` include recovery workflows. Their loopback-only test supervisor
+owns the API process and database relay; it never stops the shared PostgreSQL
+service. Ports 3101, 3102 and 5273 must be free. The test-only provider controls
+are absent from production. For the optional local Postman provider drill, start
+the simulation using postman/simulations/recovery/recovery.context.md, then run
+`pnpm test:provider:recovery`. Normal checks send no live AI requests.
 
 Part 0A has a separate synthetic compiler evaluator. With the pinned runtime,
 `pnpm compiler:prepare` downloads and verifies about 230 MB of candidate assets
@@ -148,8 +170,12 @@ reports. AI is optional: configure `GROQ_API_KEY` and `AI_SHARING_ENABLED=true`
 on the API only, using an eligible Groq Free account. Review provider data
 controls first. Each request asks for sharing consent; no paid fallback or
 automatic retry is enabled. Without a provider, editing and local PDF analysis
-still work. `AI_LIVE_CHECK=true` with `pnpm test:ai:live` opts into a synthetic
-provider request; it is excluded from normal tests and CI.
+still work. The pinned model is `openai/gpt-oss-20b` on Groq; update any older
+AI_MODEL setting to that ID. `AI_LIVE_CHECK=true` with `pnpm test:ai:live` opts into
+at most six sequential synthetic requests, including compiling actual edit
+proposals. Prepare compiler assets and Chromium first. The runner checks model
+availability, stops on failure without retry, and writes bounded evidence under
+ignored `.cache/ai-live`. It is excluded from normal tests and CI.
 
 ```sh
 pnpm lint
@@ -157,6 +183,9 @@ pnpm typecheck
 pnpm test
 pnpm test:integration
 pnpm exec playwright install chromium
+pnpm compiler:prepare
+pnpm compiler:verify
+pnpm test:templates
 pnpm test:e2e
 pnpm build
 pnpm test:e2e:built
@@ -169,8 +198,10 @@ verify auth/cookies/origin protection, and remove only that account. They never
 reset a configured database. E2E uses the separate test database when configured
 and cleans up its synthetic account. Start `pnpm mail:start` before integration or
 browser tests (CI supplies Mailpit). Browser checks use ports 3101/5273 so normal
-development servers can stay on 3001/5173. Without TEST_DATABASE_URL, E2E runs the UI/proxy smoke test
-and explicitly skips the real-account test. Playwright loads the root `.env`;
+development servers can stay on 3001/5173. The complete suite requires the test
+database and compiler assets. For an intentionally limited UI/proxy smoke check,
+run `pnpm test:e2e tests/e2e/foundation.spec.ts`; that command can skip the account
+case when no test database is configured. Playwright loads the root `.env`;
 leave test ports 3101/5273 free before running E2E.
 
 The E2E test harness serves deterministic synthetic provider responses over HTTP;
@@ -181,14 +212,20 @@ checks multi-file atomic apply, stale/conflicting requests, safety-snapshot quot
 rollback, request replay, private report ownership and deletion. PDF browser tests
 exercise actual clean, empty, encrypted, malformed and over-page PDF bytes.
 
-Compiler E2E cases require prepared assets and explicitly skip if they are absent.
-The local completion run used prepared assets and the real separate PostgreSQL
-test database: all 18 browser tests passed in both dev and built workflows,
-including both compiler journeys and five account/project lifecycle journeys.
+`pnpm test:templates` verifies asset/source hashes and runs every catalog template
+through actual baseline/edit/restore compilation and PDF text inspection. Catalog
+tests fail when prerequisites are missing. CI and `REQUIRE_COMPILER_TESTS=true`
+also fail global setup for missing/invalid compiler assets or a missing separate
+test database, so compiler journeys cannot silently skip in required runs.
+See [current verification](docs/validation-parts-4-6.md) for the latest full
+development/built browser results; the earlier Part 1 milestone had 18 journeys.
 
 CI installs from the frozen lockfile and runs lint, types, unit tests, real
-PostgreSQL integration, build, and Chromium E2E. Browser traces/screenshots are
-stored under ignored test-results. Local verification results and remaining gates
+PostgreSQL integration, pinned compiler preparation/integrity, build, full Chromium
+E2E and the built compiler/template/assistant journeys. Browser traces/screenshots
+are stored under ignored test-results. CI failure uploads include only synthetic
+screenshots/PDFs and error context; traces can contain third-party compiler bytes
+and stay local. Local verification results and remaining gates
 are recorded in docs/part-0.md; a CI workflow file is not a completed hosted CI run.
 
 ## Layout and deployment

@@ -7,6 +7,12 @@ served locally. Hosted delivery, physical devices/other browsers and asset
 redistribution are publication checks. See part-3.md for current results. The
 older foundation/evaluation entries below retain their historical scope.
 
+## Historical foundation and evaluation record
+
+The following dated statements about an unselected compiler are superseded by
+the local acceptance above. Hosted auth, account eligibility and publication
+checks remain open; see Part 7 for current integrated local recovery evidence.
+
 **Compiler evaluation update:** an isolated synthetic browser harness now produces
 and validates real XeTeX/xdvipdfmx PDFs from both gate resumes, the image/report
 fixture and all catalog templates. It records runtime/asset hashes, actual PDF

@@ -1,4 +1,39 @@
-# Part 6 progress — 2026-10-20
+# Part 6: resume PDF analysis and job matching
+
+**Complete for the agreed local deterministic scope, 2026-10-26.** Uploaded
+PDFs and exact generated-PDF bytes are integrated. The former local compiler
+blocker is closed; AI advice/requirement extraction and OCR are not implemented.
+
+## Current scope and evidence
+
+PDF.js extraction runs in a bounded dedicated worker. Users can inspect extracted
+text, page/line locations, extraction limitations, deterministic compatibility
+contributions and separate required/preferred term evidence. Unsupported,
+encrypted, malformed or insufficient-text input receives no fabricated score.
+Scores describe this app's own estimate, never an employer's ATS score or hiring
+probability. Advice asks for missing facts and metrics instead of inventing them.
+
+The compiler journey checks that the downloaded PDF hash matches the bytes sent
+to analysis and verifies Unicode text evidence. New catalog/assistant journeys
+also inspect the actual compiled PDFs through that same analysis flow.
+Private immutable reports retain the exact PDF hash, extraction/rules versions,
+normalized requirements and client-provided provenance; ownership checks and
+server-side rules derivation remain covered by real PostgreSQL tests.
+
+Reading order, multi-column layouts, ligatures, hidden text, fonts and English
+heading/contact/date heuristics limit extraction and matching. Some complex cases
+are deterministic line fixtures rather than arbitrary real-document coverage.
+Browser hashes/extraction are client claims and provide no server attestation.
+
+See [validation-parts-4-6.md](validation-parts-4-6.md) for current local regression
+results. Hosted account behavior, broader browsers/devices and broader PDF/font
+coverage remain release work. No changes to the scoring rubric or report schema
+were needed for this status reconciliation.
+
+## Historical delivery record
+
+Everything below describes the earlier upload-first milestone. Its integrated
+compiler blocker and older verification counts are superseded above.
 
 **2026-10-24 integration update:** generated compiler PDFs now enter analysis as
 the exact in-memory bytes. Browser tests compare the downloaded PDF hash with
@@ -83,7 +118,7 @@ matching PDF. Report deletion does not erase the local analysis. Logout clears
 private report state and guards late responses. Reports are immutable; rerunning
 analysis or changing advice cannot silently rescore an earlier report.
 
-## Verification actually run
+### Verification actually run
 
 Typecheck, build, forty unit tests, five PostgreSQL integration scripts and eleven
 Chromium E2E tests passed on the pinned runtime. The extraction/matching/unsupported

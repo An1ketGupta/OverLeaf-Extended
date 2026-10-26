@@ -62,7 +62,10 @@ See part-1.md for lifecycle behavior and dependency obligations.
 The database pool has three connections, bounded connection/query/statement timeouts,
 and an idle-socket error listener. `/api/health` reports process liveness;
 `/api/ready` checks access to migrated auth tables and returns 503 when unavailable.
-An idle database failure does not crash the API. Readiness also probes project and
+Idle and checked-out database clients have content-free error listeners, so a
+dropped socket during a transaction cannot crash the API between query rejection
+and rollback. Query failures still propagate and broken clients are removed.
+Readiness also probes project and
 file tables. Private project source persists in PostgreSQL; bounded text writes
 lock their parent project, validate quotas and compare optimistic versions.
 There is no Redis, paid worker, or compile endpoint. Optional bounded server-only
@@ -72,7 +75,20 @@ Immutable text snapshot capture/read and browser ZIP export now provide the
 source prerequisite for Part 3. Account/project locks serialize quota checks and
 source capture against writes. PostgreSQL rejects snapshot updates; source edits
 cannot change a captured revision. See contracts.md for retention bounds and ZIP
-format, and part-3.md for the compiler gate that remains open.
+format, and part-3.md for the selected localhost compiler and publication gates.
+
+Part 7 source exports use an ephemeral locked capture, without allocating retained
+history. A separate 50 MiB encoded export response bound supports JSON escaping
+while the compiler keeps its 16 MiB transport cap. Browser ZIP import validates
+stored-entry headers, central records, CRCs, manifest hashes and tree limits;
+the API independently validates the strict DTO and recomputes hashes. Database
+import creates a new private source/asset tree atomically with fresh IDs. No
+historical owner/version token is authority. See backup-recovery.md for scope.
+
+Recovery tests supervise a synthetic child API and interrupt only a test-owned
+TCP relay to TEST_DATABASE_URL. Loopback controls and deterministic provider
+barriers live under scripts/, never in the production app. The API/database
+boundary and real PostgreSQL transactions remain exercised during those failures.
 
 The Part 2 browser workspace imports only public contracts and browser libraries.
 CodeMirror loads with the workspace; PDF.js and its packaged worker load only for

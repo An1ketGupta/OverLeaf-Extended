@@ -2,7 +2,7 @@
 
 Created: 2026-10-20. Current user clarification (2026-10-24): **personal project; test on localhost for now. Free/no-card/no-subscription constraints remain; Docker is allowed.** Earlier commercial hosting research is historical, not a hosting selection. No deployment or paid resources are authorized by local implementation. See [compiler acceptance](docs/compiler-feasibility.md) and [historical commercial assessment](docs/commercial-use.md).
 
-Status: Part 0A's browser route is selected for local desktop Chromium; Part 3 compilation/PDF export is implemented and verified against real PostgreSQL and both development/built local browser workflows. Assets, main-file selection, source/asset history, diagnostics, cancellation, stale previews and exact-byte generated-PDF analysis are integrated. Parts 2 and independent Parts 4–6 flows remain implemented. Part 1 account lifecycle is now complete locally. Live AI, public account delivery, actual hosting, compiler redistribution and broader devices remain separate future work. See [Part 0](docs/part-0.md), [Part 2](docs/part-2.md), [Part 3](docs/part-3.md), [Part 4](docs/part-4.md), [Part 5](docs/part-5.md), and [Part 6](docs/part-6.md).
+Status (2026-10-26): Parts 1–7 are complete for the agreed localhost / desktop Chromium milestone. Integrated signup/template/edit/compile/AI/analysis/restore, API and database outage recovery, late-response cleanup, quota behavior, keyboard/reflow and source ZIP recovery are verified. Findings fixed include a checked-out PostgreSQL connection crash, retention-dependent export, missing ZIP import, stale reads and dialog focus. All 31 built-app browser journeys, 51 unit tests, eleven PostgreSQL integration suites and 70 evaluator cases pass. Development coverage includes a clean rerun after an implementation-time HMR interruption. Public account delivery, hosting/CDN behavior, compiler redistribution, broader devices, native zoom/screen-reader review, whole-database dump/restore and independent release review remain explicit limitations. CI is configured but its GitHub execution is unobserved. See [Part 7](docs/part-7.md) and [current verification](docs/validation-part-7.md); the earlier [Parts 4–6 record](docs/validation-parts-4-6.md) retains dated live-provider evidence.
 
 ## 1. Repository findings and confirmed constraints
 
@@ -200,7 +200,7 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 **Owner:** A0/A1; A4 for 0A, A2 for 0B. **Depends on:** none. **Status:** [ ]
 
-**Implementation update (2026-10-20):** Local foundation is implemented and verified with native PostgreSQL and Chromium. Runtime/tooling, web/API scaffolds, health/readiness, Better Auth routing prototype, migrations/seed, initial shared contracts, docs, CI, and deployment templates are in place. Part 0 remains incomplete: neither compiler route is proven, Neon Free signup/connection is unvalidated, and actual Vercel/Render auth/CDN checks have not run. Detailed evidence and handoff: [docs/part-0.md](docs/part-0.md).
+**Current scope (2026-10-26):** Local foundation and the measured browser compiler route are accepted for localhost / desktop Chromium. Runtime/tooling, web/API integration, health/readiness, local verified accounts, migrations, contracts and CI are implemented. Part 0's hosted gates remain open: Neon/account eligibility, host selection, actual auth/CDN/email delivery and compiler publication checks. The earlier unselected-compiler statements in the dated foundation record are historical. See [docs/part-0.md](docs/part-0.md).
 
 - 0A: Complete the server/browser compiler comparison above. Record compatibility, licensing, asset-delivery plan, and measurements.
 - 0B: Validate Vercel-to-Render auth routing with a minimal API (Docker or native) and browser client. Confirm secure cookie forwarding and cache behavior on actual staging hosts when account access is available; do not mark that deployed check complete from localhost alone.
@@ -237,7 +237,7 @@ See [Part 1](docs/part-1.md) and the [approved plan](docs/implementation-plan-pa
 
 **Owner:** A3. **Depends on:** Parts 0-1. **Status:** [x] Local editor/autosave verified; hosted prerequisites remain open.
 
-**Implementation update:** `/projects` and `/projects/:projectId` provide a real PostgreSQL-backed writing desk, CodeMirror LaTeX editing, resizable panels, tabs/search/shortcuts, serialized debounced saves, explicit conflict resolution, private tab recovery, and a PDF.js local-file preview. The typed compiler boundary reports unavailable until Part 0A passes; no engine or mock compilation is wired in. Evidence, migration details, and remaining prerequisites: [docs/part-2.md](docs/part-2.md).
+**Current implementation:** `/projects` and `/projects/:projectId` provide a real PostgreSQL-backed writing desk, CodeMirror editing, resizable panels, tabs/search/shortcuts, serialized saves, explicit conflicts and private tab recovery. The selected browser compiler now produces real PDFs and integrates download, diagnostics and analysis. Part 7 extends outage/late-response/focus verification and source backup recovery. See [docs/part-2.md](docs/part-2.md) and [Part 7](docs/part-7.md).
 
 - Build resizable file tree/editor/PDF panels, tabs, search, shortcuts, keyboard focus, and save indicators.
 - Integrate CodeMirror 6 with verified LaTeX syntax/completion and a typed compiler adapter.
@@ -264,7 +264,7 @@ See [Part 1](docs/part-1.md) and the [approved plan](docs/implementation-plan-pa
 
 ### Part 4 - Curated templates and recoverable history
 
-**Owner:** A3/A2; A4 verifies compatibility. **Depends on:** Parts 1-3. **Status:** [ ] Partial - independent template copying, named snapshots, source diff and transactional restore implemented; selected-engine CI compilation/text inspection blocked by Part 0A. See [progress](docs/part-4.md).
+**Owner:** A3/A2; A4 verifies compatibility. **Depends on:** Parts 1-3. **Status:** [x] Complete for localhost / desktop Chromium. All three catalog templates pass real compilation, PDF text inspection, independent copying, editing and restoration. CI now prepares pinned assets and requires these checks; hosted CI execution remains unobserved. See [progress](docs/part-4.md).
 
 - Include 2-3 resume templates and one report using supported packages/fonts with provenance/licenses and synthetic content.
 - Copy templates into private independent projects; add named snapshots, source diff, and restore.
@@ -274,7 +274,7 @@ See [Part 1](docs/part-1.md) and the [approved plan](docs/implementation-plan-pa
 
 ### Part 5 - AI editing and compile-error assistance
 
-**Owner:** A5; A3 owns review UI; A2 owns transactional apply. **Depends on:** Parts 1-3 and proposal contracts. **Status:** [ ] Independent request/review/atomic apply/restore implemented; live provider validation and compiler-dependent completion blocked. See [Part 5 progress](docs/part-5.md).
+**Owner:** A5; A3 owns review UI; A2 owns transactional apply. **Depends on:** Parts 1-3 and proposal contracts. **Status:** [x] Complete for the local validation scope. Review/reject/apply/compile/failure/diagnostic/restore and later-edit protection pass; six synthetic live cases passed with Groq's pinned openai/gpt-oss-20b, including real compilation of live edits. AI remains optional and disabled by default. Account billing/data settings and general model quality are not attested. See [Part 5 progress](docs/part-5.md).
 
 - Configure a server-only provider adapter/model and request/output/time/concurrency caps. No keys in frontend assets or compiler inputs.
 - Support selected-code explanations, bounded generation/rewrites, project questions, and diagnostic explanations.
@@ -289,7 +289,7 @@ See [Part 1](docs/part-1.md) and the [approved plan](docs/implementation-plan-pa
 
 ### Part 6 - Resume PDF analysis and job matching
 
-**Owner:** A6; A3 report UI; A5 optional server-generated advice. **Depends on:** Parts 1 and 3 plus analysis contracts. Deterministic analysis can proceed independently of Part 5. **Status:** [ ] Uploaded-PDF extraction, deterministic checks/job-term evidence, and private saved reports implemented; integrated compiler output remains gated. See [Part 6 progress](docs/part-6.md).
+**Owner:** A6; A3 report UI; A5 optional server-generated advice. **Depends on:** Parts 1 and 3 plus analysis contracts. Deterministic analysis can proceed independently of Part 5. **Status:** [x] Complete for the local deterministic scope. Uploaded/generated exact-byte PDF extraction, evidence-backed checks/job-term coverage and private immutable reports are integrated and verified. OCR and optional AI requirement extraction/advice remain unimplemented; extraction/font/reading-order limitations remain explicit. See [Part 6 progress](docs/part-6.md).
 
 - Extract actual uploaded/generated PDF bytes in a bounded PDF.js worker; check size/pages, malformed/encrypted input, and file type.
 - Show extracted text and page/evidence locations beside the PDF. Flag image-only input as unsupported; OCR is later work.
@@ -305,7 +305,15 @@ See [Part 1](docs/part-1.md) and the [approved plan](docs/implementation-plan-pa
 
 ### Part 7 - Integrated verification and recovery
 
-**Owner:** A7 reviews; A0 assigns fixes. **Depends on:** Parts 1-6. **Status:** [ ]
+**Owner:** Implementing agent; independent release review remains separate. **Depends on:** Parts 1-6. **Status:** [x] Complete for localhost / desktop Chromium, with the recorded limitations below.
+
+**Local completion (2026-10-26):** real service/process/transaction failures,
+pending and late replies, exact-byte end-to-end recovery, quota rollback/reuse,
+keyboard focus and bounded source ZIP import/export are checked. Fixed findings
+and command-by-command evidence are in [Part 7](docs/part-7.md) and
+[validation](docs/validation-part-7.md). Source ZIP recovery is demonstrated;
+whole-database pg_dump/restore, actual hosted/CDN behavior, native browser zoom,
+physical devices and independent review are not claimed.
 
 - Verify the complete browser journey: sign up -> template -> edit/save -> compile/download -> AI diff/apply -> resume analysis -> restore.
 - Test account isolation on every route/artifact and authenticated CDN cache behavior through the actual frontend/backend routing.
@@ -433,9 +441,13 @@ only for gates actually demonstrated.
 | Part 1 | Complete for localhost/desktop Chromium; verified accounts, recovery, project/file management, deletion cleanup, isolation and conflict workflows passed; hosted email/auth remain separate |
 | Part 2 | Local workspace/autosave verified and compiler integrated |
 | Part 3 | Complete for agreed localhost/desktop Chromium scope; real compilation, preview, PDF/source export and generated-PDF analysis verified |
-| Parts 4-9 | Independent Parts 4–6 local flows implemented; remaining release/follow-on work retains its own prerequisites |
+| Part 4 | Complete locally; all catalog template compile/text/edit/restore checks pass; required CI wiring added, hosted run unobserved |
+| Part 5 | Complete for local validation; guarded apply/recovery and six live synthetic Groq cases passed; optional AI disabled by default |
+| Part 6 | Complete for local deterministic scope; uploaded/generated exact-byte analysis, evidence and private reports verified |
+| Part 7 | Complete for the localhost milestone: integrated/restart/disconnect/race/quota/source-backup checks pass; publication and full-database recovery limitations are recorded |
+| Parts 8-9 | Deployment and follow-on features remain planned with their own prerequisites |
 
-**Next task:** review the completed local Part 1 account/project workflows and choose the next roadmap part. Before public deployment, complete the exact compiler redistribution materials, host selection/routing/auth checks and supported-device verification. Local account/lifecycle work is complete; remaining release work stays separately scoped. No paid infrastructure, external account or deployment has been created. See [docs/part-3.md](docs/part-3.md) and [compiler publication checklist](docs/compiler-licenses.md).
+**Next task:** Part 8 requires separate host/account and publication decisions before any deployment. Validate free/no-card host and database eligibility, actual auth/email/CDN routing, compiler redistribution, supported devices/accessibility and independent release review. A whole-database backup/restore drill also remains unexecuted because native dump/restore tools were unavailable; source ZIP recovery does not replace it. No deployment, external account, paid resource, product license change or live provider call was made during Part 7. See [current verification](docs/validation-part-7.md), [backup recovery](docs/backup-recovery.md) and the [compiler publication checklist](docs/compiler-licenses.md).
 
 ## 10. Primary references
 

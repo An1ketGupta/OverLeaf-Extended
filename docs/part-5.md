@@ -1,4 +1,77 @@
-# Part 5 progress — 2026-10-20
+# Part 5: AI editing and compile-error assistance
+
+**Complete for the agreed local validation scope, 2026-10-26.** The real
+request/review/reject/apply/compile/diagnostic/restore workflow is verified, and a
+bounded six-case live Groq matrix passed with original synthetic documents.
+AI remains optional and disabled by default.
+
+## Current implementation and model
+
+The server pins `openai/gpt-oss-20b` on Groq, JSON object output, low reasoning
+effort, 4,096 maximum completion tokens, a ten-second provider deadline and bounded
+response/context sizes. Existing account/request concurrency, quota, ownership,
+atomic apply, immutable safety snapshot and stale-version protection remain.
+No automatic retry, provider tools, paid fallback or browser credential is added.
+
+The earlier Llama 3.3 configuration was absent from the supplied key's model list;
+the first live attempt stopped. Groq's current
+[model catalog](https://console.groq.com/docs/models) lists that model as enterprise,
+while `openai/gpt-oss-20b` appears in the
+[Free plan limits](https://console.groq.com/docs/rate-limits) and was available to
+the supplied key. The replacement was deliberate, within the approved plan;
+there is no runtime fallback. Existing explicit AI_MODEL settings must use the
+new pinned ID. No plan upgrade, account creation or payment was performed.
+
+Accepted edits now update the workspace through its guarded, paused mutation
+path instead of reloading the page. This retains the last successful PDF with a
+stale label after changed source or compile failure. Quick restore uses the same
+guard and refuses to overwrite later work. Source buffers and saved versions are
+reconciled before editing resumes. Instruction/diagnostic fields have stable
+accessible names. Browser tests use the actual HTTP adapter with a test-only
+synthetic upstream; production exposes no fixture-provider setting.
+
+## Live validation and privacy
+
+The opt-in `pnpm test:ai:live` checks model availability, then sends at most six
+sequential original synthetic requests: explanation, factual project question,
+selected rewrite, generation, an actual compiler diagnostic, and missing metrics.
+It stops on failure without retry. Selected rewrites must preserve every byte
+outside the selection; both edit proposals compile through the product browser
+adapter and their actual PDFs contain the requested text. Manual review of the
+six synthetic answers found no invented resume metrics.
+
+Use an eligible Free account key through the environment or ignored local .env,
+with AI_SHARING_ENABLED=true and AI_LIVE_CHECK=true. Compiler assets and Playwright
+Chromium must already be prepared. The runner keeps bounded results and synthetic
+review/PDF material under ignored .cache/ai-live; normal tests and CI make no live
+provider calls. The supplied key was used only in the validation process's
+environment; it was not saved to project files or enabled for real documents.
+
+Groq's [data policy](https://console.groq.com/docs/your-data) describes default
+inference non-retention with reliability/abuse exceptions. Account billing/data
+settings were not independently inspected, and a successful key does not attest
+those settings. The sample establishes the tested local behavior, not general
+model quality, real-document factual correctness or hosted delivery.
+
+## Current verification
+
+The new browser journey passes real compilation of visible accepted changes,
+rejection without mutation, compile failure and stale preview, consent-based
+diagnostic assistance, successful safety restore/recompilation and rejection of
+quick restore after later manual work. The six live cases passed, including
+compilation/text inspection of both actual live edit proposals. Existing real
+PostgreSQL coverage establishes ownership, atomic multi-file apply, stale apply,
+quota rollback and interruption handling.
+
+See [validation-parts-4-6.md](validation-parts-4-6.md) for final commands, evidence
+and limitations. No schema migration, shared DTO change or runtime dependency
+was needed. Independent review, hosted auth and broader release checks remain
+outside this local milestone.
+
+## Historical delivery record
+
+Everything below describes the original independent milestone. Its old model,
+disabled-compilation and unvalidated-live-provider statements are superseded above.
 
 **2026-10-24 integration update:** Part 3 now supplies bounded real compiler
 diagnostics to the assistant's existing review/consent flow. The localhost compiler
@@ -81,7 +154,7 @@ PostgreSQL, and Chromium against a test-only HTTP provider. Its fixture switch i
 in scripts/e2e-api.ts, never in the production server/configuration. These checks
 establish local behavior, not live quality, hosted cookies, or provider retention.
 
-## Verification actually run
+### Verification actually run
 
 Pinned Node 24.22.0 / pnpm 10.34.7 were used. Typecheck, build and forty unit
 tests passed. All five PostgreSQL integration scripts passed against the separate

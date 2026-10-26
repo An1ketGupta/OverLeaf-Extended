@@ -1,4 +1,39 @@
-# Part 4 progress — 2026-10-20
+# Part 4: curated templates and recoverable history
+
+**Complete for localhost / desktop Chromium, 2026-10-26.** Both resume templates
+and the multi-file report are verified through the real product compiler. Hosted
+CI execution, broader devices and compiler redistribution remain separate checks.
+
+## Current delivered scope
+
+- The catalog contains two original MIT-licensed synthetic resumes and one report.
+  Template source/license hashes are checked against the complete shared catalog.
+- Each template is copied into independent private projects. Existing named
+  snapshots, source/asset comparison and transactional safety-snapshot restore
+  remain covered by real PostgreSQL tests.
+- `pnpm test:templates` checks compiler/template integrity and runs all three
+  catalog browser journeys. Every journey compiles the baseline, checks identifying
+  extracted PDF text, edits and recompiles, compares/restores history, and compiles
+  the restored copy. A second project remains unchanged.
+- Resume checks include names, contacts and sections. Report checks include nested
+  inputs, contents, findings, the resolved section reference and bibliography;
+  undefined references/citations and placeholder question marks fail the checks.
+- CI prepares pinned assets before building and requires real compiler coverage
+  in development and built browser runs. Missing assets or test database fail its
+  global setup. Failure uploads exclude traces, which can contain downloaded
+  compiler binaries. Binaries remain ignored and are not published by this task.
+
+## Current verification
+
+The three catalog journeys passed locally against real PostgreSQL and the selected
+browser engine. Current full regression results are recorded in
+[validation-parts-4-6.md](validation-parts-4-6.md). The workflow has been updated;
+a GitHub-hosted run has not been observed. Local results do not verify deployment.
+
+## Historical delivery record
+
+Everything below records the earlier independent milestone. Its compiler and
+Part 1 blockers are superseded by the current scope and evidence above.
 
 **2026-10-24 integration update:** all catalog templates now compile in the selected
 local browser engine. Source history, comparison and restore also include bounded
@@ -10,7 +45,7 @@ describes the earlier independent text-only milestone.
 selected a compiler and Parts 1/3 still have open work. This change adds source
 starters and recoverable text history without enabling a compiler integration.
 
-## Delivered
+### Delivered
 
 - Two original synthetic resume starters and one multi-file report, using standard
   article/report classes and default LaTeX fonts without additional packages.
@@ -52,7 +87,7 @@ before using these features. The new table is included in readiness. Production
 API packaging must retain the repository templates directory alongside the
 existing source packages.
 
-## Verification
+### Verification
 
 Used pinned Node 24.22.0 / pnpm 10.34.7 and native PostgreSQL 17.10 on loopback
 port 55432, with only the separate overleaf_pro_test database. Tests migrate
@@ -75,7 +110,7 @@ narrowing in the new integration script; those were corrected. The first
 integration invocation lacked TEST_DATABASE_URL and failed explicitly; subsequent
 runs used the separate native test database.
 
-## Remaining gates
+### Remaining gates
 
 Compile every template against the selected, pinned engine in CI and inspect
 actual extracted PDF text. This cannot run until Part 0A supplies a demonstrated
