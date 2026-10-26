@@ -59,6 +59,37 @@ function fixture() {
 }
 
 describe("consistent source export", () => {
+  it("exports exact asset bytes and rejects unseen remote asset replacements", async () => {
+    const { snapshot, model, project, api } = fixture();
+    const bytes = Buffer.from("%PDF-1.4\nsynthetic image bytes");
+    const asset = {
+      id: randomUUID(),
+      path: "images/chart.pdf",
+      version: 1,
+      mediaType: "application/pdf" as const,
+      bytes: bytes.length,
+      dataBase64: bytes.toString("base64"),
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+    };
+    snapshot.assets = [asset];
+    project.assets = [asset];
+    const archive = unzipSync(await sourceArchive(snapshot));
+    expect(
+      Buffer.from(archive["source/images/chart.pdf"] ?? []).equals(bytes),
+    ).toBe(true);
+    const manifest = JSON.parse(
+      strFromU8(archive["snapshot.json"] as Uint8Array),
+    );
+    expect(manifest.assets[0].sha256).toBe(asset.sha256);
+    expect(manifest.assets[0]).not.toHaveProperty("dataBase64");
+    api.get.mockResolvedValue({
+      ...project,
+      assets: [{ ...asset, version: 2, sha256: "a".repeat(64) }],
+    });
+    await expect(captureSavedSource(model, api)).rejects.toThrow(
+      "Saved files changed",
+    );
+  });
   it("preserves exact UTF-8 paths/content and puts provenance outside user source", async () => {
     const { snapshot } = fixture();
     const archive = unzipSync(await sourceArchive(snapshot));
@@ -87,9 +118,19 @@ describe("consistent source export", () => {
     await expect(
       sourceArchive({
         ...snapshot,
-        assets: [{ path: "image.png", bytes: 1, sha256: "a".repeat(64) }],
+        assets: [
+          {
+            id: crypto.randomUUID(),
+            version: 1,
+            mediaType: "image/png",
+            path: "image.png",
+            bytes: 1,
+            sha256: "a".repeat(64),
+            dataBase64: "YQ==",
+          },
+        ],
       }),
-    ).rejects.toThrow("Asset snapshots");
+    ).rejects.toThrow("integrity");
   });
   it("saves pending edits before requesting their exact revision", async () => {
     const { model, project, snapshot, api } = fixture();

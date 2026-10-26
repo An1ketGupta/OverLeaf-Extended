@@ -1,7 +1,7 @@
 import {
   type Project,
   type SourceSnapshot,
-  textSnapshotSchema,
+  sourceSnapshotSchema,
 } from "@overleaf-pro/contracts";
 import { type Zippable, zipSync } from "fflate";
 import { projectApi } from "./api.js";
@@ -12,9 +12,9 @@ type SnapshotApi = {
   createSnapshot(id: string, baseRevision: number): Promise<SourceSnapshot>;
 };
 
-export async function captureSavedSource(
+export async function savedProjectForHistory(
   model: WorkspaceModel,
-  api: SnapshotApi = projectApi,
+  api: Pick<SnapshotApi, "get"> = projectApi,
 ) {
   if (!model.isActive) throw new Error("Reopen this project to export it.");
   const saved = await Promise.all(
@@ -40,12 +40,31 @@ export async function captureSavedSource(
         local.content !== file.content
       );
     }) ||
-    project.mainFile !== model.project.mainFile
+    project.mainFile !== model.project.mainFile ||
+    JSON.stringify(
+      (project.assets ?? []).map((a) => [a.id, a.path, a.version, a.sha256]),
+    ) !==
+      JSON.stringify(
+        (model.project.assets ?? []).map((a) => [
+          a.id,
+          a.path,
+          a.version,
+          a.sha256,
+        ]),
+      )
   )
     throw new Error(
       "Saved files changed while this project was open. Reload and review them before exporting.",
     );
-  const snapshot = textSnapshotSchema.parse(
+  return project;
+}
+
+export async function captureSavedSource(
+  model: WorkspaceModel,
+  api: SnapshotApi = projectApi,
+) {
+  const project = await savedProjectForHistory(model, api);
+  const snapshot = sourceSnapshotSchema.parse(
     await api.createSnapshot(project.id, project.revision),
   );
   if (!model.isActive) throw new Error("Reopen this project to export it.");
@@ -60,7 +79,7 @@ export async function captureSavedSource(
 }
 
 export async function sourceArchive(input: SourceSnapshot) {
-  const snapshot = textSnapshotSchema.parse(input);
+  const snapshot = sourceSnapshotSchema.parse(input);
   const entries: Zippable = Object.create(null);
   for (const file of snapshot.files) {
     const bytes = new TextEncoder().encode(file.content);
@@ -86,11 +105,27 @@ export async function sourceArchive(input: SourceSnapshot) {
           ...file,
           path: `source/${file.path}`,
         })),
+        assets: snapshot.assets.map(({ dataBase64: _data, ...asset }) => ({
+          ...asset,
+          path: `source/${asset.path}`,
+        })),
       },
       null,
       2,
     ),
   );
+  for (const asset of snapshot.assets) {
+    const bytes = Uint8Array.from(atob(asset.dataBase64), (c) =>
+      c.charCodeAt(0),
+    );
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const actual = [...new Uint8Array(digest)]
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    if (actual !== asset.sha256)
+      throw new Error("Asset integrity check failed");
+    entries[`source/${asset.path}`] = bytes;
+  }
   // Store bounded source bytes without expensive compression on the UI thread.
   return zipSync(entries, { level: 0 });
 }
