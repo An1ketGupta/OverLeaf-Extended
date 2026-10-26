@@ -5,6 +5,7 @@ import {
 } from "@overleaf-pro/contracts";
 import { useEffect, useRef, useState } from "react";
 import { projectApi } from "./api.js";
+import { containDialogFocus } from "./dialog.js";
 import { changedFiles } from "./diff.js";
 import { captureSavedSource, savedProjectForHistory } from "./export.js";
 import type { WorkspaceModel } from "./model.js";
@@ -31,6 +32,7 @@ export function History({
   const [path, setPath] = useState("");
   useEffect(() => {
     alive.current = true;
+    const before = document.activeElement;
     const element = dialog.current;
     element?.showModal();
     void projectApi
@@ -50,6 +52,7 @@ export function History({
     return () => {
       alive.current = false;
       element?.close();
+      if (before instanceof HTMLElement && before.isConnected) before.focus();
     };
   }, [model]);
 
@@ -72,6 +75,7 @@ export function History({
     : [];
   return (
     <dialog
+      onKeyDown={containDialogFocus}
       ref={dialog}
       className="history-dialog"
       aria-labelledby="history-title"

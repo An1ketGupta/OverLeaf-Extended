@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { containDialogFocus } from "./dialog.js";
 
 export type ManagementTarget = {
   action: "rename" | "delete";
@@ -41,6 +42,7 @@ export function ManagementDialog({
   }, []);
   return (
     <dialog
+      onKeyDown={containDialogFocus}
       ref={dialog}
       className="management-dialog"
       aria-labelledby="management-title"

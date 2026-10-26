@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useBlocker } from "react-router";
+import { containDialogFocus } from "./dialog.js";
 import { downloadText } from "./download.js";
 import type { WorkspaceModel } from "./model.js";
 export function NavigationGuard({ model }: { model: WorkspaceModel }) {
@@ -8,11 +9,16 @@ export function NavigationGuard({ model }: { model: WorkspaceModel }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
+    const before = document.activeElement;
     if (blocker.state === "blocked") dialog.current?.showModal();
     else dialog.current?.close();
+    return () => {
+      if (before instanceof HTMLElement && before.isConnected) before.focus();
+    };
   }, [blocker.state]);
   return (
     <dialog
+      onKeyDown={containDialogFocus}
       className="management-dialog"
       ref={dialog}
       aria-label="Unsaved work"
