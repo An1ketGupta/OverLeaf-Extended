@@ -13,8 +13,10 @@
     "@better-auth/drizzle-adapter": "1.7.12",
     "@overleaf-pro/contracts": "workspace:*",
     "@overleaf-pro/db": "workspace:*",
+    "@overleaf-pro/resume": "workspace:*",
     "better-auth": "1.7.12",
     "fastify": "5.12.7",
+    "nodemailer": "10.2.1",
     "tsx": "4.23.15",
     "zod": "4.6.7"
   }
