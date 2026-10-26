@@ -1,5 +1,10 @@
 # Part 2: editor workspace and autosave
 
+Current update (2026-10-25): Part 1 lifecycle/management and Part 3 compiler flows
+are complete for localhost. Use `/account` with the local verification inbox; see
+[Part 1](part-1.md) and [Part 3](part-3.md). The older implementation evidence below
+describes the original Part 2 scope.
+
 Local implementation complete. The workspace uses real authenticated PostgreSQL
 storage. Part 0 hosted authentication, Neon eligibility, and compiler feasibility
 remain open. Part 1 is only partially implemented to supply the required project

@@ -5,10 +5,12 @@ in progress: compiler selection, hosted authentication, and Neon account access
 remain gates. Do not build a dependent compiler integration until a route passes.
 
 - Keep hosting free with no card, subscription, or expiring trial. Docker is allowed.
-- This is a commercial product. Select plans and dependencies compatible with
-  commercial use; Vercel Hobby is excluded. Render Free is a staging candidate,
-  not an approved production backend. Commercial launch hosting remains an open
-  Part 0 gate; see docs/commercial-use.md. Do not infer permission to spend money.
+- Current scope is a personal project, tested on localhost (user clarification,
+  2026-10-24). Accept the measured local compiler route for local integration;
+  hosted delivery, broader devices and redistribution checks are publication
+  gates. Keep dependency obligations explicit; no product license change or paid
+  service is authorized. Earlier commercial hosting decisions are historical;
+  choose and validate any future host separately.
 - Use the pinned Node/pnpm and pnpm-lock.yaml. TypeScript is strict; validate inputs
   through packages/contracts. Add packages only for real shared behavior.
 - apps/web contains public browser code. Never import packages/db, server auth,

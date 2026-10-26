@@ -1,4 +1,21 @@
-# Part 0 progress — 2026-10-20
+# Part 0 progress — 2026-10-24
+
+**Local compiler acceptance, 2026-10-24:** the user clarified personal-project /
+localhost scope. The measured BusyTeX browser route is selected for local desktop
+Chromium and Part 3 is implemented and tested, including the production build
+served locally. Hosted delivery, physical devices/other browsers and asset
+redistribution are publication checks. See part-3.md for current results. The
+older foundation/evaluation entries below retain their historical scope.
+
+**Compiler evaluation update:** an isolated synthetic browser harness now produces
+and validates real XeTeX/xdvipdfmx PDFs from both gate resumes, the image/report
+fixture and all catalog templates. It records runtime/asset hashes, actual PDF
+text/rendering, timings, memory, cancellation, timeout and project isolation.
+This is local feasibility evidence, not a selected production route. Licensing,
+actual hosted delivery and the supported device/browser matrix remain gates;
+Part 3 product integration has not begun. See [compiler-feasibility.md](compiler-feasibility.md)
+and its checked-in measurement record. The historical foundation checks below
+still describe their original runs, not checks rerun in this update.
 
 **Commercial-use update:** see [commercial-use.md](commercial-use.md). Vercel
 Hobby is excluded and Render Free is a staging candidate only. Commercial launch
@@ -58,11 +75,11 @@ not inferred from the local auth test or the CI file.
 
 | Gate | State / what resolves it |
 | --- | --- |
-| 0A server/browser compiler comparison | Open. Neither candidate has measured template compatibility, pinned engine/package assets with notices, delivery/capacity measurements, or proven isolation. Follow compiler-feasibility.md. No engine is selected. |
+| 0A server/browser compiler comparison | Local gate passed for browser BusyTeX/XeTeX on desktop Chromium under the user's localhost scope. Server execution remains unverified and unused. Hosted/device/redistribution checks remain publication work; see compiler-feasibility.md. |
 | 0B Vercel-to-Render auth | Local prototype passed. Actual staging hostnames/account access, cookie forwarding/renewal, CDN isolation, and cold-start behavior remain pending. Follow auth-staging-checklist.md. |
 | Neon Free signup/connection | Not configured or validated. Use the user's eligible Free account and separate branches; do not substitute a trial/paid/card-required service. |
 | Free host eligibility/quotas | Not established for the user's accounts. Deployment templates provision nothing. |
-| Public account lifecycle | Part 1: verification/reset delivery and public registration remain disabled pending implementation. |
+| Public account lifecycle | Part 1 local verification/reset and management complete; see part-1.md. Public registration/hosted delivery remain disabled pending separate validation. |
 | Independent review | Pending. This implementation was checked by the implementing agent; no separate reviewer/subagent was invoked. |
 
 [Neon's published Free plan](https://neon.com/pricing) states no payment card or

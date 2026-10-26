@@ -1,8 +1,8 @@
 # OverLeaf-Pro: stack and Codex agent roadmap
 
-Created: 2026-10-20. Updated for the user's clarified requirement: **commercial use; free hosting, no payment card, no paid subscription or expiring trial credits. Docker is allowed.** Vercel Hobby is excluded. Commercial launch hosts are not selected; Render Free remains a staging candidate only. See [commercial-use decision](docs/commercial-use.md), which supersedes the earlier personal-project hosting proposal and Vercel-specific examples.
+Created: 2026-10-20. Current user clarification (2026-10-24): **personal project; test on localhost for now. Free/no-card/no-subscription constraints remain; Docker is allowed.** Earlier commercial hosting research is historical, not a hosting selection. No deployment or paid resources are authorized by local implementation. See [compiler acceptance](docs/compiler-feasibility.md) and [historical commercial assessment](docs/commercial-use.md).
 
-Status: Part 2's local editor and autosave are implemented, including the minimum private project/file persistence prerequisite. Immutable text snapshot capture and project ZIP export are implemented as a Part 3 prerequisite. Part 0 compiler/hosting gates and the rest of Part 1 remain incomplete. See [Part 0 progress](docs/part-0.md), [Part 2 progress](docs/part-2.md), and [Part 3 progress](docs/part-3.md).
+Status: Part 0A's browser route is selected for local desktop Chromium; Part 3 compilation/PDF export is implemented and verified against real PostgreSQL and both development/built local browser workflows. Assets, main-file selection, source/asset history, diagnostics, cancellation, stale previews and exact-byte generated-PDF analysis are integrated. Parts 2 and independent Parts 4–6 flows remain implemented. Part 1 account lifecycle is now complete locally. Live AI, public account delivery, actual hosting, compiler redistribution and broader devices remain separate future work. See [Part 0](docs/part-0.md), [Part 2](docs/part-2.md), [Part 3](docs/part-3.md), [Part 4](docs/part-4.md), [Part 5](docs/part-5.md), and [Part 6](docs/part-6.md).
 
 ## 1. Repository findings and confirmed constraints
 
@@ -91,7 +91,7 @@ The original personal-project hosting proposal is superseded. A complete commerc
 
 ### Compiler feasibility gate: Part 0A - compare server and browser execution
 
-Neither server nor browser compilation has been tested in this repository. Docker is allowed. Benchmark a minimal server compiler on Render Free and the browser candidate before selecting the implementation. SwiftLaTeX documents WebAssembly PdfTeX/XeTeX engines, virtual input files, and package fetching. Its repository is AGPL-3.0. Check the actual engine/assets licenses and maintenance state before adopting it; do not infer obligations solely from a repository label.
+The browser evaluation now compiles real fixtures and catalog templates using a pinned BusyTeX/TeX Live 2025 candidate; actual hosted delivery, complete license notices and supported-device checks remain open. Server compilation has not been validated on Render Free. See [compiler feasibility evidence](docs/compiler-feasibility.md). Docker is allowed. Compare demonstrated capacity and isolation before selecting the implementation. SwiftLaTeX remains a separate candidate: it documents WebAssembly PdfTeX/XeTeX engines, virtual input files, and package fetching. Its repository is AGPL-3.0. Check the actual engine/assets licenses and maintenance state before adopting it; do not infer obligations solely from a repository label.
 
 The prototype must verify:
 
@@ -215,9 +215,15 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 ### Part 1 - Accounts, private projects, and source persistence
 
-**Owner:** A2; A3 adds dashboard UI. **Depends on:** Part 0 core contracts/auth validation. **Status:** [ ]
+**Owner:** A2; A3 adds dashboard UI. **Depends on:** Part 0 core contracts/auth validation. **Status:** [x] (localhost / desktop Chromium)
 
-**Partial prerequisites delivered:** authenticated project creation/list/read, text-file creation/update, ownership checks, server hashes, quotas, and optimistic versions from Part 2; immutable text snapshot capture/read for Part 3 export. Full CRUD, main-file selection, assets, snapshot restore, email/account lifecycle, and hosted auth checks remain pending. Part 1 is not complete.
+**Local completion (2026-10-25):** verified accounts, local verification/reset
+SMTP delivery, session revocation, full project/source/asset management, safe draft
+handling, immutable deletion backups and restore are implemented. Real PostgreSQL
+checks prove isolation, cleanup, quota rollback and concurrent edits; all 18 browser
+journeys pass in both dev and locally served built workflows. Hosted authentication,
+real mailbox delivery, Neon access and public registration remain separate gates.
+See [Part 1](docs/part-1.md) and the [approved plan](docs/implementation-plan-part-1.md).
 
 - Implement Better Auth sign-up/sign-in/sign-out and session validation. Specify verification/reset delivery before public release.
 - Add project/file CRUD, main-file selection, bounded assets, normalized paths, and optimistic file versions.
@@ -242,9 +248,9 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 ### Part 3 - LaTeX compilation and export (validated execution route)
 
-**Owner:** A4; A3 integrates UI. **Depends on:** Part 0A, snapshots from Part 1, workspace from Part 2. **Status:** [ ]
+**Owner:** A4; A3 integrates UI. **Depends on:** Part 0A, snapshots from Part 1, workspace from Part 2. **Status:** [x] Local desktop Chromium / localhost scope.
 
-**Implementation update (2026-10-20):** immutable text snapshots and complete project source ZIP export are implemented. No compiler route passed Part 0A, so engine integration and real PDF generation remain blocked by the repository gate. The user confirmed no staging setup is available. See [docs/part-3.md](docs/part-3.md) for exact delivered behavior, checks, and remaining work. This is partial prerequisite delivery, not a completed compiler.
+**Implementation update (2026-10-24):** the user accepted localhost testing for this personal project. Pinned browser XeTeX/xdvipdfmx now compiles consistent source/asset captures, resolves bounded multiple passes, navigates diagnostics, supports cancel/timeout and auto compile, preserves stale output, previews/downloads actual PDFs, and hands exact bytes to resume analysis. Asset persistence/history/ZIP export and main-file selection are integrated. All six PostgreSQL integration scripts, 44 unit tests and 13 browser tests passed; both compiler journeys also passed against the built app locally. See [docs/part-3.md](docs/part-3.md). Hosted delivery, other browser/device targets, redistribution and optional durable PDF storage remain separate publication/follow-on work.
 
 - Integrate the engine/route selected by Part 0A: browser WASM in a worker, or the server compiler only after capacity and execution-isolation gates pass. Pin package/font assets and enforce per-job input boundaries.
 - Compile a consistent source/asset snapshot, load the entry file, perform supported passes, and return actual PDF bytes/diagnostics.
@@ -258,7 +264,7 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 ### Part 4 - Curated templates and recoverable history
 
-**Owner:** A3/A2; A4 verifies compatibility. **Depends on:** Parts 1-3. **Status:** [ ]
+**Owner:** A3/A2; A4 verifies compatibility. **Depends on:** Parts 1-3. **Status:** [ ] Partial - independent template copying, named snapshots, source diff and transactional restore implemented; selected-engine CI compilation/text inspection blocked by Part 0A. See [progress](docs/part-4.md).
 
 - Include 2-3 resume templates and one report using supported packages/fonts with provenance/licenses and synthetic content.
 - Copy templates into private independent projects; add named snapshots, source diff, and restore.
@@ -268,7 +274,7 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 ### Part 5 - AI editing and compile-error assistance
 
-**Owner:** A5; A3 owns review UI; A2 owns transactional apply. **Depends on:** Parts 1-3 and proposal contracts. **Status:** [ ]
+**Owner:** A5; A3 owns review UI; A2 owns transactional apply. **Depends on:** Parts 1-3 and proposal contracts. **Status:** [ ] Independent request/review/atomic apply/restore implemented; live provider validation and compiler-dependent completion blocked. See [Part 5 progress](docs/part-5.md).
 
 - Configure a server-only provider adapter/model and request/output/time/concurrency caps. No keys in frontend assets or compiler inputs.
 - Support selected-code explanations, bounded generation/rewrites, project questions, and diagnostic explanations.
@@ -283,7 +289,7 @@ Every part starts incomplete and ends with an observable demo. Dates below are n
 
 ### Part 6 - Resume PDF analysis and job matching
 
-**Owner:** A6; A3 report UI; A5 optional server-generated advice. **Depends on:** Parts 1 and 3 plus analysis contracts. Deterministic analysis can proceed independently of Part 5. **Status:** [ ]
+**Owner:** A6; A3 report UI; A5 optional server-generated advice. **Depends on:** Parts 1 and 3 plus analysis contracts. Deterministic analysis can proceed independently of Part 5. **Status:** [ ] Uploaded-PDF extraction, deterministic checks/job-term evidence, and private saved reports implemented; integrated compiler output remains gated. See [Part 6 progress](docs/part-6.md).
 
 - Extract actual uploaded/generated PDF bytes in a bounded PDF.js worker; check size/pages, malformed/encrypted input, and file type.
 - Show extracted text and page/evidence locations beside the PDF. Flag image-only input as unsupported; OCR is later work.
@@ -419,17 +425,17 @@ only for gates actually demonstrated.
 | Item | Status |
 | --- | --- |
 | Initial repository inspection | Complete; findings recorded above |
-| Hosting requirements | Commercial use confirmed; free/no-card constraints retained; Vercel Hobby excluded; launch hosts pending |
+| Hosting requirements | Current personal-project scope uses localhost; free/no-card constraints retained; future host selection remains separate |
 | Revised architecture/roadmap | Prepared in this file |
-| Server/browser compiler comparison | Gate open; synthetic fixtures and evaluation protocol prepared; no route selected |
+| Server/browser compiler comparison | Browser BusyTeX/XeTeX selected for local desktop Chromium under user clarification; native/server route unverified and unused; publication checks remain |
 | Local authentication prototype | Verified against native PostgreSQL and Chromium through the Vite proxy; actual staging hosts pending |
-| Part 0 | In progress; local foundation implemented; hosted access/auth and compiler gates pending |
-| Part 1 | Minimal persistence plus immutable text snapshot capture/read delivered; account/project/assets/restore features pending |
-| Part 2 | Local workspace/autosave verified; compiler adapter intentionally unavailable |
-| Part 3 | Text snapshots and source ZIP export delivered; engine integration blocked on Part 0A; incomplete |
-| Parts 4-9 | Not started |
+| Part 0 | Local foundation/compiler passed; actual hosted access/auth and publication checks deferred |
+| Part 1 | Complete for localhost/desktop Chromium; verified accounts, recovery, project/file management, deletion cleanup, isolation and conflict workflows passed; hosted email/auth remain separate |
+| Part 2 | Local workspace/autosave verified and compiler integrated |
+| Part 3 | Complete for agreed localhost/desktop Chromium scope; real compilation, preview, PDF/source export and generated-PDF analysis verified |
+| Parts 4-9 | Independent Parts 4–6 local flows implemented; remaining release/follow-on work retains its own prerequisites |
 
-**Next task:** revise and validate hosting for commercial use within the no-card budget, establish a real database connection, compare compiler feasibility, and verify authentication on the selected staging hosts. Vercel Hobby is excluded; existing Vercel rewrite examples are historical and unapproved for this product. No commercial launch host or compiler route has been selected. See [docs/commercial-use.md](docs/commercial-use.md) and [docs/part-0.md](docs/part-0.md) for gates and local evidence.
+**Next task:** review the completed local Part 1 account/project workflows and choose the next roadmap part. Before public deployment, complete the exact compiler redistribution materials, host selection/routing/auth checks and supported-device verification. Local account/lifecycle work is complete; remaining release work stays separately scoped. No paid infrastructure, external account or deployment has been created. See [docs/part-3.md](docs/part-3.md) and [compiler publication checklist](docs/compiler-licenses.md).
 
 ## 10. Primary references
 

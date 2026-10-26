@@ -1,5 +1,10 @@
 # Commercial-use decision — 2026-10-20
 
+**Superseded scope, 2026-10-24:** the user clarified that this is a personal
+project and requested localhost testing for now. This document preserves the
+earlier commercial hosting investigation. It does not block local compiler
+integration, select a host, authorize spending, or approve compiler redistribution.
+
 The user confirmed that OverLeaf-Pro is intended for commercial use. This
 supersedes the earlier personal-project hosting assumptions in ROADMAP.md and
 the original Vercel/Render deployment examples. The existing requirements remain:

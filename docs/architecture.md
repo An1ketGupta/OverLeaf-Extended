@@ -1,10 +1,27 @@
 # Foundation architecture
 
-Commercial use is confirmed. See commercial-use.md: Vercel Hobby is excluded,
-Render Free is a staging candidate, and launch hosts remain unselected. The
-framework/database boundaries below remain valid; the old Vercel-specific routing
-example is historical and must be replaced or explicitly revalidated on an
-eligible plan before deployment.
+Current scope is a personal project tested on localhost (user clarification,
+2026-10-24). The earlier commercial assessment in commercial-use.md is historical.
+No host is selected. Local compiler acceptance is separate from future hosting,
+authentication and redistribution checks. The web/API/database boundaries remain.
+
+Part 3 uses pinned browser XeTeX/xdvipdfmx in a fresh worker with no network or
+storage host API after bootstrap. The adapter fetches verified engine code and
+8 MiB asset shards without credentials, passes engine code/compiled WASM/package
+bytes into the worker, and supplies only one immutable source/asset capture.
+Worker bootstrap verifies the engine JS hash before loading a temporary Blob;
+the dev/preview servers set worker-specific CSP that denies network connections.
+Each job has a 15-second deadline, at most three passes, bounded auxiliary files,
+5 MiB PDF/20-page preview limits and termination on cancel/navigation/logout.
+Engine loading has a separate 30-second deadline. No TeX executes on the API.
+
+The project_asset table stores bounded bytea data with optimistic versions.
+Immutable snapshots copy asset bytes as bounded base64 JSON; restore backs up
+the complete tree transactionally. The compile-input API captures the exact
+project revision under its lock without storing a history row. Its capture ID
+is separate from persisted snapshot IDs. Only local PDF files/results are kept;
+optional report saving still binds actual analyzed hashes with client-provided
+provenance. The source ZIP includes image bytes and an asset hash manifest.
 
 Node 24.22.0 and pnpm 10.34.7 are pinned. Stable package versions are exact and the
 workspace lockfile is committed. React/Vite/React Router live in apps/web;
@@ -18,7 +35,7 @@ bundling change must preserve the server/browser boundary and migration paths.
 
 ```text
 Browser -> /api/* -> Vite proxy locally / validated same-origin proxy when hosted
-                         -> Node API (commercial launch host pending) -> PostgreSQL
+                         -> Local Node API (future hosting separate) -> PostgreSQL
                          -> Better Auth + Drizzle adapter
 ```
 
@@ -30,12 +47,17 @@ All API responses carry private, no-store. Multiple Set-Cookie headers, includin
 session renewal, are forwarded individually. Cookies are HttpOnly, SameSite=Lax,
 host-only, and Secure in production; there are no browser-local bearer tokens.
 
-Auth rate limits use an in-memory, per-instance store. They reset on restart.
+Auth rate limits use an in-memory, per-process store. They reset on restart.
 Fastify does not trust forwarded client IPs. Until the deployed proxy chain is
 verified, Better Auth may share a per-path rate-limit bucket for unknown clients.
 Do not accept untrusted forwarding headers simply to remove that limitation.
-Public signup is disabled by default and prohibited in production in this prototype.
-Email verification/reset delivery, account lifecycle, and authorization are Part 1.
+Public signup is disabled by default and prohibited in production pending hosted
+delivery validation. Part 1 supplies local verification/reset through a loopback
+Mailpit inbox and server-only SMTP adapter. Auth transactions atomically consume
+reset tokens, revoke sessions and write passwords; private routes reject legacy
+unverified sessions. All callback paths/queries and raw adapter errors are kept out
+of logs. Email send acceptance is process-local and bounded, not durable delivery.
+See part-1.md for lifecycle behavior and dependency obligations.
 
 The database pool has three connections, bounded connection/query/statement timeouts,
 and an idle-socket error listener. `/api/health` reports process liveness;
@@ -43,7 +65,8 @@ and an idle-socket error listener. `/api/health` reports process liveness;
 An idle database failure does not crash the API. Readiness also probes project and
 file tables. Private project source persists in PostgreSQL; bounded text writes
 lock their parent project, validate quotas and compare optimistic versions.
-There is no Redis, paid worker, AI call, or compile endpoint.
+There is no Redis, paid worker, or compile endpoint. Optional bounded server-only
+Groq calls are implemented for Part 5; they are disabled by default.
 
 Immutable text snapshot capture/read and browser ZIP export now provide the
 source prerequisite for Part 3. Account/project locks serialize quota checks and
@@ -55,7 +78,7 @@ The Part 2 browser workspace imports only public contracts and browser libraries
 CodeMirror loads with the workspace; PDF.js and its packaged worker load only for
 local PDF previews. Unsaved source recovery uses account-scoped sessionStorage,
 with logout broadcasts and a content-free localStorage invalidation marker.
-See part-2.md for the draft lifecycle and the unavailable typed compiler adapter.
+See part-2.md for the draft lifecycle and part-3.md for the selected local compiler adapter.
 
 ## Deployment templates
 
@@ -77,3 +100,28 @@ cache, origin and routing checks.
 Actual HTTPS cookie forwarding, CDN caching, service wake-up, and timeout behavior
 remain staging checks. Local proxy tests cannot establish them. The proposed hosts
 and quotas must be checked in the user's accounts before publishing.
+
+Part 4 adds original MIT-licensed template source in templates/, copied by the
+server into independent private project/file records with fresh IDs. A separate
+snapshot_name table labels immutable revisions without modifying their source.
+List and transactional restore routes authorize ownership; restore preserves the
+current revision under the account/project locks and advances live versions.
+See part-4.md and contracts.md for retention, stale-restore and browser reload
+semantics. Runtime packaging must retain templates/ at the repository root.
+Catalog template compatibility is verified with the selected local engine. No
+template PDFs or third-party compiler binaries are committed.
+
+The Part 0A runner in scripts/compiler-feasibility.ts accepts fixed synthetic
+repository fixtures and binds an ephemeral loopback port. It shares the authored
+scripts/compiler/worker.js runtime with the app; preparation copies that runtime
+and pinned engine/package bytes into ignored local public assets. The selected
+local route is integrated in browser-compiler.ts/useCompilation.ts. Future public
+redistribution, actual hosted delivery and broader devices still need validation.
+
+Parts 5/6 add private proposal/report routes. The API owns provider requests;
+packages/db owns proposal/report persistence, snapshot-before-apply transactions,
+and migration 0004. The browser imports only public contracts and packages/resume
+deterministic rules. PDF extraction runs in a dedicated worker with a child PDF.js
+parser port, deadlines and termination. PDF bytes remain local; optionally saved
+reports contain bounded client-provided extraction and exact hash claims, never
+compiler attestation. See part-5.md and part-6.md for limits and remaining gates.
