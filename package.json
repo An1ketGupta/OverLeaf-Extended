@@ -27,7 +27,11 @@
     "check:environment": "tsx scripts/check-environment.ts",
     "compiler:prepare": "tsx scripts/compiler-feasibility.ts prepare",
     "compiler:benchmark": "tsx scripts/compiler-feasibility.ts benchmark",
-    "test:ai:live": "tsx --env-file-if-exists=.env scripts/ai-live.ts"
+    "compiler:verify": "tsx scripts/compiler-checks.ts",
+    "test:templates": "pnpm compiler:verify && playwright test tests/e2e/templates.spec.ts",
+    "test:ai:live": "tsx --env-file-if-exists=.env scripts/ai-live.ts",
+    "test:recovery:integration": "tsx --env-file-if-exists=.env scripts/backup-integration.ts && tsx --env-file-if-exists=.env scripts/races-integration.ts && tsx --env-file-if-exists=.env scripts/quotas-integration.ts",
+    "test:provider:recovery": "tsx scripts/provider-recovery.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

@@ -1,4 +1,4 @@
-name: Foundation checks
+name: Local application verification
 on:
   push:
   pull_request:
@@ -44,11 +44,26 @@ jobs:
       - run: pnpm test
       - run: pnpm db:migrate && pnpm db:seed
       - run: pnpm test:integration
-      - run: pnpm build
+      - run: pnpm test:recovery:integration
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm test:e2e
+      - run: pnpm compiler:prepare
+      - run: pnpm compiler:verify
+      - run: pnpm build
+      - run: pnpm test:templates
+      - run: >-
+          pnpm test:e2e --grep-invert "catalog .*: real PDF text"
+      - run: pnpm test:e2e:built tests/e2e/templates.spec.ts tests/e2e/compiler.spec.ts tests/e2e/assistant-compiler.spec.ts tests/e2e/recovery.spec.ts tests/e2e/late-worker.spec.ts tests/e2e/database-recovery.spec.ts tests/e2e/report-limits.spec.ts
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: browser-results
-          path: test-results/
+          include-hidden-files: true
+          # Traces can contain downloaded third-party compiler binaries. Keep
+          # those local until redistribution requirements are satisfied.
+          path: |
+            test-results/**/*.png
+            test-results/**/*.pdf
+            test-results/**/error-context.md
+            .cache/production-results/**/*.png
+            .cache/production-results/**/*.pdf
+            .cache/production-results/**/error-context.md
