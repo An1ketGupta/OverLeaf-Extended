@@ -78,7 +78,24 @@ export async function captureSavedSource(
   return snapshot;
 }
 
-export async function sourceArchive(input: SourceSnapshot) {
+export async function captureSourceBackup(model: WorkspaceModel) {
+  const project = await savedProjectForHistory(model);
+  const input = await projectApi.exportInput(project.id, project.revision);
+  if (!model.isActive) throw new Error("Reopen this project to export it.");
+  if (
+    input.snapshot.projectId !== project.id ||
+    input.snapshot.revision !== project.revision
+  )
+    throw new Error(
+      "Capture does not match the requested project revision. Retry the export.",
+    );
+  return input.snapshot;
+}
+
+export async function sourceArchive(
+  input: SourceSnapshot,
+  provenance: "snapshot" | "capture" = "snapshot",
+) {
   const snapshot = sourceSnapshotSchema.parse(input);
   const entries: Zippable = Object.create(null);
   for (const file of snapshot.files) {
@@ -95,8 +112,9 @@ export async function sourceArchive(input: SourceSnapshot) {
   entries["snapshot.json"] = new TextEncoder().encode(
     JSON.stringify(
       {
-        format: "overleaf-pro-source-v1",
-        snapshotId: snapshot.id,
+        ...(provenance === "snapshot"
+          ? { format: "overleaf-pro-source-v1", snapshotId: snapshot.id }
+          : { format: "overleaf-pro-source-v2", captureId: snapshot.id }),
         projectId: snapshot.projectId,
         revision: snapshot.revision,
         createdAt: snapshot.createdAt,

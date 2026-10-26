@@ -1,5 +1,6 @@
 import {
   type LocalDraft,
+  limits,
   type Project,
   type TemplateId,
   templateCatalog,
@@ -17,6 +18,7 @@ import {
   removeProjectDrafts,
 } from "./drafts.js";
 import { sourceArchive } from "./export.js";
+import { readSourceBackup } from "./import.js";
 import { ManagementDialog, type ManagementTarget } from "./ManagementDialog.js";
 import { OrphanDrafts } from "./OrphanDrafts.js";
 import "./workspace.css";
@@ -27,6 +29,8 @@ export function Projects() {
   const [message, setMessage] = useState("Loading your projects…");
   const [name, setName] = useState("");
   const [template, setTemplate] = useState<"" | TemplateId>("");
+  const [backup, setBackup] = useState<File>();
+  const [importName, setImportName] = useState("");
   const [busy, setBusy] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [userId, setUserId] = useState("");
@@ -199,11 +203,11 @@ export function Projects() {
             const generation = ++exportGeneration.current;
             setBusy(true);
             void (async () => {
-              const snapshot = await projectApi.createSnapshot(
+              const input = await projectApi.exportInput(
                 management.project.id,
                 management.project.revision,
               );
-              const bytes = await sourceArchive(snapshot);
+              const bytes = await sourceArchive(input.snapshot, "capture");
               const session = await getSession();
               if (
                 generation !== exportGeneration.current ||
@@ -316,8 +320,74 @@ export function Projects() {
             </form>
             <p className="template-note">
               Original MIT-licensed templates use synthetic examples and
-              standard LaTeX classes/fonts. Compiler compatibility is awaiting
-              engine validation.
+              standard LaTeX classes/fonts, verified with the selected local
+              compiler.
+            </p>
+            <form
+              className="new-project"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (!backup || busy) return;
+                const generation = ++exportGeneration.current;
+                setBusy(true);
+                setMessage("");
+                void (async () => {
+                  if (backup.size > limits.backupArchiveBytes)
+                    throw new Error(
+                      "Backup is too large. The maximum archive size is 9 MiB.",
+                    );
+                  const input = await readSourceBackup(
+                    new Uint8Array(await backup.arrayBuffer()),
+                    importName,
+                  );
+                  if (generation !== exportGeneration.current) return;
+                  const project = await projectApi.importProject(input);
+                  if (generation === exportGeneration.current)
+                    navigate(`/projects/${project.id}`);
+                })()
+                  .catch((error: unknown) => {
+                    if (generation === exportGeneration.current)
+                      setMessage(
+                        error instanceof Error
+                          ? error.message
+                          : "Import failed. Refresh projects before retrying.",
+                      );
+                  })
+                  .finally(() => {
+                    if (generation === exportGeneration.current) setBusy(false);
+                  });
+              }}
+            >
+              <label>
+                Project backup ZIP
+                <input
+                  type="file"
+                  accept=".zip,application/zip"
+                  disabled={busy}
+                  onChange={(event) => setBackup(event.target.files?.[0])}
+                />
+              </label>
+              <label>
+                Recovered project name
+                <input
+                  required
+                  maxLength={100}
+                  value={importName}
+                  disabled={busy}
+                  onChange={(event) => setImportName(event.target.value)}
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={busy || !backup || !importName.trim()}
+              >
+                Import project backup
+              </button>
+            </form>
+            <p className="template-note">
+              Restore a source ZIP exported by this app into a new private
+              project. Existing projects stay intact. Account, history, AI
+              requests and saved reports are not included.
             </p>
             <div className="project-list">
               {projects.length === 0 ? (

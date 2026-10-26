@@ -24,7 +24,7 @@ import {
   removeDraft,
   writeDraft,
 } from "./drafts.js";
-import { captureSavedSource, sourceArchive } from "./export.js";
+import { captureSourceBackup, sourceArchive } from "./export.js";
 import { FileTree } from "./FileTree.js";
 import { History } from "./History.js";
 import { ManagementDialog, type ManagementTarget } from "./ManagementDialog.js";
@@ -205,6 +205,8 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     [model],
   );
   useEffect(() => {
+    let mounted = true;
+    let validation = 0;
     const unload = (event: BeforeUnloadEvent) => {
       if (model.hasUnsaved) {
         event.preventDefault();
@@ -219,8 +221,10 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     };
     const validateSession = () => {
       if (document.visibilityState !== "visible") return;
+      const request = ++validation;
       void getSession()
         .then((session) => {
+          if (!mounted || request !== validation || !model.isActive) return;
           if (!session || session.user.id !== model.userId) {
             model.suspend();
             setSessionExpired(true);
@@ -232,15 +236,25 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     };
     const validateProject = () => {
       if (model.paused || !model.isActive) return;
+      const request = ++validation;
+      const before = model.snapshot();
       void getSession()
         .then(async (session) => {
+          if (!mounted || request !== validation || !model.isActive) return;
           if (!session || session.user.id !== model.userId) {
             model.suspend();
             setSessionExpired(true);
             return;
           }
           const project = await projectApi.get(model.project.id);
-          if (!model.isActive || model.paused) return;
+          if (
+            !mounted ||
+            request !== validation ||
+            !model.isActive ||
+            model.paused ||
+            before !== model.snapshot()
+          )
+            return;
           if (
             project.name !== model.project.name ||
             project.mainFile !== model.project.mainFile ||
@@ -259,6 +273,13 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
             model.markRemote();
         })
         .catch((error: unknown) => {
+          if (
+            !mounted ||
+            request !== validation ||
+            !model.isActive ||
+            before !== model.snapshot()
+          )
+            return;
           if (error instanceof ApiError && error.status === 404)
             model.markRemote(true);
         });
@@ -278,6 +299,8 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     window.addEventListener("offline", connected);
     document.addEventListener("visibilitychange", validateSession);
     return () => {
+      mounted = false;
+      validation++;
       window.removeEventListener("beforeunload", unload);
       window.removeEventListener("online", connected);
       window.removeEventListener("offline", connected);
@@ -503,8 +526,8 @@ function WorkspaceDesk({ model }: { model: WorkspaceModel }) {
     setBusy(true);
     setNotice("Saving files and preparing project export…");
     try {
-      const snapshot = await captureSavedSource(model);
-      const bytes = await sourceArchive(snapshot);
+      const snapshot = await captureSourceBackup(model);
+      const bytes = await sourceArchive(snapshot, "capture");
       if (!exportAllowed.current || !model.isActive) return;
       const url = URL.createObjectURL(
         new Blob([new Uint8Array(bytes)], { type: "application/zip" }),

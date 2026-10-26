@@ -202,7 +202,7 @@ test("project export saves all source into a ZIP and rejects unseen remote chang
     "source/main.tex",
     "source/sections/notes.tex",
     "snapshot.json",
-    "overleaf-pro-source-v1",
+    "overleaf-pro-source-v2",
   ])
     expect(zip.includes(Buffer.from(text))).toBe(true);
   await expect(page.getByText(/Exported saved revision 2\./)).toBeVisible();

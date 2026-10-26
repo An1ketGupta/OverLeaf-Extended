@@ -8,6 +8,9 @@ import {
   createTextFileSchema,
   deleteEntrySchema,
   errorSchema,
+  exportInputSchema,
+  type ImportProject,
+  importProjectSchema,
   mainFileSchema,
   projectListSchema,
   projectSchema,
@@ -57,15 +60,29 @@ async function request(path: string, method = "GET", body?: unknown) {
     const parsed = errorSchema.safeParse(json);
     throw new ApiError(
       response.status,
-      parsed.success
-        ? parsed.data.error.message
-        : "Project request failed. Your draft has been kept.",
+      response.status >= 500
+        ? "Project service is temporarily unavailable. Your draft has been kept. Retry when it recovers."
+        : parsed.success
+          ? parsed.data.error.message
+          : "Project request failed. Your draft has been kept.",
     );
   }
   if (method !== "GET") announceProjectChange(path.split("/")[1] ?? "");
   return json;
 }
 export const projectApi = {
+  exportInput: async (id: string, baseRevision: number) =>
+    exportInputSchema.parse(
+      await request(
+        `/${id}/export-input`,
+        "POST",
+        restoreSnapshotSchema.parse({ baseRevision }),
+      ),
+    ),
+  importProject: async (input: ImportProject) =>
+    projectSchema.parse(
+      await request("/import", "POST", importProjectSchema.parse(input)),
+    ),
   rename: async (id: string, baseRevision: number, name: string) =>
     projectSchema.parse(
       await request(

@@ -29,6 +29,7 @@ export async function getStatus(signal: AbortSignal) {
 }
 export async function getSession() {
   const response = await fetch("/api/session", {
+    signal: AbortSignal.timeout(12_000),
     credentials: "same-origin",
     cache: "no-store",
   });
