@@ -3,6 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { createDatabase } from "@overleaf-pro/db";
 import { buildApp } from "../apps/api/src/app.js";
 import { readConfig } from "../apps/api/src/config.js";
+import { verifiedSignup } from "./test-account.js";
 import { requireTestDatabase } from "./test-database.js";
 
 const database = createDatabase(requireTestDatabase());
@@ -14,20 +15,16 @@ const app = buildApp(
     TRUSTED_ORIGINS: origin,
     AUTH_SECRET: randomUUID(),
     AUTH_ALLOW_SIGNUP: "true",
+    MAIL_ENABLED: "true",
   }),
   { database },
 );
 const emails = [0, 1].map(() => `workspace-${randomUUID()}@example.test`);
 async function signup(email: string) {
-  const response = await app.inject({
-    method: "POST",
-    url: "/api/auth/sign-up/email",
-    headers: { origin },
-    payload: {
-      name: "Workspace Test",
-      email,
-      password: "synthetic-workspace-password-42",
-    },
+  const response = await verifiedSignup(app, origin, {
+    name: "Workspace Test",
+    email,
+    password: "synthetic-workspace-password-42",
   });
   assert.equal(response.statusCode, 200);
   const cookies = response.headers["set-cookie"];
@@ -80,7 +77,12 @@ try {
         method: "POST",
         url: `${url}/files`,
         headers: otherHeaders,
-        payload: { path: "secret.tex", content: "" },
+        payload: {
+          baseRevision: (await app.inject({ url: `${url}`, headers })).json()
+            .revision,
+          path: "secret.tex",
+          content: "",
+        },
       })
     ).statusCode,
     404,
@@ -92,7 +94,12 @@ try {
           method: "POST",
           url: `${url}/files`,
           headers,
-          payload: { path, content: "" },
+          payload: {
+            baseRevision: (await app.inject({ url: `${url}`, headers })).json()
+              .revision,
+            path,
+            content: "",
+          },
         })
       ).statusCode,
       400,
@@ -102,7 +109,12 @@ try {
     method: "POST",
     url: `${url}/files`,
     headers,
-    payload: { path: "chapters/one.tex", content: "chapter" },
+    payload: {
+      baseRevision: (await app.inject({ url: `${url}`, headers })).json()
+        .revision,
+      path: "chapters/one.tex",
+      content: "chapter",
+    },
   });
   assert.equal(added.statusCode, 201);
   assert.equal(
@@ -111,7 +123,12 @@ try {
         method: "POST",
         url: `${url}/files`,
         headers,
-        payload: { path: "chapters/one.tex", content: "" },
+        payload: {
+          baseRevision: (await app.inject({ url: `${url}`, headers })).json()
+            .revision,
+          path: "chapters/one.tex",
+          content: "",
+        },
       })
     ).statusCode,
     409,
@@ -204,7 +221,13 @@ try {
       method: "POST",
       url: `/api/projects/${quotaId}/files`,
       headers,
-      payload: { path: `part-${index}.tex`, content: "" },
+      payload: {
+        baseRevision: (
+          await app.inject({ url: `/api/projects/${quotaId}`, headers })
+        ).json().revision,
+        path: `part-${index}.tex`,
+        content: "",
+      },
     });
     assert.equal(result.statusCode, 201);
   }
@@ -214,7 +237,13 @@ try {
         method: "POST",
         url: `/api/projects/${quotaId}/files`,
         headers,
-        payload: { path: "over-limit.tex", content: "" },
+        payload: {
+          baseRevision: (
+            await app.inject({ url: `/api/projects/${quotaId}`, headers })
+          ).json().revision,
+          path: "over-limit.tex",
+          content: "",
+        },
       })
     ).statusCode,
     400,

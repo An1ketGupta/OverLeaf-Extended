@@ -8,6 +8,7 @@ import {
 import { createDatabase } from "@overleaf-pro/db";
 import { buildApp } from "../apps/api/src/app.js";
 import { readConfig } from "../apps/api/src/config.js";
+import { verifiedSignup } from "./test-account.js";
 import { requireTestDatabase } from "./test-database.js";
 
 const database = createDatabase(requireTestDatabase());
@@ -19,20 +20,16 @@ const app = buildApp(
     TRUSTED_ORIGINS: origin,
     AUTH_SECRET: randomUUID(),
     AUTH_ALLOW_SIGNUP: "true",
+    MAIL_ENABLED: "true",
   }),
   { database },
 );
 const emails = [0, 1].map(() => `snapshot-${randomUUID()}@example.test`);
 async function signup(email: string) {
-  const response = await app.inject({
-    method: "POST",
-    url: "/api/auth/sign-up/email",
-    headers: { origin },
-    payload: {
-      name: "Snapshot Test",
-      email,
-      password: "synthetic-snapshot-password-42",
-    },
+  const response = await verifiedSignup(app, origin, {
+    name: "Snapshot Test",
+    email,
+    password: "synthetic-snapshot-password-42",
   });
   assert.equal(response.statusCode, 200);
   const cookies = response.headers["set-cookie"];
@@ -249,6 +246,8 @@ try {
       url: `${largeUrl}/files`,
       headers,
       payload: {
+        baseRevision: (await app.inject({ url: `${largeUrl}`, headers })).json()
+          .revision,
         path: `large-${index}.tex`,
         content: "x".repeat(limits.textFileBytes),
       },
@@ -291,6 +290,12 @@ try {
           url: `/api/projects/${otherProject.id}/files`,
           headers,
           payload: {
+            baseRevision: (
+              await app.inject({
+                url: `/api/projects/${otherProject.id}`,
+                headers,
+              })
+            ).json().revision,
             path: `extra-${index}.tex`,
             content: "y".repeat(limits.textFileBytes),
           },
